@@ -1,4 +1,4 @@
-import { useParams } from "../routini/hooks/useParams";
+import { useParams } from "routini";
 
 export default function Product() {
   const { productId } = useParams();

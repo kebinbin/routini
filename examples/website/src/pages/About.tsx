@@ -1,6 +1,5 @@
 import { useEffect } from "react";
-import { Link } from "../routini/components/Link";
-import { useParams } from "../routini/hooks/useParams";
+import { Link, useParams } from "routini";
 
 console.log("About page imported");
 

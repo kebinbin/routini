@@ -1,4 +1,4 @@
-import { Link } from "../routini/components/Link";
+import { Link } from "routini";
 console.log("404 page imported");
 export default function Default404() {
   console.log("404 page rendered");

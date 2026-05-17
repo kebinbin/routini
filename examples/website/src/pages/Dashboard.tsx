@@ -1,4 +1,4 @@
-import { Navigate } from "../routini/components/Navigate";
+import { Navigate } from "routini";
 // redirects to /login if not authenticated
 export default function Dashboard() {
   const isAuthenticated = false; // This should be determined by your auth logic

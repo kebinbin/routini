@@ -1,5 +1,4 @@
-import { Link } from "../routini/components/Link";
-import { useLocation } from "../routini/hooks/useLocation";
+import { Link, useLocation } from "routini";
 
 export default function Nav() {
   const { path } = useLocation();

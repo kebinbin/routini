@@ -1,4 +1,4 @@
-import { Link } from "../routini/components/Link";
+import { Link } from "routini";
 
 export default function Home() {
   const lang = "en"; // This could be dynamic based on user preference or browser settings

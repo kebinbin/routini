@@ -1,7 +1,5 @@
 import { useState } from "react";
-import { Router } from "./routini/components/Router";
-import { Route } from "./routini/components/Route";
-import { Outlet } from "./routini/components/Outlet";
+import { Router, Route, Outlet } from "routini";
 import Home from "./pages/Home";
 import Product from "./pages/Product";
 import Default from "./pages/404";

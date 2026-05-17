@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useParams } from "../routini/hooks/useParams";
+import { useParams } from "routini";
 
 export default function Search() {
   const { query } = useParams<{ query: string }>();
