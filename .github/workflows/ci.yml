@@ -38,7 +38,3 @@ jobs:
 
       - name: publint
         run: npm run check:exports -w packages/routini
-
-      - name: arethetypeswrong
-        # Runs in CI only — see README "Known issues" for context.
-        run: npx -y -p @arethetypeswrong/cli@latest attw --pack packages/routini

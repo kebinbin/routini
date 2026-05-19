@@ -271,4 +271,4 @@ Internal-only changes (refactors with no consumer impact) don't need a changeset
 
 ### Known issues
 
-- **`@arethetypeswrong/cli` crashes locally** on this maintainer's machine with `Cannot read properties of undefined (reading 'filename')`, reproducible across multiple versions and on every package (including third-party packages pulled fresh from npm). The crash is environmental, not package-related. We run `attw` in the **CI workflow only** so PRs still get type-correctness checks, and have left it out of local devDeps + `check:exports`. Restore locally once the environmental issue is resolved.
+- **`@arethetypeswrong/cli` is disabled.** It crashes with `Cannot read properties of undefined (reading 'filename')` across versions 0.17.4 and 0.18.2 on every package we tried — local macOS + Node 20, fresh GitHub Actions Ubuntu runners, and third-party packages pulled fresh from npm — so the bug is in attw itself, not our environment or our package shape. `publint` still runs (locally + in CI) and catches the bulk of exports-map mistakes. We'll re-enable attw once a working version ships.
