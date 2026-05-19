@@ -5,3 +5,5 @@ export function Outlet() {
   const { content } = useContext(RouterContext);
   return <>{content}</>;
 }
+
+Outlet.displayName = "Outlet";

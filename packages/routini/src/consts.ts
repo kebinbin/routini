@@ -1,4 +1,4 @@
 export const EVENTS = {
-  PUSHSTATE: "pushstate",
+  NAVIGATE: "routini:navigate",
   POPSTATE: "popstate",
 };

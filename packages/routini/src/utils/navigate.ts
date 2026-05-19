@@ -5,6 +5,7 @@ import { EVENTS } from "../consts";
  * and dispatching a custom event to notify the Router about the change.
  */
 export function navigate(to: string) {
-  window.history.pushState({}, "", to);
-  window.dispatchEvent(new Event(EVENTS.PUSHSTATE));
+  if (typeof window === "undefined") return;
+  window.history.pushState({}, "", to); // Update the URL without reloading the page
+  window.dispatchEvent(new Event(EVENTS.NAVIGATE)); // Emit event to listening router.
 }

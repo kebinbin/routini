@@ -1,8 +1,9 @@
 {
   "name": "routini",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A minimal TypeScript-first router for React",
   "type": "module",
+  "sideEffects": false,
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -23,7 +24,13 @@
   ],
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch"
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "check:exports": "publint",
+    "prepublishOnly": "npm run typecheck && npm run lint && npm test && npm run build && npm run check:exports"
   },
   "peerDependencies": {
     "react": ">=18",
@@ -33,9 +40,17 @@
     "path-to-regexp": "8.4.2"
   },
   "devDependencies": {
-    "@types/node": "^24.0.0",
+    "@eslint/js": "^10.0.1",
+    "@testing-library/react": "^16.3.2",
     "@types/react": "^19.2.14",
+    "eslint": "^10.4.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.6.0",
+    "happy-dom": "^20.9.0",
+    "publint": "^0.3.21",
     "tsup": "^8.0.0",
-    "typescript": "~6.0.2"
+    "typescript": "~6.0.2",
+    "typescript-eslint": "^8.59.4",
+    "vitest": "^4.1.6"
   }
 }

@@ -7,3 +7,5 @@ export function Navigate({ to }: { to: string }) {
   }, [to]);
   return null;
 }
+
+Navigate.displayName = "Navigate";

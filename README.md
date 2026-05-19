@@ -1,7 +1,6 @@
 # routini
 
-A minimal Typescript-first router for React.
-A tiny, TypeScript-first React router with lazy loading built in.
+A tiny, TypeScript-first router for React.
 
 ## Installation
 
@@ -235,3 +234,41 @@ No loaders, no actions, no data fetching — just routing.
 - [ ] SSR support via `ssrPath` prop
 - [ ] View Transitions API support
 - [ ] `@routini/vite-plugin` for file-based routing
+
+## Development
+
+This is an npm-workspaces monorepo. The library lives in `packages/routini`; the demo site in `examples/website`.
+
+### Common commands
+
+Run from the repo root:
+
+| Command | What it does |
+| --- | --- |
+| `npm install` | Installs every workspace |
+| `npm run build` | Builds the library (`tsup`) |
+| `npm run dev:package` | Rebuilds the library on change |
+| `npm run dev:website` | Starts the demo Vite dev server |
+| `npm test` | Runs Vitest across workspaces |
+| `npm run lint -w packages/routini` | Lints the library |
+| `npm run typecheck -w packages/routini` | Type-checks the library |
+
+Open two terminals for the typical workflow: `npm run dev:package` and `npm run dev:website`.
+
+### Releasing
+
+Versioning + changelogs are managed by [Changesets](https://github.com/changesets/changesets) in PR-only mode (no `NPM_TOKEN` stored in GitHub — publishes are run manually from a clean checkout).
+
+For any user-visible change:
+
+1. After making your changes on a branch, run `npx changeset` from the repo root.
+2. Choose the bump type (`patch` for fixes, `minor` for additions, `major` for breaking changes) and write a short, user-facing summary — this becomes the changelog entry.
+3. Commit the generated `.changeset/*.md` file with your PR.
+4. When PRs with changesets land on `main`, the release workflow opens (or updates) a "Version Packages" PR that bumps `package.json` and updates `CHANGELOG.md`.
+5. Merging that PR is the signal to publish. From a clean checkout: `npm run build && cd packages/routini && npm publish`.
+
+Internal-only changes (refactors with no consumer impact) don't need a changeset.
+
+### Known issues
+
+- **`@arethetypeswrong/cli` crashes locally** on this maintainer's machine with `Cannot read properties of undefined (reading 'filename')`, reproducible across multiple versions and on every package (including third-party packages pulled fresh from npm). The crash is environmental, not package-related. We run `attw` in the **CI workflow only** so PRs still get type-correctness checks, and have left it out of local devDeps + `check:exports`. Restore locally once the environmental issue is resolved.

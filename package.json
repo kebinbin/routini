@@ -10,7 +10,8 @@
   "scripts": {
     "build": "npm run build -w packages/routini",
     "dev:package": "npm run dev -w packages/routini",
-    "dev:website": "npm run dev -w examples/website"
+    "dev:website": "npm run dev -w examples/website",
+    "test": "npm run test --workspaces --if-present"
   },
   "repository": {
     "type": "git",
@@ -22,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/kebinbin/routini/issues"
   },
-  "homepage": "https://github.com/kebinbin/routini#readme"
+  "homepage": "https://github.com/kebinbin/routini#readme",
+  "devDependencies": {
+    "@changesets/cli": "^2.31.0"
+  }
 }

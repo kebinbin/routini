@@ -19,3 +19,5 @@ export function Link({ target, to, ...props }: LinkProps) {
 
   return <a onClick={handleClick} href={to} target={target} {...props} />;
 }
+
+Link.displayName = "Link";

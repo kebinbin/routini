@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/static-components */
 import { useEffect, useState, Children, lazy, Suspense } from "react";
-import { match } from "path-to-regexp";
 import { EVENTS } from "../consts";
 import { RouterContext } from "../context/RouterContext";
+import { matchRoute } from "../utils/matchRoute";
+import { isRouteType } from "./Route";
 
 export type DynamicImport = () => Promise<{ default: React.ComponentType }>;
 
@@ -17,6 +18,8 @@ export interface RouterProps {
   routes?: RouteDefinition[];
   loading?: React.ReactNode;
   children?: React.ReactNode;
+  /** Initial path to use during server-side rendering (where `window` is undefined). */
+  ssrPath?: string;
 }
 
 const lazyComponentsCache = new WeakMap<
@@ -42,36 +45,22 @@ const resolveLazyComponent = (dynamicImport: DynamicImport) => {
   return lazyComponent;
 };
 
-function matchRoute(routes: RouteDefinition[], currentPath: string) {
-  let catchAll: RouteDefinition | undefined;
-
-  for (const route of routes) {
-    // Save * route as fallback, always try specific routes first
-    if (route.path === "*") {
-      catchAll = route;
-      continue;
-    }
-    if (route.path === currentPath) return { route, params: {} };
-    const matchedUrl = match(route.path, { decode: decodeURIComponent });
-    const matched = matchedUrl(currentPath);
-    if (matched)
-      return { route, params: matched.params as Record<string, string> };
-  }
-
-  // No specific route matched — use catch-all if defined
-  if (catchAll) return { route: catchAll, params: {} };
-  return { route: undefined, params: {} };
-}
-
-export function Router({ routes = [], loading = null, children }: RouterProps) {
-  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+export function Router({
+  routes = [],
+  loading = null,
+  children,
+  ssrPath,
+}: RouterProps) {
+  const [currentPath, setCurrentPath] = useState(() =>
+    typeof window === "undefined" ? (ssrPath ?? "/") : window.location.pathname,
+  );
 
   useEffect(() => {
     const onLocationChange = () => setCurrentPath(window.location.pathname);
-    window.addEventListener(EVENTS.PUSHSTATE, onLocationChange);
+    window.addEventListener(EVENTS.NAVIGATE, onLocationChange);
     window.addEventListener(EVENTS.POPSTATE, onLocationChange);
     return () => {
-      window.removeEventListener(EVENTS.PUSHSTATE, onLocationChange);
+      window.removeEventListener(EVENTS.NAVIGATE, onLocationChange);
       window.removeEventListener(EVENTS.POPSTATE, onLocationChange);
     };
   }, []);
@@ -79,8 +68,7 @@ export function Router({ routes = [], loading = null, children }: RouterProps) {
   const childrenRoutes: RouteDefinition[] = [];
   Children.forEach(children, (child) => {
     const { props, type } = child as React.ReactElement;
-    const { name } = type as { name: string };
-    if (name === "Route") {
+    if (isRouteType(type)) {
       childrenRoutes.push(props as RouteDefinition);
     }
   });
@@ -126,3 +114,5 @@ export function Router({ routes = [], loading = null, children }: RouterProps) {
     </RouterContext.Provider>
   );
 }
+
+Router.displayName = "Router";
