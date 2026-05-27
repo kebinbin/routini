@@ -3,6 +3,7 @@ import { act, render, screen, waitFor } from "@testing-library/react";
 import { Router } from "./Router";
 import { Route } from "./Route";
 import { Outlet } from "./Outlet";
+import { Navigate } from "./Navigate";
 import { navigate } from "../utils/navigate";
 import { EVENTS } from "../consts";
 import type { RouteDefinition } from "./Router";
@@ -129,6 +130,24 @@ describe("Router", () => {
     expect(warnSpy).toHaveBeenCalledWith(
       expect.stringContaining('No route matched "/missing"'),
     );
+  });
+
+  // Regression test: prior to the useSyncExternalStore refactor, this case
+  // failed because child effects (Navigate's useEffect) ran before the parent
+  // Router's useEffect attached its event listener. The URL changed but
+  // Router's state did not, leaving the stale <Navigate /> in the Outlet.
+  // useSyncExternalStore eliminates the race because React reconciles the
+  // snapshot after every commit.
+  it("handles a <Navigate /> in the initial route tree (no race on mount)", async () => {
+    const routes: RouteDefinition[] = [
+      { path: "/", component: () => <Navigate to="/about" /> },
+      { path: "/about", component: About },
+    ];
+    render(<Router routes={routes} />);
+    await waitFor(() => {
+      expect(screen.getByText("about page")).toBeTruthy();
+    });
+    expect(window.location.pathname).toBe("/about");
   });
 
   it("throws when a lazy module has no default export", async () => {
