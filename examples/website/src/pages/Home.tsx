@@ -1,18 +1,55 @@
 import { Link } from "routini";
+import { ArrowRight } from "lucide-react";
+import { InstallCommand } from "../components/InstallCommand";
+import { Logo } from "../components/Logo";
+import { WhyRoutini } from "../components/WhyRoutini";
+import { QuickStart } from "../components/QuickStart";
+import { ApiAtAGlance } from "../components/ApiAtAGlance";
+import { BuiltWith } from "../components/BuiltWith";
+import { langPath, useLang, useT } from "../lib/i18n";
 
 export default function Home() {
-  const lang = "en"; // This could be dynamic based on user preference or browser settings
-  const search = "123456"; // Example search query
-  const productId = "567"; // Example product ID
+  const lang = useLang();
+  const t = useT();
+
   return (
     <>
-      <h1>Home</h1>
-      <Link to={`/${lang}/about`}>Go to about in {lang}</Link>
-      <Link to={`/search/${search}`}>Search for {search}</Link>
-      <Link to={`/product/${productId}`}>Go to product {productId}</Link>
-      <Link to="/dashboard">Go to dashboard (protected route)</Link>
-      <Link to={`/login`}>Login</Link>
-      <Link to="/contact">Contact us</Link>
+      <section className="-mt-(--nav-h) mx-auto flex min-h-dvh w-full max-w-6xl flex-col items-center justify-center px-6 py-12">
+        <div className="flex flex-col items-center text-center">
+          <Logo animated className="mb-10 h-12 w-auto text-bone-dim md:h-22" />
+
+          <p className="mb-6 font-mono text-xs uppercase tracking-[0.2em] text-bone-faint">
+            {t.home.pretitle}
+          </p>
+
+          <h1 className="text-balance text-5xl font-medium leading-[1.05] tracking-tight md:text-7xl">
+            {t.home.title1}
+            <br />
+            <span className="text-bone-dim">{t.home.title2}</span>
+          </h1>
+
+          <p className="text-balance mt-8 max-w-xl text-lg text-bone-dim md:text-xl">
+            {t.home.sub}
+          </p>
+
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              to={langPath(lang, "/docs")}
+              className="group inline-flex items-center gap-2 bg-accent px-5 py-3 font-mono text-sm text-white transition-colors hover:bg-accent-dim"
+            >
+              {t.home.ctaDocs}
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+
+            <InstallCommand />
+          </div>
+        </div>
+      </section>
+
+      <WhyRoutini />
+      <QuickStart />
+      <ApiAtAGlance />
+      <BuiltWith />
     </>
   );
 }

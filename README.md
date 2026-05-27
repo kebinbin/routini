@@ -2,6 +2,8 @@
 
 A tiny, TypeScript-first router for React.
 
+> Small to ship, solid to type, scoped to one job, free of setup ceremony.
+
 ## Installation
 
 ```bash
@@ -221,6 +223,18 @@ Only use `component` for routes that must be eagerly loaded.
 **Minimal API.** Routini has 7 exports and nothing more.
 No loaders, no actions, no data fetching — just routing.
 
+## What's not in scope
+
+Routini is intentionally small. These features aren't planned — if you need them, reach for a router that does.
+
+| Feature | Use instead |
+| --- | --- |
+| Data loaders & actions | react-router, tanstack router |
+| Nested layouts | react-router, tanstack router |
+| File-based routing | tanstack router, Remix |
+| Server-side rendering | planned via `ssrPath` (see Roadmap) |
+| Hash & memory routing | react-router |
+
 ## Performance
 
 - Lazy loading built in — no boilerplate
@@ -238,6 +252,19 @@ No loaders, no actions, no data fetching — just routing.
 ## Development
 
 This is an npm-workspaces monorepo. The library lives in `packages/routini`; the demo site in `examples/website`.
+
+### Prerequisites
+
+The repo pins a Node version in [`.nvmrc`](.nvmrc) so local builds, contributor machines, and CI all run the same version. If you use [nvm](https://github.com/nvm-sh/nvm), [fnm](https://github.com/Schniz/fnm), or [Volta](https://volta.sh), they will read this file automatically:
+
+```bash
+# nvm or fnm
+nvm use            # or: fnm use
+
+# Volta picks it up automatically when you cd into the repo
+```
+
+The root `package.json` also declares `"engines": { "node": ">=20.19.0" }`, so npm will warn if you install with an older Node. The minimum is driven by Vitest's `rolldown` dependency.
 
 ### Common commands
 

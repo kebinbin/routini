@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/static-components */
-import { useEffect, useState, Children, lazy, Suspense } from "react";
+import { useSyncExternalStore, Children, lazy, Suspense } from "react";
 import { EVENTS } from "../consts";
 import { RouterContext } from "../context/RouterContext";
 import { matchRoute } from "../utils/matchRoute";
@@ -27,6 +27,23 @@ const lazyComponentsCache = new WeakMap<
   React.LazyExoticComponent<React.ComponentType>
 >();
 
+/**
+ * Subscribe to URL changes. Module-level so its identity is stable across
+ * renders (otherwise useSyncExternalStore would re-subscribe every render).
+ */
+function subscribeToLocation(callback: () => void): () => void {
+  window.addEventListener(EVENTS.NAVIGATE, callback);
+  window.addEventListener(EVENTS.POPSTATE, callback);
+  return () => {
+    window.removeEventListener(EVENTS.NAVIGATE, callback);
+    window.removeEventListener(EVENTS.POPSTATE, callback);
+  };
+}
+
+function getClientPathname(): string {
+  return window.location.pathname;
+}
+
 const resolveLazyComponent = (dynamicImport: DynamicImport) => {
   if (lazyComponentsCache.has(dynamicImport))
     return lazyComponentsCache.get(dynamicImport);
@@ -51,19 +68,17 @@ export function Router({
   children,
   ssrPath,
 }: RouterProps) {
-  const [currentPath, setCurrentPath] = useState(() =>
-    typeof window === "undefined" ? (ssrPath ?? "/") : window.location.pathname,
+  // React 18+ subscribes to the URL via useSyncExternalStore. Compared to the
+  // older useState + useEffect pattern, this eliminates a race where a child
+  // <Navigate /> in the initial tree fires its effect (mutating window.location)
+  // *before* the parent Router's effect attaches its listener — the URL would
+  // change but Router's state would not. useSyncExternalStore re-reads the
+  // snapshot after every commit, so any such drift is caught automatically.
+  const currentPath = useSyncExternalStore(
+    subscribeToLocation,
+    getClientPathname,
+    () => ssrPath ?? "/",
   );
-
-  useEffect(() => {
-    const onLocationChange = () => setCurrentPath(window.location.pathname);
-    window.addEventListener(EVENTS.NAVIGATE, onLocationChange);
-    window.addEventListener(EVENTS.POPSTATE, onLocationChange);
-    return () => {
-      window.removeEventListener(EVENTS.NAVIGATE, onLocationChange);
-      window.removeEventListener(EVENTS.POPSTATE, onLocationChange);
-    };
-  }, []);
 
   const childrenRoutes: RouteDefinition[] = [];
   Children.forEach(children, (child) => {

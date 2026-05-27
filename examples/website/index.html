@@ -1,10 +1,26 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>website</title>
+    <title>routini · a tiny React router</title>
+    <script>
+      // No-flash theme bootstrap: read saved preference (or fall back to OS) and
+      // set [data-theme] BEFORE React mounts. Must stay inline + synchronous.
+      (function () {
+        try {
+          var saved = localStorage.getItem("routini-theme");
+          var theme =
+            saved ||
+            (window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: light)").matches
+              ? "light"
+              : "dark");
+          document.documentElement.setAttribute("data-theme", theme);
+        } catch (_) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
