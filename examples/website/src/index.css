@@ -1,99 +1,98 @@
-:root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+@import "tailwindcss";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
 
-  --sans: system-ui, "Segoe UI", Roboto, sans-serif;
-  --heading: system-ui, "Segoe UI", Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+@theme {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, "SF Mono", Menlo, monospace;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* Dark theme — refined minimalism, Vercel-flat */
+  --color-ink: #0a0a0a; /* page background */
+  --color-ink-2: #111111; /* raised surface */
+  --color-ink-3: #1f1f1f; /* hairline borders */
+  --color-bone: #ededed; /* primary text */
+  --color-bone-dim: #8a8a8a; /* secondary text */
+  --color-bone-faint: #4a4a4a; /* tertiary text, captions */
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  /* Single warm accent — terracotta. Same hue across themes. */
+  --color-accent: #c4553a;
+  --color-accent-dim: #a8442f;
 }
 
-@media (prefers-color-scheme: dark) {
+/* Light theme overrides — applied when [data-theme="light"] is on <html>. */
+@layer base {
   :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+    /* py-4 (32px) + nav content height (20px) = 52px = 3.25rem.
+       Single source of truth — reference as var(--nav-h) everywhere. */
+    --nav-h: 3.25rem;
+  }
+
+  [data-theme="light"] {
+    --color-ink: #ffffff;
+    --color-ink-2: #fafafa;
+    --color-ink-3: #e5e5e5;
+    --color-bone: #0a0a0a;
+    --color-bone-dim: #525252;
+    --color-bone-faint: #a3a3a3;
+  }
+
+  html {
+    background: var(--color-ink);
+  }
+
+  html[data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  html[data-theme="light"] {
+    color-scheme: light;
+  }
+
+  body {
+    background: var(--color-ink);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11"; /* Geist stylistic alternates */
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: #ffffff;
   }
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+@utility text-balance {
+  text-wrap: balance;
 }
 
-body {
+/*
+ * Shiki dual-theme output: Shiki emits two color sets per span as CSS
+ * variables (--shiki-light, --shiki-dark, plus -bg variants). We pick which
+ * to apply based on the active [data-theme] on <html>. This lets light/dark
+ * switching happen instantly without re-running the highlighter.
+ */
+.code-block-shiki .shiki,
+.code-block-shiki .shiki code {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem; /* text-sm-ish */
+  line-height: 1.6;
+  padding: 1rem;
   margin: 0;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+/* Use the theme's per-token colors for text, but override the block background
+ * with our own --color-ink-2 so the code block sits naturally in the palette
+ * instead of fighting it with the theme's native bg. */
+.code-block-shiki .shiki {
+  background-color: var(--color-ink-2) !important;
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
+html[data-theme="dark"] .code-block-shiki .shiki span {
+  color: var(--shiki-dark) !important;
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+html[data-theme="light"] .code-block-shiki .shiki span {
+  color: var(--shiki-light) !important;
 }
