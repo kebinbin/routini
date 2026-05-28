@@ -1,5 +1,5 @@
 ---
-"routini": minor
+"routini": patch
 ---
 
 Add `ssrPath` prop to `<Router>` for server-side rendering support.
