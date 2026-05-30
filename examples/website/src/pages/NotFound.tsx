@@ -6,7 +6,7 @@ export default function NotFound() {
   const t = useT();
 
   return (
-    <section className="mx-auto flex max-w-6xl flex-col items-start px-6 py-24">
+    <section className="mx-auto flex max-w-7xl flex-col items-start px-6 py-24">
       <p className="mb-6 font-mono text-xs uppercase tracking-[0.2em] text-bone-faint">
         {t.notFound.pretitle}
       </p>

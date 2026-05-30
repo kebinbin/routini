@@ -22,7 +22,7 @@ export default function App() {
 
 function PageLoading() {
   return (
-    <div className="mx-auto max-w-6xl px-6 py-24 font-mono text-sm text-bone-faint">
+    <div className="mx-auto max-w-7xl px-6 py-24 font-mono text-sm text-bone-faint">
       loading…
     </div>
   );

@@ -78,8 +78,14 @@
   font-family: var(--font-mono);
   font-size: 0.8125rem; /* text-sm-ish */
   line-height: 1.6;
-  padding: 1rem;
   margin: 0;
+}
+
+/* Padding lives on the <pre> only. Shiki's <code> is inline, so giving it
+ * left-padding would indent just the first line (the padding applies before
+ * the first line box and is ignored on subsequent ones). */
+.code-block-shiki .shiki {
+  padding: 1rem 1.5rem;
 }
 
 /* Use the theme's per-token colors for text, but override the block background

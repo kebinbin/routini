@@ -18,7 +18,7 @@ export function Nav() {
 
   return (
     <header className="sticky top-0 z-10 border-b border-ink-3 bg-ink">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <Link
           to={langPath(lang)}
           className="group inline-flex items-center gap-2.5 font-mono text-sm tracking-tight text-bone hover:text-accent"

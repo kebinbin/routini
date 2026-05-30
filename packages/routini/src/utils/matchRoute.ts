@@ -1,4 +1,4 @@
-import { match } from "path-to-regexp";
+import { parse } from "regexparam";
 import type { RouteDefinition } from "../components/Router";
 
 export interface MatchResult {
@@ -18,10 +18,20 @@ export function matchRoute(
       continue;
     }
     if (route.path === currentPath) return { route, params: {} };
-    const matchedUrl = match(route.path, { decode: decodeURIComponent });
-    const matched = matchedUrl(currentPath);
-    if (matched)
-      return { route, params: matched.params as Record<string, string> };
+
+    // regexparam compiles the pattern to a RegExp + ordered key names; we run
+    // the match ourselves. Unlike path-to-regexp it doesn't decode, so each
+    // captured segment is decodeURIComponent'd to preserve previous behavior.
+    const { keys, pattern } = parse(route.path);
+    const matched = pattern.exec(currentPath);
+    if (matched) {
+      const params: Record<string, string> = {};
+      for (let i = 0; i < keys.length; i++) {
+        const value = matched[i + 1];
+        if (value !== undefined) params[keys[i]] = decodeURIComponent(value);
+      }
+      return { route, params };
+    }
   }
 
   if (catchAll) return { route: catchAll, params: {} };
