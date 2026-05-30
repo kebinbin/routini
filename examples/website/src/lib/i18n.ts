@@ -34,19 +34,19 @@ const dict = {
         "Small to ship, solid to type, scoped to one job, free of setup ceremony.",
       size: {
         headline: "Under 2 KB",
-        body: "The whole library — components, hooks, the navigate utility — ships in 1.8 KB gzipped. Drop it in without thinking about your bundle budget.",
+        body: "Components, hooks, and the navigate utility — the whole library ships in 1.4 KB gzipped.",
       },
       types: {
         headline: "TypeScript from day one",
-        body: "Written in TypeScript, not retrofitted with .d.ts files. useParams<T>() is generic, every export is typed, route definitions are validated at compile time.",
+        body: "Written in TypeScript, not retrofitted. useParams<T>() is generic and every export is fully typed.",
       },
       scope: {
         headline: "Routing, not a framework",
-        body: "Some routers have grown into full frameworks — loaders, actions, deferred data, codegen. Routini does one thing: match URLs to components. Your data layer — React Query, SWR, fetch — stays yours.",
+        body: "routini matches URLs to components — nothing more. Your data layer — SWR, React Query, fetch — stays yours.",
       },
       config: {
         headline: "Zero configuration",
-        body: "No config file, no codegen step, no Vite plugin. Install, define a routes array, and you're done — no build pipeline to bend around the router.",
+        body: "No config file, no codegen, no Vite plugin. Install, define a routes array, and you're done.",
       },
     },
     quickStart: {
@@ -55,6 +55,7 @@ const dict = {
         "Define a routes array, render <Router />, link with <Link />. That's the whole mental model.",
       captions: {
         setup: "Setup",
+        routeChildren: "<Route> JSX children",
         lazyRoutes: "Lazy routes",
         typedParams: "Typed URL params",
         navigateFromCode: "Navigate from code",
@@ -157,19 +158,19 @@ const dict = {
         "Ligera al enviar, robusta en tipado, enfocada en una sola tarea, sin ceremonia de configuración.",
       size: {
         headline: "Menos de 2 KB",
-        body: "Toda la librería — componentes, hooks y la utilidad navigate — pesa 1.8 KB comprimida. Inclúyela sin preocuparte por el tamaño de tu bundle.",
+        body: "Componentes, hooks y la utilidad navigate — toda la librería pesa 1.4 KB comprimida.",
       },
       types: {
         headline: "TypeScript desde el primer día",
-        body: "Escrita en TypeScript, no añadida después con archivos .d.ts. useParams<T>() es genérico, cada export está tipado y las definiciones de rutas se validan en tiempo de compilación.",
+        body: "Escrita en TypeScript, no añadida después. useParams<T>() es genérico y cada export está completamente tipado.",
       },
       scope: {
         headline: "Routing, no un framework",
-        body: "Algunos routers han crecido hasta convertirse en frameworks completos — loaders, actions, deferred data, codegen. Routini hace una sola cosa: emparejar URLs con componentes. Tu capa de datos — React Query, SWR, fetch — sigue siendo tuya.",
+        body: "routini empareja URLs con componentes — nada más. Tu capa de datos — SWR, React Query, fetch — sigue siendo tuya.",
       },
       config: {
         headline: "Cero configuración",
-        body: "Sin archivo de configuración, sin paso de codegen, sin plugin de Vite. Instala, define un array de rutas y listo — sin un pipeline de build que tengas que doblar alrededor del router.",
+        body: "Sin archivo de configuración, sin codegen, sin plugin de Vite. Instala, define un array de rutas y listo.",
       },
     },
     quickStart: {
@@ -178,6 +179,7 @@ const dict = {
         "Define un array de rutas, renderiza <Router />, navega con <Link />. Ese es todo el modelo mental.",
       captions: {
         setup: "Setup",
+        routeChildren: "<Route> como hijos JSX",
         lazyRoutes: "Rutas con carga diferida",
         typedParams: "Params tipados",
         navigateFromCode: "Navegar desde código",

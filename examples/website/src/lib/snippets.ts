@@ -12,16 +12,14 @@
  *
  * When you add a snippet:
  * 1. Add an entry here keyed by `SnippetId`
- * 2. Add the matching caption to `i18n.ts` under `quickStart.captions`
- *    (both `en` and `es`)
- * 3. If it should appear in the Quick Start tab list, add the id to
- *    `QUICK_START_ORDER` in `components/QuickStart.tsx`
+ * 2. Render it via `<CodeBlock id={...} caption={...} />`. Captions are passed
+ *    in by the consuming component (e.g. a filename like `App.tsx`); code
+ *    identifiers and filenames are not translated.
  */
 export const snippets = {
-  setup: `import { Router, Link } from "routini";
+  setup: `import { Router } from "routini";
+import Home from "./Home";
 
-// Routes outside the component so the lazy() cache
-// keeps a stable identity between renders.
 const routes = [
   { path: "/", component: Home },
   { path: "/products/:id", lazy: () => import("./Product") },
@@ -31,13 +29,19 @@ const routes = [
 export default function App() {
   return <Router routes={routes} />;
 }
+`,
 
-function Home() {
+  routeChildren: `import { Router, Route } from "routini";
+
+// JSX form — same routing, declarative.
+// Best for eager component routes.
+export default function App() {
   return (
-    <main>
-      <h1>Welcome</h1>
-      <Link to="/products/42">View product 42</Link>
-    </main>
+    <Router>
+      <Route path="/" component={Home} />
+      <Route path="/about" component={About} />
+      <Route path="*" component={NotFound} />
+    </Router>
   );
 }
 `,
@@ -74,6 +78,27 @@ function LogoutButton() {
 function Breadcrumb() {
   const { path } = useLocation();
   return <span>You are at {path}</span>;
+}
+`,
+
+  apiSurface: `// Seven exports. That's the entire API.
+import {
+  Router, Route, Link, Outlet,
+  Navigate, useLocation, useParams,
+} from "routini";
+`,
+
+  dataLayer: `import { useParams } from "routini";
+import useSWR from "swr";
+
+const fetcher = (u) => fetch(u).then(r => r.json());
+
+function Product() {
+  const { id } = useParams();      // routini → the URL
+  const { data } = useSWR(         // you → the data
+    \`/api/products/\${id}\`, fetcher);
+
+  return <h1>{data?.name}</h1>;
 }
 `,
 } as const;

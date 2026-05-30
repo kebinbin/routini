@@ -3,7 +3,6 @@ import { ArrowRight } from "lucide-react";
 import { InstallCommand } from "../components/InstallCommand";
 import { Logo } from "../components/Logo";
 import { WhyRoutini } from "../components/WhyRoutini";
-import { QuickStart } from "../components/QuickStart";
 import { ApiAtAGlance } from "../components/ApiAtAGlance";
 import { BuiltWith } from "../components/BuiltWith";
 import { langPath, useLang, useT } from "../lib/i18n";
@@ -14,7 +13,7 @@ export default function Home() {
 
   return (
     <>
-      <section className="-mt-(--nav-h) mx-auto flex min-h-dvh w-full max-w-6xl flex-col items-center justify-center px-6 py-12">
+      <section className="mx-auto flex w-full max-w-7xl flex-col items-center px-6 py-20 md:py-28">
         <div className="flex flex-col items-center text-center">
           <Logo animated className="mb-10 h-12 w-auto text-bone-dim md:h-22" />
 
@@ -22,7 +21,7 @@ export default function Home() {
             {t.home.pretitle}
           </p>
 
-          <h1 className="text-balance text-5xl font-medium leading-[1.05] tracking-tight md:text-7xl">
+          <h1 className="text-balance text-5xl font-medium leading-none tracking-tight md:text-7xl">
             {t.home.title1}
             <br />
             <span className="text-bone-dim">{t.home.title2}</span>
@@ -47,7 +46,6 @@ export default function Home() {
       </section>
 
       <WhyRoutini />
-      <QuickStart />
       <ApiAtAGlance />
       <BuiltWith />
     </>

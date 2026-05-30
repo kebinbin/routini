@@ -7,7 +7,7 @@ export function ApiAtAGlance() {
 
   return (
     <section className="border-t border-ink-3">
-      <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
+      <div className="mx-auto max-w-7xl px-6 py-20 md:py-28">
         <p className="mb-6 text-center font-mono text-xs uppercase tracking-[0.2em] text-bone-faint">
           {t.api.pretitle}
         </p>
