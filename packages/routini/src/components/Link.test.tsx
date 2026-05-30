@@ -78,4 +78,23 @@ describe("Link", () => {
     expect(window.location.pathname).toBe("/about");
     window.removeEventListener(EVENTS.NAVIGATE, handler);
   });
+
+  it("does not call navigate for a pure hash link", () => {
+    const handler = vi.fn();
+    window.addEventListener(EVENTS.NAVIGATE, handler);
+    const { container } = render(<Link to="#section">jump</Link>);
+    fireEvent.click(container.querySelector("a")!, { button: 0 });
+    expect(handler).not.toHaveBeenCalled();
+    window.removeEventListener(EVENTS.NAVIGATE, handler);
+  });
+
+  it("navigates to the path portion of a path+hash link", () => {
+    const handler = vi.fn();
+    window.addEventListener(EVENTS.NAVIGATE, handler);
+    const { container } = render(<Link to="/docs#api">api</Link>);
+    fireEvent.click(container.querySelector("a")!, { button: 0 });
+    expect(handler).toHaveBeenCalledTimes(1);
+    expect(window.location.pathname).toBe("/docs");
+    window.removeEventListener(EVENTS.NAVIGATE, handler);
+  });
 });
