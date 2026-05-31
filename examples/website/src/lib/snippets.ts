@@ -134,6 +134,61 @@ const routes = [
   { path: "/home", component: Home },
 ];
 `,
+
+  codeSplit: `import { Router } from "routini";
+import Home from "./Home";
+
+// Home is eager (above the fold); everything else is
+// code-split and only fetched when its route matches.
+const routes = [
+  { path: "/", component: Home },
+  {
+    path: "/dashboard",
+    lazy: () => import("./Dashboard"),
+    loading: <Skeleton />, // per-route fallback
+  },
+  { path: "*", lazy: () => import("./NotFound") },
+];
+
+export default () => <Router routes={routes} />;
+`,
+
+  activeNav: `import { Router, Outlet, Link, useLocation } from "routini";
+
+function NavLink({ to, children }) {
+  const { path } = useLocation();
+  const active = path === to;
+  return (
+    <Link to={to} aria-current={active ? "page" : undefined}>
+      {children}
+    </Link>
+  );
+}
+
+export default function App() {
+  return (
+    <Router routes={routes}>
+      <header>
+        <NavLink to="/">Home</NavLink>
+        <NavLink to="/about">About</NavLink>
+      </header>
+      <Outlet />
+    </Router>
+  );
+}
+`,
+
+  redirects404: `import { Navigate } from "routini";
+import Home from "./Home";
+
+const routes = [
+  // Send "/" to the real landing page.
+  { path: "/", component: () => <Navigate to="/home" /> },
+  { path: "/home", component: Home },
+  // Anything unmatched falls through to the 404.
+  { path: "*", lazy: () => import("./NotFound") },
+];
+`,
 } as const;
 
 export type SnippetId = keyof typeof snippets;

@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
 import { Link } from "routini";
 import { CodeBlock } from "../components/CodeBlock";
 import { langPath, useLang } from "../lib/i18n";
 import { useDocsT } from "../lib/i18n.docs";
+import { useActiveSection } from "../lib/useActiveSection";
 import type { SnippetId } from "../lib/snippets";
 
 const GROUP_ORDER = ["components", "hooks", "utility"] as const;
@@ -96,54 +96,12 @@ interface DocsEntryContent {
 
 const ANCHORS = DOCS_ENTRIES.map((e) => e.anchor);
 
-// A heading counts as "reached" once its top scrolls within this many px of the
-// viewport top — just below the sticky nav. Smaller = activates later (heading
-// must be closer to the very top); larger = activates earlier.
-const ACTIVE_LINE = 96;
-
-/**
- * Tracks which section the reader is on, for sidebar highlighting: the active
- * section is the last one whose heading has scrolled up past ACTIVE_LINE. This
- * "you've reached this heading" model is predictable for tall sections. A
- * scroll listener throttled with requestAnimationFrame — negligible churn.
- */
-function useActiveSection(): string {
-  const [active, setActive] = useState<string>(ANCHORS[0] ?? "");
-
-  useEffect(() => {
-    let raf = 0;
-    const update = () => {
-      let current = ANCHORS[0] ?? "";
-      for (const id of ANCHORS) {
-        const el = document.getElementById(id);
-        if (!el) continue;
-        if (el.getBoundingClientRect().top <= ACTIVE_LINE) current = id;
-        else break;
-      }
-      setActive(current);
-    };
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(update);
-    };
-
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
-
-  return active;
-}
-
 export default function Docs() {
   const lang = useLang();
   const t = useDocsT();
   const docsPath = langPath(lang, "/docs");
   const content = t.docsContent as Record<string, DocsEntryContent>;
-  const active = useActiveSection();
+  const active = useActiveSection(ANCHORS);
 
   const groups = GROUP_ORDER.map((key) => ({
     key,
