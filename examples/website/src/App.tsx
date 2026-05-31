@@ -1,7 +1,7 @@
 import { Navigate, Router, type RouteDefinition } from "routini";
 import { Layout } from "./components/Layout";
 import { Logo } from "./components/Logo";
-import { DocsSkeleton } from "./components/DocsSkeleton";
+import { PageSkeleton } from "./components/PageSkeleton";
 import { DEFAULT_LANG } from "./lib/i18n";
 import Home from "./pages/Home";
 
@@ -14,9 +14,13 @@ const routes: RouteDefinition[] = [
   {
     path: "/:lang/docs",
     lazy: () => import("./pages/Docs"),
-    loading: <DocsSkeleton />,
+    loading: <PageSkeleton sidebarGroups={[5, 2, 1]} blocks={2} />,
   },
-  { path: "/:lang/examples", lazy: () => import("./pages/Examples") },
+  {
+    path: "/:lang/examples",
+    lazy: () => import("./pages/Examples"),
+    loading: <PageSkeleton blocks={3} />,
+  },
   { path: "*", lazy: () => import("./pages/NotFound") },
 ];
 
