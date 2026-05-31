@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link } from "routini";
 import { CodeBlock } from "../components/CodeBlock";
 import { langPath, useLang } from "../lib/i18n";
@@ -93,11 +94,56 @@ interface DocsEntryContent {
   notes?: readonly string[];
 }
 
+const ANCHORS = DOCS_ENTRIES.map((e) => e.anchor);
+
+// A heading counts as "reached" once its top scrolls within this many px of the
+// viewport top — just below the sticky nav. Smaller = activates later (heading
+// must be closer to the very top); larger = activates earlier.
+const ACTIVE_LINE = 96;
+
+/**
+ * Tracks which section the reader is on, for sidebar highlighting: the active
+ * section is the last one whose heading has scrolled up past ACTIVE_LINE. This
+ * "you've reached this heading" model is predictable for tall sections. A
+ * scroll listener throttled with requestAnimationFrame — negligible churn.
+ */
+function useActiveSection(): string {
+  const [active, setActive] = useState<string>(ANCHORS[0] ?? "");
+
+  useEffect(() => {
+    let raf = 0;
+    const update = () => {
+      let current = ANCHORS[0] ?? "";
+      for (const id of ANCHORS) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        if (el.getBoundingClientRect().top <= ACTIVE_LINE) current = id;
+        else break;
+      }
+      setActive(current);
+    };
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  return active;
+}
+
 export default function Docs() {
   const lang = useLang();
   const t = useDocsT();
   const docsPath = langPath(lang, "/docs");
   const content = t.docsContent as Record<string, DocsEntryContent>;
+  const active = useActiveSection();
 
   const groups = GROUP_ORDER.map((key) => ({
     key,
@@ -124,16 +170,24 @@ export default function Docs() {
                     {group.label}
                   </p>
                   <ul className="flex flex-col border-l border-ink-3">
-                    {group.entries.map((entry) => (
-                      <li key={entry.anchor}>
-                        <Link
-                          to={`${docsPath}#${entry.anchor}`}
-                          className="-ml-px block border-l border-transparent py-1 pl-3 font-mono text-sm text-bone-dim transition-colors hover:border-bone-faint hover:text-bone"
-                        >
-                          {entry.name}
-                        </Link>
-                      </li>
-                    ))}
+                    {group.entries.map((entry) => {
+                      const isActive = entry.anchor === active;
+                      return (
+                        <li key={entry.anchor}>
+                          <Link
+                            to={`${docsPath}#${entry.anchor}`}
+                            aria-current={isActive ? "location" : undefined}
+                            className={`-ml-px block border-l py-1 pl-3 font-mono text-sm transition-colors ${
+                              isActive
+                                ? "border-accent text-bone"
+                                : "border-transparent text-bone-dim hover:border-bone-faint hover:text-bone"
+                            }`}
+                          >
+                            {entry.name}
+                          </Link>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               ))}
