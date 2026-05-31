@@ -21,7 +21,7 @@ export function InstallCommand() {
   return (
     <button
       onClick={copy}
-      aria-label={copied ? t.home.copied : t.home.copyInstall}
+      aria-label={copied ? t.install.copied : t.install.copy}
       className="group inline-flex items-center gap-3 border border-ink-3 bg-ink-2 px-4 py-3 font-mono text-sm text-bone-dim transition-colors hover:border-accent hover:text-bone"
     >
       <span className="text-bone-faint">$</span>

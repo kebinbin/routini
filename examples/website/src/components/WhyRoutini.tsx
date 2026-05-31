@@ -1,4 +1,4 @@
-import { useT } from "../lib/i18n";
+import { useHomeT } from "../lib/i18n.home";
 import { CodeBlock } from "./CodeBlock";
 import { BundleChart } from "./BundleChart";
 import type { SnippetId } from "../lib/snippets";
@@ -12,7 +12,7 @@ interface Feature {
 }
 
 export function WhyRoutini() {
-  const t = useT();
+  const t = useHomeT();
 
   // Order matters — the numbered markers (01, 02, 03, 04) follow this sequence.
   // Each cell pairs a claim with the visual that proves it.

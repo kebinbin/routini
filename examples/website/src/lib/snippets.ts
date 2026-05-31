@@ -101,6 +101,39 @@ function Product() {
   return <h1>{data?.name}</h1>;
 }
 `,
+
+  linkUsage: `import { Link } from "routini";
+
+function Nav() {
+  return (
+    <nav>
+      <Link to="/">Home</Link>
+      <Link to="/docs#api">API</Link>
+    </nav>
+  );
+}
+`,
+
+  outletLayout: `import { Router, Outlet } from "routini";
+
+export default function App() {
+  return (
+    <Router routes={routes}>
+      <Header />
+      <Outlet />
+      <Footer />
+    </Router>
+  );
+}
+`,
+
+  navigateRedirect: `import { Navigate } from "routini";
+
+const routes = [
+  { path: "/", component: () => <Navigate to="/home" /> },
+  { path: "/home", component: Home },
+];
+`,
 } as const;
 
 export type SnippetId = keyof typeof snippets;

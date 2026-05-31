@@ -72,6 +72,49 @@ describe("Router", () => {
     expect(screen.getByText("about page")).toBeTruthy();
   });
 
+  it("scrolls to the URL hash after a path+hash navigation", async () => {
+    const scrollSpy = vi.fn();
+    const original = Element.prototype.scrollIntoView;
+    Element.prototype.scrollIntoView = scrollSpy;
+
+    const Docs = () => <section id="api">api section</section>;
+    const routes: RouteDefinition[] = [
+      { path: "/", component: Home },
+      { path: "/docs", component: Docs },
+    ];
+    render(<Router routes={routes} />);
+    // No hash on the initial route — nothing should scroll yet.
+    expect(scrollSpy).not.toHaveBeenCalled();
+
+    act(() => {
+      navigate("/docs#api");
+    });
+
+    await waitFor(() => expect(scrollSpy).toHaveBeenCalledTimes(1));
+
+    Element.prototype.scrollIntoView = original;
+  });
+
+  it("scrolls to the hash on initial load (deep link, no Link involved)", async () => {
+    const scrollSpy = vi.fn();
+    const original = Element.prototype.scrollIntoView;
+    Element.prototype.scrollIntoView = scrollSpy;
+
+    // URL already carries the hash before the app mounts — as if typed into
+    // the address bar, refreshed, or followed from an external link.
+    window.history.replaceState({}, "", "/docs#api");
+    const Docs = () => <section id="api">api section</section>;
+    const routes: RouteDefinition[] = [
+      { path: "/", component: Home },
+      { path: "/docs", component: Docs },
+    ];
+    render(<Router routes={routes} />);
+
+    await waitFor(() => expect(scrollSpy).toHaveBeenCalledTimes(1));
+
+    Element.prototype.scrollIntoView = original;
+  });
+
   it("renders <Route> children as routes (works after minification)", () => {
     window.history.replaceState({}, "", "/about");
     render(

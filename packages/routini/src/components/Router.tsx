@@ -1,5 +1,12 @@
 /* eslint-disable react-hooks/static-components */
-import { useSyncExternalStore, Children, lazy, Suspense } from "react";
+import {
+  useSyncExternalStore,
+  useEffect,
+  useLayoutEffect,
+  Children,
+  lazy,
+  Suspense,
+} from "react";
 import { EVENTS } from "../consts";
 import { RouterContext } from "../context/RouterContext";
 import { matchRoute } from "../utils/matchRoute";
@@ -42,6 +49,35 @@ function subscribeToLocation(callback: () => void): () => void {
 
 function getClientPathname(): string {
   return window.location.pathname;
+}
+
+// useLayoutEffect scrolls before the browser paints (no flash), but warns
+// during SSR — fall back to useEffect on the server. Effects never run on the
+// server anyway, so the scroll itself stays client-only either way.
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
+/**
+ * Internal. Rendered by Router inside the matched route's content (so for lazy
+ * routes it only mounts once Suspense resolves). Renders null. Scrolls to the
+ * URL hash after the route commits, and on subsequent same-route hash changes.
+ */
+function ScrollToHash() {
+  useIsomorphicLayoutEffect(() => {
+    const scrollToHash = () => {
+      const id = window.location.hash.slice(1);
+      if (id) document.getElementById(id)?.scrollIntoView();
+    };
+    // On mount: the route just committed (eager, lazy-resolved, or a deep link
+    // on first load) — scroll if the URL carries a hash.
+    scrollToHash();
+    // Same-route hash changes don't re-render Router (pathname is unchanged),
+    // so listen for navigations and scroll to the new hash directly.
+    window.addEventListener(EVENTS.NAVIGATE, scrollToHash);
+    return () => window.removeEventListener(EVENTS.NAVIGATE, scrollToHash);
+  }, []);
+
+  return null;
 }
 
 const resolveLazyComponent = (dynamicImport: DynamicImport) => {
@@ -113,7 +149,12 @@ export function Router({
     );
   }
 
-  const pageContent = Page ? <Page /> : null;
+  const pageContent = Page ? (
+    <>
+      <ScrollToHash key={currentPath} />
+      <Page />
+    </>
+  ) : null;
 
   const content = matchedRoute?.lazy ? (
     <Suspense fallback={matchedRoute?.loading ?? loading}>

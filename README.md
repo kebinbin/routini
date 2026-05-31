@@ -69,6 +69,16 @@ Client-side navigation. Handles modifier keys (cmd, ctrl, shift, alt) correctly.
 <Link to="/about">About</Link>
 ```
 
+Hash anchors are handled too:
+
+- `to="#section"` — pure hash, the browser scrolls natively.
+- `to="/docs#section"` — navigates to the path, then scrolls to the element
+  with that `id` once the route has rendered (works with lazy routes).
+
+```tsx
+<Link to="/docs#api">API reference</Link>
+```
+
 ### `<Outlet />`
 
 Renders the matched route. Use when you need layout control:

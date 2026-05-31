@@ -38,6 +38,10 @@
 
   html {
     background: var(--color-ink);
+    /* Anchored sections (docs hash links) clear the sticky nav instead of
+       hiding behind it; smooth-scroll the jump. */
+    scroll-padding-top: calc(var(--nav-h) + 1.5rem);
+    scroll-behavior: smooth;
   }
 
   html[data-theme="dark"] {
@@ -65,6 +69,23 @@
 
 @utility text-balance {
   text-wrap: balance;
+}
+
+/* Route-loading reveal: stays invisible through a short delay, then fades in.
+ * Fast lazy chunks resolve before the delay elapses, so the loader unmounts
+ * without ever flashing; only genuinely slow loads show it. */
+@keyframes routini-loader-reveal {
+  0%,
+  55% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@utility loader-reveal {
+  animation: routini-loader-reveal 0.6s ease forwards;
 }
 
 /*

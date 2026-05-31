@@ -1,9 +1,10 @@
 import { Link } from "routini";
-import { langPath, useLang, useT } from "../lib/i18n";
+import { langPath, useLang } from "../lib/i18n";
+import { useNotFoundT } from "../lib/i18n.notFound";
 
 export default function NotFound() {
   const lang = useLang();
-  const t = useT();
+  const t = useNotFoundT();
 
   return (
     <section className="mx-auto flex max-w-7xl flex-col items-start px-6 py-24">
