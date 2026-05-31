@@ -9,12 +9,12 @@ export function ApiAtAGlance() {
   return (
     <section className="border-t border-ink-3">
       <div className="mx-auto max-w-7xl px-6 py-20 md:py-28">
-        <p className="mb-6 text-center font-mono text-xs uppercase tracking-[0.2em] text-bone-faint">
+        <p className="mb-4 text-center font-mono text-xs uppercase tracking-[0.2em] text-bone-faint">
           {t.api.pretitle}
         </p>
-        <p className="text-balance mx-auto mb-10 max-w-2xl text-center text-lg text-bone-dim">
+        <h2 className="text-pretty mx-auto mb-12 max-w-3xl text-center text-3xl font-medium tracking-tight text-bone md:mb-16 md:text-4xl">
           {t.api.intro}
-        </p>
+        </h2>
 
         <ul className="grid grid-cols-1 gap-x-12 gap-y-0 md:grid-cols-2">
           {t.api.entries.map((entry) => (

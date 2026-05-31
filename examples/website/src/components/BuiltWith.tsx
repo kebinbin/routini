@@ -10,16 +10,16 @@ export function BuiltWith() {
   return (
     <section className="border-t border-ink-3">
       <div className="mx-auto max-w-7xl px-6 py-20 md:py-28">
-        <p className="mb-6 text-center font-mono text-xs uppercase tracking-[0.2em] text-bone-faint">
+        <p className="mb-4 text-center font-mono text-xs uppercase tracking-[0.2em] text-bone-faint">
           {t.builtWith.pretitle}
         </p>
-        <p className="text-balance mx-auto mb-12 max-w-2xl text-center text-lg text-bone-dim">
+        <h2 className="text-pretty mx-auto mb-12 max-w-3xl text-center text-3xl font-medium tracking-tight text-bone md:mb-16 md:text-4xl">
           {t.builtWith.intro}
-        </p>
+        </h2>
 
-        <ul className="grid grid-cols-1 gap-px bg-ink-3 sm:grid-cols-2 md:grid-cols-4">
-          {/* Three ghost placeholders, then the live "Add yours" CTA cell. */}
-          {[0, 1, 2].map((i) => (
+        <ul className="grid grid-cols-1 gap-px bg-ink-3 sm:grid-cols-2 md:grid-cols-3">
+          {/* Two ghost placeholders, then the live "Add yours" CTA cell. */}
+          {[0, 1].map((i) => (
             <li
               key={i}
               className="aspect-4/3 flex items-center justify-center bg-ink"
