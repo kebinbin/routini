@@ -1,11 +1,11 @@
 import { ArrowUpRight } from "lucide-react";
-import { useT } from "../lib/i18n";
+import { useHomeT } from "../lib/i18n.home";
 
 const PR_TEMPLATE_URL =
   "https://github.com/kebinbin/routini/issues/new?title=Built+with+routini%3A+";
 
 export function BuiltWith() {
-  const t = useT();
+  const t = useHomeT();
 
   return (
     <section className="border-t border-ink-3">

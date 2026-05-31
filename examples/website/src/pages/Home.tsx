@@ -5,11 +5,12 @@ import { Logo } from "../components/Logo";
 import { WhyRoutini } from "../components/WhyRoutini";
 import { ApiAtAGlance } from "../components/ApiAtAGlance";
 import { BuiltWith } from "../components/BuiltWith";
-import { langPath, useLang, useT } from "../lib/i18n";
+import { langPath, useLang } from "../lib/i18n";
+import { useHomeT } from "../lib/i18n.home";
 
 export default function Home() {
   const lang = useLang();
-  const t = useT();
+  const t = useHomeT();
 
   return (
     <>

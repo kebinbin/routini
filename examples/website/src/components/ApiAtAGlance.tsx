@@ -1,9 +1,10 @@
 import { Link } from "routini";
-import { langPath, useLang, useT } from "../lib/i18n";
+import { langPath, useLang } from "../lib/i18n";
+import { useHomeT } from "../lib/i18n.home";
 
 export function ApiAtAGlance() {
   const lang = useLang();
-  const t = useT();
+  const t = useHomeT();
 
   return (
     <section className="border-t border-ink-3">

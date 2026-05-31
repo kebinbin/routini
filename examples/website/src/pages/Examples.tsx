@@ -1,7 +1,7 @@
-import { useT } from "../lib/i18n";
+import { useExamplesT } from "../lib/i18n.examples";
 
 export default function Examples() {
-  const t = useT();
+  const t = useExamplesT();
   return (
     <section className="mx-auto max-w-7xl px-6 py-24">
       <p className="mb-6 font-mono text-xs uppercase tracking-[0.2em] text-bone-faint">
