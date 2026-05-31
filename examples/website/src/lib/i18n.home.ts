@@ -35,8 +35,7 @@ const home = {
     },
     api: {
       pretitle: "API at a glance",
-      intro:
-        "Seven exports, one utility. Each links to its full reference in the docs.",
+      intro: "Seven exports and one utility — the whole API fits in your head.",
       entries: [
         {
           name: "Router",
@@ -120,8 +119,7 @@ const home = {
     },
     api: {
       pretitle: "La API de un vistazo",
-      intro:
-        "Siete exports y una utilidad. Cada uno enlaza a su referencia completa en la documentación.",
+      intro: "Siete exports y una utilidad — y con eso conoces toda la API.",
       entries: [
         {
           name: "Router",
