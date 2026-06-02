@@ -65,6 +65,13 @@
     background: var(--color-accent);
     color: #ffffff;
   }
+
+  /* Keyboard-only focus ring (mouse clicks don't trigger :focus-visible). */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 1px;
+  }
 }
 
 @utility text-balance {

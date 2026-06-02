@@ -3,6 +3,7 @@ import { CodeBlock } from "../components/CodeBlock";
 import { langPath, useLang } from "../lib/i18n";
 import { useDocsT } from "../lib/i18n.docs";
 import { useActiveSection } from "../lib/useActiveSection";
+import { usePageTitle } from "../lib/usePageTitle";
 import type { SnippetId } from "../lib/snippets";
 
 const GROUP_ORDER = ["components", "hooks", "utility"] as const;
@@ -102,6 +103,7 @@ export default function Docs() {
   const docsPath = langPath(lang, "/docs");
   const content = t.docsContent as Record<string, DocsEntryContent>;
   const active = useActiveSection(ANCHORS);
+  usePageTitle(`${t.docs.title} · routini`);
 
   const groups = GROUP_ORDER.map((key) => ({
     key,

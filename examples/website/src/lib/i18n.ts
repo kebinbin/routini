@@ -22,11 +22,13 @@ const global = {
     nav: { docs: "docs", examples: "examples", github: "GitHub" },
     footer: { builtWith: "built with" },
     install: { copy: "Copy install command", copied: "Copied" },
+    skipToContent: "Skip to content",
   },
   es: {
     nav: { docs: "docs", examples: "ejemplos", github: "GitHub" },
     footer: { builtWith: "hecho con" },
     install: { copy: "Copiar comando de instalación", copied: "Copiado" },
+    skipToContent: "Saltar al contenido",
   },
 } as const;
 

@@ -1,10 +1,12 @@
 import { Link } from "routini";
 import { langPath, useLang } from "../lib/i18n";
 import { useNotFoundT } from "../lib/i18n.notFound";
+import { usePageTitle } from "../lib/usePageTitle";
 
 export default function NotFound() {
   const lang = useLang();
   const t = useNotFoundT();
+  usePageTitle(`${t.notFound.pretitle} · routini`);
 
   return (
     <section className="mx-auto flex min-h-[70vh] max-w-xl flex-col items-center justify-center px-6 py-24 text-center">

@@ -41,8 +41,12 @@ const EDGE_MS = 300; // time to grow one edge
 const HOLD_MS = 2000; // pause at end of each pattern
 const REST_MS = 2000; // empty hold between patterns
 
-const STROKE_INACTIVE = ".05";
-const STROKE_ACTIVE = ".25";
+// Stroke weights. The ANIMATED_* pair is the animated mark's faint background
+// edges and their "lit" weight; STATIC is the plain weight for the
+// non-animated mark (nav, footer), which must read clearly at small sizes.
+const STROKE_ANIMATED_INACTIVE = ".05";
+const STROKE_ANIMATED_ACTIVE = ".25";
+const STROKE_STATIC = "1";
 
 export function Logo({ className, animated = false }: LogoProps) {
   const reduceMotion =
@@ -168,7 +172,7 @@ export function Logo({ className, animated = false }: LogoProps) {
       viewBox="0 0 58 34"
       fill="none"
       stroke="currentColor"
-      strokeWidth={STROKE_INACTIVE}
+      strokeWidth={animated ? STROKE_ANIMATED_INACTIVE : STROKE_STATIC}
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}
@@ -192,7 +196,7 @@ export function Logo({ className, animated = false }: LogoProps) {
                   y1={y1}
                   x2={x2}
                   y2={y2}
-                  strokeWidth={STROKE_ACTIVE}
+                  strokeWidth={STROKE_ANIMATED_ACTIVE}
                   strokeDasharray={EDGE_LENGTH}
                   strokeDashoffset={isActive ? 0 : EDGE_LENGTH}
                   style={{
@@ -218,7 +222,9 @@ export function Logo({ className, animated = false }: LogoProps) {
                 cy={cy}
                 r="3"
                 fill="var(--color-ink)"
-                strokeWidth={isActive ? STROKE_ACTIVE : STROKE_INACTIVE}
+                strokeWidth={
+                  isActive ? STROKE_ANIMATED_ACTIVE : STROKE_ANIMATED_INACTIVE
+                }
                 style={{
                   transition: isActive
                     ? `stroke-width ${NODE_MS}ms cubic-bezier(0.4, 0, 0.2, 1)`

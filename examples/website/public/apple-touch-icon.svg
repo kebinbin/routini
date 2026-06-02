@@ -1,0 +1,16 @@
+<svg width="180" height="180" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+  <!-- Source for apple-touch-icon.png (180×180). Export to PNG.
+       Opaque ink background (iOS doesn't honor transparency and rounds corners
+       itself); bone mark centered. -->
+  <rect width="180" height="180" fill="#0a0a0a" />
+  <g transform="translate(25, 53) scale(2.2)" fill="none" stroke="#ededed" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="8" y1="17" x2="40" y2="17" />
+    <line x1="24" y1="17" x2="35.3" y2="28.3" />
+    <line x1="40" y1="17" x2="51.3" y2="5.7" />
+    <circle cx="8" cy="17" r="3" fill="#ededed" />
+    <circle cx="24" cy="17" r="3" fill="#ededed" />
+    <circle cx="35.3" cy="28.3" r="3" fill="#ededed" />
+    <circle cx="40" cy="17" r="3" fill="#0a0a0a" />
+    <circle cx="51.3" cy="5.7" r="3" fill="#0a0a0a" />
+  </g>
+</svg>

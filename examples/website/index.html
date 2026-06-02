@@ -2,9 +2,36 @@
 <html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
     <title>routini · a tiny React router</title>
+    <meta
+      name="description"
+      content="A tiny, TypeScript-first router for React. Under 2 KB, lazy routes built in — seven exports and one utility."
+    />
+    <link rel="canonical" href="https://routini.dev/" />
+
+    <!-- Mobile browser-chrome color, matched to the ink palette. -->
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0a0a" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+
+    <!-- Open Graph: link-preview card on Slack, Discord, iMessage, LinkedIn, X… -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="routini" />
+    <meta property="og:title" content="routini · a tiny React router" />
+    <meta
+      property="og:description"
+      content="A tiny, TypeScript-first router for React. Under 2 KB, lazy routes built in — seven exports and one utility."
+    />
+    <meta property="og:url" content="https://routini.dev/" />
+    <meta property="og:image" content="https://routini.dev/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- X/Twitter reads the OG tags above; this only opts into the big-image card. -->
+    <meta name="twitter:card" content="summary_large_image" />
     <script>
       // No-flash theme bootstrap: read saved preference (or fall back to OS) and
       // set [data-theme] BEFORE React mounts. Must stay inline + synchronous.
