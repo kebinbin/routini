@@ -1,5 +1,6 @@
 import { CodeBlock } from "../components/CodeBlock";
 import { useExamplesT } from "../lib/i18n.examples";
+import { usePageTitle } from "../lib/usePageTitle";
 import { snippets, type SnippetId } from "../lib/snippets";
 
 // Recipe order + the snippet each one shows. Titles/bodies are translated in
@@ -19,6 +20,7 @@ export default function Examples() {
     string,
     { title: string; body: string }
   >;
+  usePageTitle(`${t.examples.title} · routini`);
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-16 md:py-20">

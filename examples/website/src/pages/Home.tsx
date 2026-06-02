@@ -7,10 +7,12 @@ import { ApiAtAGlance } from "../components/ApiAtAGlance";
 import { BuiltWith } from "../components/BuiltWith";
 import { langPath, useLang } from "../lib/i18n";
 import { useHomeT } from "../lib/i18n.home";
+import { usePageTitle } from "../lib/usePageTitle";
 
 export default function Home() {
   const lang = useLang();
   const t = useHomeT();
+  usePageTitle("routini · a tiny React router");
 
   return (
     <>
