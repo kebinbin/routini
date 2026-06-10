@@ -82,7 +82,7 @@ const DOCS_ENTRIES: DocEntry[] = [
   {
     anchor: "navigate-util",
     name: "navigate",
-    signature: "navigate(to: string): void",
+    signature: "navigate(to: string, options?: NavigateOptions): void",
     snippet: "navigateFromCode",
     group: "utility",
     since: "0.1.0",
@@ -92,6 +92,14 @@ const DOCS_ENTRIES: DocEntry[] = [
     name: "Error handling",
     signature: "<Router errorFallback onError />",
     snippet: "errorHandling",
+    group: "guides",
+    since: "0.2.0",
+  },
+  {
+    anchor: "view-transitions",
+    name: "View Transitions",
+    signature: '<Link viewTransition> · navigate(to, { viewTransition })',
+    snippet: "viewTransitions",
     group: "guides",
     since: "0.2.0",
   },

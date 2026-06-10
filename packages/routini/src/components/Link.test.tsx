@@ -97,4 +97,28 @@ describe("Link", () => {
     expect(window.location.pathname).toBe("/docs");
     window.removeEventListener(EVENTS.NAVIGATE, handler);
   });
+
+  it("replaces the history entry when the replace prop is set", () => {
+    const replaceSpy = vi.spyOn(window.history, "replaceState");
+    const pushSpy = vi.spyOn(window.history, "pushState");
+    const { container } = render(
+      <Link to="/about" replace>
+        about
+      </Link>,
+    );
+    fireEvent.click(container.querySelector("a")!, { button: 0 });
+    expect(replaceSpy).toHaveBeenCalledWith({}, "", "/about");
+    expect(pushSpy).not.toHaveBeenCalled();
+  });
+
+  it("does not leak replace/viewTransition onto the rendered anchor", () => {
+    const { container } = render(
+      <Link to="/about" replace viewTransition>
+        about
+      </Link>,
+    );
+    const anchor = container.querySelector("a")!;
+    expect(anchor.hasAttribute("replace")).toBe(false);
+    expect(anchor.hasAttribute("viewtransition")).toBe(false);
+  });
 });
