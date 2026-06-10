@@ -9,12 +9,12 @@
  *   React Router    react-router-dom@7.16.0   59.97 KB
  *   TanStack Router @tanstack/react-router@1.170.10  39.3 KB
  *   Wouter          wouter@3.10.0             2.54 KB
- *   routini         (incl. error boundary)    2.16 KB
+ *   routini         (error boundary + view transitions)  2.26 KB
  *
  * Ordered smallest → largest so routini leads as the highlighted reference.
  */
 const ENTRIES = [
-  { name: "routini", kb: 2.16, label: "2.2 KB", highlight: true },
+  { name: "routini", kb: 2.26, label: "2.3 KB", highlight: true },
   { name: "Wouter", kb: 2.54, label: "2.5 KB" },
   { name: "TanStack Router", kb: 39.3, label: "39 KB" },
   { name: "React Router", kb: 59.97, label: "60 KB" },

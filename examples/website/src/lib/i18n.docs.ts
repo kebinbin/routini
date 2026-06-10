@@ -101,6 +101,16 @@ const docs = {
             desc: "Destination path. May include a #hash.",
           },
           {
+            name: "replace",
+            type: "boolean",
+            desc: "Replace the current history entry instead of pushing a new one.",
+          },
+          {
+            name: "viewTransition",
+            type: "boolean",
+            desc: "Animate this navigation with the View Transitions API. Browsers without support navigate instantly.",
+          },
+          {
             name: "...rest",
             type: "AnchorHTMLAttributes",
             desc: "Any standard <a> attribute (className, style, aria-*, target, …) is forwarded to the anchor.",
@@ -128,9 +138,15 @@ const docs = {
             type: "string",
             desc: "Destination path to redirect to when the component mounts.",
           },
+          {
+            name: "replace",
+            type: "boolean",
+            desc: "Defaults to true: the redirect replaces the current history entry. Pass false to push a new one.",
+          },
         ],
         notes: [
           "The redirect runs in an effect after mount, and re-fires if to changes.",
+          "Replacing keeps the back button working — a pushed redirect would send Back to the route that redirected away, which immediately redirects forward again.",
           "Renders null — it produces no markup of its own.",
           "For redirects triggered by an event or some logic, call the navigate utility instead.",
         ],
@@ -169,16 +185,21 @@ const docs = {
         ],
       },
       "navigate-util": {
-        body: "Imperative navigation for use outside React components or inside event handlers. It updates the URL with History pushState and notifies Router to re-render — the same function powering Link and Navigate.",
+        body: "Imperative navigation for use outside React components or inside event handlers. It updates the URL via the History API and notifies Router to re-render — the same function powering Link and Navigate.",
         table: [
           {
             name: "to",
             type: "string",
             desc: "Destination path. May include a #hash.",
           },
+          {
+            name: "options",
+            type: "NavigateOptions",
+            desc: "Optional. { replace?: boolean, viewTransition?: boolean } — swap the history entry instead of pushing, and/or animate the navigation.",
+          },
         ],
         notes: [
-          "Adds a new history entry, so the back button returns to the previous route.",
+          "Adds a new history entry by default, so the back button returns to the previous route; { replace: true } swaps the current entry instead.",
           "No-ops during server rendering (when window is undefined).",
           "Inside a component you can also read it from useLocation().",
         ],
@@ -202,6 +223,27 @@ const docs = {
           "The boundary catches both failed lazy chunks and render errors in the page, and clears the error automatically when you navigate to another route.",
           "It wraps the matched page, so any layout components around <Outlet /> stay on screen when a page errors. It does not cover those layout components themselves — wrap <Router> in your own boundary if anything in your layout can throw.",
           "routini surfaces the error and lets you decide — it never auto-reloads or writes to storage.",
+        ],
+      },
+      "view-transitions": {
+        body: "Opt any navigation into the View Transitions API: the browser snapshots the old and new page and animates between them. Pass viewTransition on a Link, or { viewTransition: true } to navigate. The animation itself is designed in CSS — the default is a quick cross-fade; give an element a view-transition-name to morph it between pages, like an album cover growing into the detail header.",
+        table: [
+          {
+            name: "viewTransition",
+            type: "boolean",
+            desc: "On <Link> — animate this navigation.",
+          },
+          {
+            name: "{ viewTransition: true }",
+            type: "NavigateOptions",
+            desc: "On navigate() — same, from code.",
+          },
+        ],
+        notes: [
+          "Progressive enhancement: browsers without document.startViewTransition navigate instantly — no feature checks needed in your code.",
+          "Opt in per navigation: the page is non-interactive while an animation runs, so reserve it for navigations where motion adds meaning.",
+          "Works best with eager routes. On a lazy route whose chunk isn't loaded yet, the transition animates to the loading fallback rather than the page.",
+          "Customize with the ::view-transition-old/new pseudo-elements; scope per-element morphs with view-transition-name.",
         ],
       },
     },
@@ -304,6 +346,16 @@ const docs = {
             desc: "Ruta de destino. Puede incluir un #hash.",
           },
           {
+            name: "replace",
+            type: "boolean",
+            desc: "Reemplaza la entrada actual del historial en lugar de añadir una nueva.",
+          },
+          {
+            name: "viewTransition",
+            type: "boolean",
+            desc: "Anima esta navegación con la View Transitions API. Los navegadores sin soporte navegan al instante.",
+          },
+          {
             name: "...rest",
             type: "AnchorHTMLAttributes",
             desc: "Cualquier atributo estándar de <a> (className, style, aria-*, target, …) se reenvía al ancla.",
@@ -331,9 +383,15 @@ const docs = {
             type: "string",
             desc: "Ruta de destino a la que redirigir cuando el componente se monta.",
           },
+          {
+            name: "replace",
+            type: "boolean",
+            desc: "Por defecto true: la redirección reemplaza la entrada actual del historial. Pasa false para añadir una nueva.",
+          },
         ],
         notes: [
           "La redirección se ejecuta en un efecto tras el montaje, y se vuelve a disparar si to cambia.",
+          "Reemplazar mantiene el botón atrás funcionando — una redirección con push enviaría Atrás a la ruta que redirigió, que inmediatamente redirige hacia adelante otra vez.",
           "Renderiza null — no produce markup propio.",
           "Para redirecciones disparadas por un evento o cierta lógica, llama a la utilidad navigate.",
         ],
@@ -372,16 +430,21 @@ const docs = {
         ],
       },
       "navigate-util": {
-        body: "Navegación imperativa para usar fuera de componentes de React o dentro de event handlers. Actualiza la URL con History pushState y notifica a Router para re-renderizar — la misma función que usan Link y Navigate.",
+        body: "Navegación imperativa para usar fuera de componentes de React o dentro de event handlers. Actualiza la URL con la History API y notifica a Router para re-renderizar — la misma función que usan Link y Navigate.",
         table: [
           {
             name: "to",
             type: "string",
             desc: "Ruta de destino. Puede incluir un #hash.",
           },
+          {
+            name: "options",
+            type: "NavigateOptions",
+            desc: "Opcional. { replace?: boolean, viewTransition?: boolean } — reemplaza la entrada del historial en lugar de añadir, y/o anima la navegación.",
+          },
         ],
         notes: [
-          "Añade una nueva entrada al historial, así que el botón atrás vuelve a la ruta anterior.",
+          "Añade una nueva entrada al historial por defecto, así que el botón atrás vuelve a la ruta anterior; { replace: true } reemplaza la entrada actual.",
           "No hace nada durante el renderizado en servidor (cuando window no existe).",
           "Dentro de un componente también puedes obtenerla desde useLocation().",
         ],
@@ -405,6 +468,27 @@ const docs = {
           "El boundary captura tanto chunks lazy fallidos como errores de render en la página, y limpia el error automáticamente al navegar a otra ruta.",
           "Envuelve la página coincidente, así que cualquier componente de tu layout alrededor de <Outlet /> sigue en pantalla cuando una página falla. No cubre esos componentes del layout — envuelve <Router> en tu propio boundary si algo de tu layout puede lanzar errores.",
           "routini expone el error y te deja decidir — nunca recarga solo ni escribe en storage.",
+        ],
+      },
+      "view-transitions": {
+        body: "Activa la View Transitions API en cualquier navegación: el navegador captura la página vieja y la nueva y anima entre ambas. Pasa viewTransition en un Link, o { viewTransition: true } a navigate. La animación se diseña en CSS — por defecto es un cross-fade rápido; dale a un elemento un view-transition-name para transformarlo entre páginas, como una portada de álbum que crece hasta ser la cabecera del detalle.",
+        table: [
+          {
+            name: "viewTransition",
+            type: "boolean",
+            desc: "En <Link> — anima esta navegación.",
+          },
+          {
+            name: "{ viewTransition: true }",
+            type: "NavigateOptions",
+            desc: "En navigate() — lo mismo, desde código.",
+          },
+        ],
+        notes: [
+          "Mejora progresiva: los navegadores sin document.startViewTransition navegan al instante — sin checks de soporte en tu código.",
+          "Actívala por navegación: la página no es interactiva mientras corre la animación, así que resérvala para navegaciones donde el movimiento aporte significado.",
+          "Funciona mejor con rutas eager. En una ruta lazy cuyo chunk no está cargado, la transición anima hacia el fallback de carga en lugar de la página.",
+          "Personalízala con los pseudo-elementos ::view-transition-old/new; delimita transformaciones por elemento con view-transition-name.",
         ],
       },
     },

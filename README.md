@@ -70,6 +70,18 @@ Client-side navigation. Handles modifier keys (cmd, ctrl, shift, alt) correctly.
 <Link to="/about">About</Link>
 ```
 
+Two optional props beyond the standard `<a>` attributes:
+
+```tsx
+<Link to="/dashboard" replace>Dashboard</Link>          {/* replace the history entry */}
+<Link to="/album/9" viewTransition>Open album</Link>    {/* animate the navigation */}
+```
+
+- `replace` — swap the current history entry instead of pushing a new one.
+- `viewTransition` — animate the navigation with the View Transitions API
+  (see [View Transitions](#view-transitions)); browsers without support
+  navigate instantly.
+
 Hash anchors are handled too:
 
 - `to="#section"` — pure hash, the browser scrolls natively.
@@ -105,6 +117,11 @@ function Dashboard() {
 }
 ```
 
+Redirects **replace** the current history entry by default — otherwise the
+back button would return to the route that redirected away, which immediately
+redirects forward again (a back-button trap). Pass `replace={false}` to push
+a new entry instead.
+
 ### `useParams()`
 
 Access route parameters.
@@ -133,6 +150,19 @@ function Nav() {
     </nav>
   );
 }
+```
+
+### `navigate()`
+
+Imperative navigation for event handlers or code outside components — the same
+function that powers `Link` and `Navigate`.
+
+```tsx
+import { navigate } from "routini";
+
+navigate("/checkout");
+navigate("/dashboard", { replace: true }); // swap the history entry
+navigate("/album/9", { viewTransition: true }); // animate the navigation
 ```
 
 ## Route Definition
@@ -277,6 +307,45 @@ const routes = [
 The `*` route matches regardless of its position in the array —
 routini always tries specific routes first.
 
+## View Transitions
+
+Opt any navigation into the
+[View Transitions API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API)
+— the browser snapshots the old and new page and animates between them:
+
+```tsx
+<Link to="/album/9" viewTransition>Open album</Link>
+
+navigate("/album/9", { viewTransition: true });
+```
+
+The animation itself is designed in CSS. The default is a quick cross-fade;
+customize it with the `::view-transition-*` pseudo-elements, or give an element
+a `view-transition-name` to morph it between pages (e.g. an album cover that
+grows into the detail header):
+
+```css
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 200ms;
+}
+```
+
+```tsx
+<img src={album.cover} style={{ viewTransitionName: "cover" }} />
+```
+
+Notes:
+
+- **Progressive enhancement** — browsers without `document.startViewTransition`
+  navigate instantly. No feature checks needed in your code.
+- Transitions are opt-in per navigation: the page is non-interactive while an
+  animation runs, so reserve it for navigations where motion adds meaning.
+- **Works best with eager routes.** On a lazy route whose chunk isn't loaded
+  yet, the transition animates to the loading fallback rather than the page.
+  Keep view-transition targets eager, or pair with route preloading when it
+  lands (see Roadmap).
+
 ## Philosophy
 
 **Pages are self-contained.** Routes get their data from:
@@ -316,9 +385,10 @@ Routini is intentionally small. These features aren't planned — if you need th
 
 ## Roadmap
 
-- [ ] Link prefetching on hover (`preload="hover"`)
+- [x] View Transitions API support (`viewTransition` on `Link` / `navigate`)
+- [ ] Link prefetching on hover (`preload="hover"`) — also makes view
+      transitions seamless on lazy routes
 - [ ] SSR support via `ssrPath` prop
-- [ ] View Transitions API support
 - [ ] `@routini/vite-plugin` for file-based routing
 
 ## Development

@@ -190,6 +190,27 @@ const routes = [
 ];
 `,
 
+  viewTransitions: `import { Link, navigate } from "routini";
+
+// Opt in per navigation — the browser animates between
+// the old and new page. Unsupported browsers navigate
+// instantly. Give an element a view-transition-name in
+// CSS (or inline) to morph it across pages.
+function AlbumCard({ album }) {
+  return (
+    <Link to={\`/album/\${album.id}\`} viewTransition>
+      <img
+        src={album.cover}
+        style={{ viewTransitionName: "cover" }}
+      />
+    </Link>
+  );
+}
+
+// Or from code:
+navigate("/album/9", { viewTransition: true });
+`,
+
   errorHandling: `import { Router } from "routini";
 
 // A failed lazy chunk or a render error shows this instead

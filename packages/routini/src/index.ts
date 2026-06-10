@@ -8,3 +8,4 @@ export { Navigate } from "./components/Navigate";
 export { useLocation } from "./hooks/useLocation";
 export { useParams } from "./hooks/useParams";
 export { navigate } from "./utils/navigate";
+export type { NavigateOptions } from "./utils/navigate";

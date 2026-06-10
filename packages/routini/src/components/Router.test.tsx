@@ -72,6 +72,38 @@ describe("Router", () => {
     expect(screen.getByText("about page")).toBeTruthy();
   });
 
+  // Guards the one guarantee View Transitions depend on: the new route's DOM
+  // must be committed *inside* the startViewTransition callback (that's what
+  // the flushSync in navigate() is for — the browser screenshots the page
+  // right after the callback returns). If flushSync is ever removed, the DOM
+  // read inside the fake still shows the old page and this test fails.
+  it("commits the new route synchronously inside startViewTransition", () => {
+    // Widened view of `document`: lib.dom types startViewTransition as always
+    // present, but happy-dom doesn't implement it, so tests stub it on and off.
+    const doc = document as unknown as {
+      startViewTransition?: (cb: () => void) => unknown;
+    };
+    let domInsideCallback = "";
+    doc.startViewTransition = vi.fn((cb: () => void) => {
+      cb();
+      domInsideCallback = document.body.textContent ?? "";
+    });
+
+    const routes: RouteDefinition[] = [
+      { path: "/", component: Home },
+      { path: "/about", component: About },
+    ];
+    render(<Router routes={routes} />);
+
+    act(() => {
+      navigate("/about", { viewTransition: true });
+    });
+
+    expect(domInsideCallback).toContain("about page");
+    expect(screen.getByText("about page")).toBeTruthy();
+    delete doc.startViewTransition;
+  });
+
   it("scrolls to the URL hash after a path+hash navigation", async () => {
     const scrollSpy = vi.fn();
     const original = Element.prototype.scrollIntoView;
