@@ -6,7 +6,7 @@ import { useActiveSection } from "../lib/useActiveSection";
 import { usePageTitle } from "../lib/usePageTitle";
 import type { SnippetId } from "../lib/snippets";
 
-const GROUP_ORDER = ["components", "hooks", "utility"] as const;
+const GROUP_ORDER = ["components", "hooks", "utility", "guides"] as const;
 type GroupKey = (typeof GROUP_ORDER)[number];
 
 // Code-side metadata, ordered for display. `anchor` keys into the translated
@@ -86,6 +86,14 @@ const DOCS_ENTRIES: DocEntry[] = [
     snippet: "navigateFromCode",
     group: "utility",
     since: "0.1.0",
+  },
+  {
+    anchor: "error-handling",
+    name: "Error handling",
+    signature: "<Router errorFallback onError />",
+    snippet: "errorHandling",
+    group: "guides",
+    since: "0.2.0",
   },
 ];
 

@@ -197,6 +197,12 @@ export function Router({
     forceRetry();
   };
 
+  // The boundary wraps the matched page only. In the children/Outlet layout
+  // pattern, `content` is what Outlet renders, so any layout components around
+  // the Outlet sit *outside* this boundary — they stay alive when a page errors,
+  // but a throw in that layout isn't caught here (that's the consumer's to guard
+  // with their own boundary). Deliberate: see "Scope boundary" in the error
+  // boundary architecture notes.
   const content = (
     <RouteErrorBoundary
       resetKey={currentPath}

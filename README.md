@@ -257,6 +257,12 @@ Use `onError` for logging:
 <Router routes={routes} onError={(error, info) => Sentry.captureException(error)} />
 ```
 
+The boundary wraps the matched **page**, so in a layout any components you
+render around `<Outlet />` stay on screen when a page errors — only the page
+area shows the fallback. It does **not** cover those layout components
+themselves: if anything in your layout can throw, wrap `<Router>` in your own
+error boundary too.
+
 ## Catch-all Route
 
 Use `path="*"` to handle unmatched paths:
