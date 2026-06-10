@@ -3,6 +3,7 @@ import {
   useSyncExternalStore,
   useEffect,
   useLayoutEffect,
+  useReducer,
   Children,
   lazy,
   Suspense,
@@ -11,6 +12,8 @@ import { EVENTS } from "../consts";
 import { RouterContext } from "../context/RouterContext";
 import { matchRoute } from "../utils/matchRoute";
 import { isRouteType } from "./Route";
+import { RouteErrorBoundary, type ErrorFallback } from "./RouteErrorBoundary";
+import { markChunkError } from "../utils/isChunkError";
 
 export type DynamicImport = () => Promise<{ default: React.ComponentType }>;
 
@@ -27,6 +30,14 @@ export interface RouterProps {
   children?: React.ReactNode;
   /** Initial path to use during server-side rendering (where `window` is undefined). */
   ssrPath?: string;
+  /**
+   * What to render when a route fails to load (a code-split chunk that won't
+   * download) or throws while rendering. A node, or a function that receives
+   * `{ error, reset, reload, isChunkError }`. Defaults to a minimal message.
+   */
+  errorFallback?: ErrorFallback;
+  /** Called when a route errors — for logging/telemetry (e.g. Sentry). */
+  onError?: (error: Error, info: React.ErrorInfo) => void;
 }
 
 const lazyComponentsCache = new WeakMap<
@@ -85,14 +96,22 @@ const resolveLazyComponent = (dynamicImport: DynamicImport) => {
     return lazyComponentsCache.get(dynamicImport);
 
   const lazyComponent = lazy(() =>
-    dynamicImport().then((module) => {
-      if (!module.default) {
-        throw new Error(
-          "Lazy route module must have a default export. Did you forget to add `export default`?",
-        );
-      }
-      return module;
-    }),
+    dynamicImport().then(
+      (module) => {
+        if (!module.default) {
+          throw new Error(
+            "Lazy route module must have a default export. Did you forget to add `export default`?",
+          );
+        }
+        return module;
+      },
+      (cause) => {
+        // The dynamic import() itself rejected — a genuine chunk-load failure.
+        // Tag it so the error boundary recognises it without message-sniffing.
+        // (Separate from the missing-default throw above, which is a dev bug.)
+        throw markChunkError(cause);
+      },
+    ),
   );
   lazyComponentsCache.set(dynamicImport, lazyComponent);
   return lazyComponent;
@@ -103,6 +122,8 @@ export function Router({
   loading = null,
   children,
   ssrPath,
+  errorFallback,
+  onError,
 }: RouterProps) {
   // React 18+ subscribes to the URL via useSyncExternalStore. Compared to the
   // older useState + useEffect pattern, this eliminates a race where a child
@@ -115,6 +136,10 @@ export function Router({
     getClientPathname,
     () => ssrPath ?? "/",
   );
+
+  // Bumped by the error boundary's reset() to force a fresh render (and a fresh
+  // lazy import) after we've dropped the cached component.
+  const [, forceRetry] = useReducer((n: number) => n + 1, 0);
 
   const childrenRoutes: RouteDefinition[] = [];
   Children.forEach(children, (child) => {
@@ -156,12 +181,37 @@ export function Router({
     </>
   ) : null;
 
-  const content = matchedRoute?.lazy ? (
+  const routeContent = matchedRoute?.lazy ? (
     <Suspense fallback={matchedRoute?.loading ?? loading}>
       {pageContent}
     </Suspense>
   ) : (
     pageContent
+  );
+
+  // reset() from the error boundary drops the cached (poisoned) lazy component
+  // for the current route and forces a re-render, so the retry mints a fresh
+  // lazy() and re-runs the import.
+  const resetRoute = () => {
+    if (matchedRoute?.lazy) lazyComponentsCache.delete(matchedRoute.lazy);
+    forceRetry();
+  };
+
+  // The boundary wraps the matched page only. In the children/Outlet layout
+  // pattern, `content` is what Outlet renders, so any layout components around
+  // the Outlet sit *outside* this boundary — they stay alive when a page errors,
+  // but a throw in that layout isn't caught here (that's the consumer's to guard
+  // with their own boundary). Deliberate: see "Scope boundary" in the error
+  // boundary architecture notes.
+  const content = (
+    <RouteErrorBoundary
+      resetKey={currentPath}
+      fallback={errorFallback}
+      onError={onError}
+      onReset={resetRoute}
+    >
+      {routeContent}
+    </RouteErrorBoundary>
   );
 
   return (

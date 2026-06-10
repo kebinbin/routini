@@ -24,6 +24,10 @@ const examples = {
           title: "Code-split routes",
           body: "Mark any route lazy and routini wraps it in Suspense for you. Keep the landing route eager, split the rest, and give slow chunks a per-route fallback.",
         },
+        "error-handling": {
+          title: "Recover from a failed chunk",
+          body: "A stale chunk after a deploy — or a render error — would white-screen the app. routini wraps every route in an error boundary. Pass errorFallback for the UI and onError to log, or pass nothing for a minimal default: reset() retries in place, reload() does a full reload, and isChunkError tells the two apart.",
+        },
         "typed-params": {
           title: "Typed params + your data layer",
           body: "Read URL params with useParams<T>() and hand the id to whatever you fetch with — SWR, React Query, fetch. routini gives you the route; your data layer does the rest.",
@@ -72,6 +76,10 @@ const examples = {
         "code-split": {
           title: "Rutas con code-splitting",
           body: "Marca cualquier ruta como lazy y routini la envuelve en Suspense por ti. Deja la landing eager, divide el resto y dale a los chunks lentos un fallback por ruta.",
+        },
+        "error-handling": {
+          title: "Recuperarse de un chunk fallido",
+          body: "Un chunk obsoleto tras un deploy — o un error de render — dejaría la app en blanco. routini envuelve cada ruta en un error boundary. Pasa errorFallback para la UI y onError para registrar, o no pases nada para un mínimo por defecto: reset() reintenta en el sitio, reload() recarga del todo e isChunkError distingue ambos casos.",
         },
         "typed-params": {
           title: "Params tipados + tu capa de datos",

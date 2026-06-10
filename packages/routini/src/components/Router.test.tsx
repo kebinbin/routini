@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { Router } from "./Router";
 import { Route } from "./Route";
 import { Outlet } from "./Outlet";
@@ -207,5 +207,149 @@ describe("Router", () => {
       expect(errorSpy).toHaveBeenCalled();
     });
     errorSpy.mockRestore();
+  });
+});
+
+describe("Router error handling", () => {
+  // React logs caught errors to console.error; silence it so the test output
+  // stays clean (and so failures are about assertions, not noise).
+  let errorSpy: ReturnType<typeof vi.spyOn>;
+  beforeEach(() => {
+    errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+  });
+  afterEach(() => {
+    errorSpy.mockRestore();
+  });
+
+  it("shows the default fallback when a lazy chunk fails (no white screen)", async () => {
+    const routes: RouteDefinition[] = [
+      {
+        path: "/",
+        lazy: () =>
+          Promise.reject(
+            new Error("Failed to fetch dynamically imported module"),
+          ),
+      },
+    ];
+    render(<Router routes={routes} loading={<div>loading...</div>} />);
+    await waitFor(() =>
+      expect(screen.getByText(/couldn.t be loaded/i)).toBeTruthy(),
+    );
+  });
+
+  it("catches an eager render error with the generic fallback", () => {
+    const Boom = () => {
+      throw new Error("boom");
+    };
+    render(<Router routes={[{ path: "/", component: Boom }]} />);
+    expect(screen.getByText("Something went wrong.")).toBeTruthy();
+  });
+
+  it("renders a custom errorFallback node", async () => {
+    const routes: RouteDefinition[] = [
+      { path: "/", lazy: () => Promise.reject(new Error("nope")) },
+    ];
+    render(
+      <Router
+        routes={routes}
+        loading={<div>loading...</div>}
+        errorFallback={<div>custom oops</div>}
+      />,
+    );
+    await waitFor(() => expect(screen.getByText("custom oops")).toBeTruthy());
+  });
+
+  it("passes { error, isChunkError } to a function errorFallback", async () => {
+    const routes: RouteDefinition[] = [
+      {
+        path: "/",
+        lazy: () =>
+          Promise.reject(
+            new Error("Failed to fetch dynamically imported module"),
+          ),
+      },
+    ];
+    render(
+      <Router
+        routes={routes}
+        loading={<div>loading...</div>}
+        errorFallback={({ error, isChunkError }) => (
+          <div>
+            {isChunkError ? "chunk" : "bug"}: {error.message}
+          </div>
+        )}
+      />,
+    );
+    await waitFor(() =>
+      expect(screen.getByText(/^chunk: Failed to fetch/)).toBeTruthy(),
+    );
+  });
+
+  it("calls onError when a route throws", async () => {
+    const onError = vi.fn();
+    const routes: RouteDefinition[] = [
+      { path: "/", lazy: () => Promise.reject(new Error("kaboom")) },
+    ];
+    render(
+      <Router
+        routes={routes}
+        loading={<div>loading...</div>}
+        onError={onError}
+      />,
+    );
+    await waitFor(() => expect(onError).toHaveBeenCalled());
+    expect(onError.mock.calls[0][0]).toBeInstanceOf(Error);
+  });
+
+  it("reset() retries a failed lazy import", async () => {
+    let attempt = 0;
+    const routes: RouteDefinition[] = [
+      {
+        path: "/",
+        lazy: () => {
+          attempt += 1;
+          return attempt === 1
+            ? Promise.reject(
+                new Error("Failed to fetch dynamically imported module"),
+              )
+            : Promise.resolve({ default: Home });
+        },
+      },
+    ];
+    render(
+      <Router
+        routes={routes}
+        loading={<div>loading...</div>}
+        errorFallback={({ reset }) => (
+          <button onClick={reset}>retry</button>
+        )}
+      />,
+    );
+    // First attempt failed → custom fallback.
+    await waitFor(() => expect(screen.getByText("retry")).toBeTruthy());
+    // Retry busts the cache, re-imports; the second attempt resolves.
+    fireEvent.click(screen.getByText("retry"));
+    await waitFor(() => expect(screen.getByText("home page")).toBeTruthy());
+  });
+
+  it("clears the error automatically when navigating to a working route", async () => {
+    window.history.replaceState({}, "", "/bad");
+    const routes: RouteDefinition[] = [
+      { path: "/", component: Home },
+      {
+        path: "/bad",
+        lazy: () =>
+          Promise.reject(
+            new Error("Failed to fetch dynamically imported module"),
+          ),
+      },
+    ];
+    render(<Router routes={routes} loading={<div>loading...</div>} />);
+    await waitFor(() =>
+      expect(screen.getByText(/couldn.t be loaded/i)).toBeTruthy(),
+    );
+
+    act(() => navigate("/"));
+    await waitFor(() => expect(screen.getByText("home page")).toBeTruthy());
   });
 });

@@ -45,6 +45,7 @@ The root component. Provides routing context to all children.
 <Router
   routes={routes} // route definitions array
   loading={<Spinner />} // global loading fallback for lazy routes
+  errorFallback={<Oops />} // shown when a route fails to load or throws
 >
   {children}
 </Router>
@@ -201,6 +202,67 @@ function App() {
 }
 ```
 
+## Error handling
+
+Lazy routes can fail to load — most often a **stale chunk after a deploy** (an
+open tab references an old hashed file that no longer exists), or a network
+blip. Suspense doesn't catch this (it only catches *suspension*), so a failed
+chunk would otherwise unmount your whole app. routini wraps every route in an
+error boundary, so one broken route shows a fallback instead of a white
+screen — covering both failed lazy imports and render errors in the page. The
+boundary clears itself automatically when you navigate to another route.
+
+By default it renders a minimal message. Pass `errorFallback` to replace it:
+
+```tsx
+<Router
+  routes={routes}
+  errorFallback={
+    <div className="error">
+      <h2>This page didn’t load</h2>
+      <button onClick={() => location.reload()}>Reload</button>
+    </div>
+  }
+/>
+```
+
+For full control, pass a function — it receives the error and recovery helpers:
+
+```tsx
+<Router
+  routes={routes}
+  errorFallback={({ error, reset, reload, isChunkError }) =>
+    isChunkError ? (
+      // A stale chunk after a deploy — a fresh document fixes the chunk URLs.
+      <button onClick={reload}>New version available — reload</button>
+    ) : (
+      // A render error — retry in place, without losing app state.
+      <div>
+        <p>{error.message}</p>
+        <button onClick={reset}>Try again</button>
+      </div>
+    )
+  }
+/>
+```
+
+- `error` — the thrown error.
+- `reset()` — retry the route in place (re-runs a failed lazy import, keeps app state).
+- `reload()` — hard-reload the page. routini never calls this itself; it's yours to offer.
+- `isChunkError` — `true` for a failed code-split download, `false` for a render bug.
+
+Use `onError` for logging:
+
+```tsx
+<Router routes={routes} onError={(error, info) => Sentry.captureException(error)} />
+```
+
+The boundary wraps the matched **page**, so in a layout any components you
+render around `<Outlet />` stay on screen when a page errors — only the page
+area shows the fallback. It does **not** cover those layout components
+themselves: if anything in your layout can throw, wrap `<Router>` in your own
+error boundary too.
+
 ## Catch-all Route
 
 Use `path="*"` to handle unmatched paths:
@@ -239,11 +301,11 @@ Routini is intentionally small. These features aren't planned — if you need th
 
 | Feature | Use instead |
 | --- | --- |
-| Data loaders & actions | react-router, tanstack router |
-| Nested layouts | react-router, tanstack router |
-| File-based routing | tanstack router, Remix |
+| Data loaders & actions | a data-fetching router |
+| Nested layouts | a full-featured router |
+| File-based routing | a meta-framework |
 | Server-side rendering | planned via `ssrPath` (see Roadmap) |
-| Hash & memory routing | react-router |
+| Hash & memory routing | a full-featured router |
 
 ## Performance
 

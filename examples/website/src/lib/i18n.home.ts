@@ -8,7 +8,7 @@ const home = {
       pretitle: "A tiny router for React",
       title1: "Routing.",
       title2: "Nothing else.",
-      sub: "Under 2 KB. TypeScript-first. Lazy routes built in.",
+      sub: "2.2 KB gzipped. TypeScript-first. Lazy routes built in.",
       ctaDocs: "Read the docs",
       ctaGithub: "View on GitHub",
     },
@@ -17,8 +17,8 @@ const home = {
       subhead:
         "Small to ship, solid to type, scoped to one job, free of setup ceremony.",
       size: {
-        headline: "Under 2 KB",
-        body: "Components, hooks, and the navigate utility — the whole library ships in 1.4 KB gzipped.",
+        headline: "2.2 KB gzipped",
+        body: "Components, hooks, and the navigate utility — the whole library is 2.2 KB gzipped.",
       },
       types: {
         headline: "TypeScript from day one",
@@ -92,7 +92,7 @@ const home = {
       pretitle: "Un router pequeño para React",
       title1: "Solo routing.",
       title2: "Nada más.",
-      sub: "Menos de 2 KB. TypeScript-first. Carga diferida integrada.",
+      sub: "2.2 KB gzipped. TypeScript-first. Carga diferida integrada.",
       ctaDocs: "Leer la documentación",
       ctaGithub: "Ver en GitHub",
     },
@@ -101,8 +101,8 @@ const home = {
       subhead:
         "Ligera al enviar, robusta en tipado, enfocada en una sola tarea, sin ceremonia de configuración.",
       size: {
-        headline: "Menos de 2 KB",
-        body: "Componentes, hooks y la utilidad navigate — toda la librería pesa 1.4 KB comprimida.",
+        headline: "2.2 KB gzipped",
+        body: "Componentes, hooks y la utilidad navigate — toda la librería pesa 2.2 KB comprimida.",
       },
       types: {
         headline: "TypeScript desde el primer día",

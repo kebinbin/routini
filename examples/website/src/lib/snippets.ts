@@ -189,6 +189,30 @@ const routes = [
   { path: "*", lazy: () => import("./NotFound") },
 ];
 `,
+
+  errorHandling: `import { Router } from "routini";
+
+// A failed lazy chunk or a render error shows this instead
+// of white-screening the app. Pass nothing for a minimal
+// default; pass a function for full control.
+export default function App() {
+  return (
+    <Router
+      routes={routes}
+      onError={(error) => report(error)}
+      errorFallback={({ error, reset, reload, isChunkError }) =>
+        isChunkError ? (
+          // Stale chunk after a deploy — a fresh document fixes it.
+          <button onClick={reload}>Reload</button>
+        ) : (
+          // A render error — retry in place, keep app state.
+          <button onClick={reset}>Try again — {error.message}</button>
+        )
+      }
+    />
+  );
+}
+`,
 } as const;
 
 export type SnippetId = keyof typeof snippets;

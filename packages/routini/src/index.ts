@@ -1,5 +1,6 @@
 export { Router } from "./components/Router";
 export type { RouterProps, RouteDefinition, DynamicImport } from "./components/Router";
+export type { ErrorFallbackContext } from "./components/RouteErrorBoundary";
 export { Route } from "./components/Route";
 export { Outlet } from "./components/Outlet";
 export { Link } from "./components/Link";
