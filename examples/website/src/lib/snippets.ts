@@ -211,6 +211,25 @@ function AlbumCard({ album }) {
 navigate("/album/9", { viewTransition: true });
 `,
 
+  preload: `import { Link } from "routini";
+
+// Warm a lazy route's code-split chunk before the click, so
+// the page is ready instantly — and View Transitions land on
+// the real page, not the loading fallback. No-op for eager routes.
+function Nav() {
+  return (
+    <nav>
+      {/* on hover / keyboard focus — the user signalled intent */}
+      <Link to="/dashboard" preload="hover">Dashboard</Link>
+
+      {/* on mount, in an idle callback — the route almost
+          everyone visits next */}
+      <Link to="/album/9" preload="render">Featured album</Link>
+    </nav>
+  );
+}
+`,
+
   errorHandling: `import { Router } from "routini";
 
 // A failed lazy chunk or a render error shows this instead

@@ -4,6 +4,9 @@ import {
   useEffect,
   useLayoutEffect,
   useReducer,
+  useRef,
+  useCallback,
+  useMemo,
   Children,
   lazy,
   Suspense,
@@ -44,6 +47,22 @@ const lazyComponentsCache = new WeakMap<
   DynamicImport,
   React.LazyExoticComponent<React.ComponentType>
 >();
+
+// Thunks whose chunk has already been preloaded — so repeated hovers (or a
+// re-mounting "render" preload) fire the import at most once.
+const preloadedThunks = new WeakSet<DynamicImport>();
+
+/**
+ * Speculatively warm a route's code-split chunk: call the import thunk so the
+ * browser caches the module before navigation. Failures are swallowed (the real
+ * navigation surfaces them through the error boundary) and the thunk is
+ * forgotten so a later navigation can retry.
+ */
+function preloadRoute(dynamicImport: DynamicImport) {
+  if (preloadedThunks.has(dynamicImport)) return;
+  preloadedThunks.add(dynamicImport);
+  dynamicImport().catch(() => preloadedThunks.delete(dynamicImport));
+}
 
 /**
  * Subscribe to URL changes. Module-level so its identity is stable across
@@ -141,15 +160,55 @@ export function Router({
   // lazy import) after we've dropped the cached component.
   const [, forceRetry] = useReducer((n: number) => n + 1, 0);
 
-  const childrenRoutes: RouteDefinition[] = [];
-  Children.forEach(children, (child) => {
-    const { props, type } = child as React.ReactElement;
-    if (isRouteType(type)) {
-      childrenRoutes.push(props as RouteDefinition);
-    }
-  });
+  // Memoized so a stable `routes` prop yields a stable list — keeping both
+  // matchRoute's input and the preloadPath callback below stable, and avoiding
+  // re-walking children every render. Recomputed only when routes/children change.
+  const routesToUse = useMemo(() => {
+    const childrenRoutes: RouteDefinition[] = [];
+    Children.forEach(children, (child) => {
+      const { props, type } = child as React.ReactElement;
+      if (isRouteType(type)) {
+        childrenRoutes.push(props as RouteDefinition);
+      }
+    });
+    return routes.concat(childrenRoutes);
+  }, [routes, children]);
 
-  const routesToUse = routes.concat(childrenRoutes);
+  // Stable while routesToUse is stable, so Link's "render" preload effect (which
+  // lists it as a dependency) doesn't re-schedule on every Router render.
+  const preloadPath = useCallback(
+    (to: string) => {
+      const path = to.split(/[?#]/)[0]; // pathname only — drop any hash/query
+      const { route } = matchRoute(routesToUse, path);
+      if (route?.lazy) preloadRoute(route.lazy);
+    },
+    [routesToUse],
+  );
+
+  // Dev-only: a `routes` array recreated each render mints new lazy import thunks,
+  // busting the lazy cache so those pages remount and lose state every render —
+  // a silent flicker with no error. (Eager routes are fine: their component
+  // reference is stable.) Warn once when an unstable array actually holds lazy
+  // routes; the fix is to define it outside the component or wrap it in useMemo.
+  const lastRoutes = useRef(routes);
+  const warnedUnstableRoutes = useRef(false);
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "development") return;
+    if (
+      routes !== lastRoutes.current &&
+      !warnedUnstableRoutes.current &&
+      routes.some((route) => route.lazy)
+    ) {
+      warnedUnstableRoutes.current = true;
+      console.warn(
+        "routini: the `routes` prop changed reference between renders and " +
+          "includes lazy routes. Define the routes array outside your component " +
+          "(or wrap it in useMemo) — otherwise lazy routes remount and lose " +
+          "their state on every render.",
+      );
+    }
+    lastRoutes.current = routes;
+  }, [routes]);
 
   const { route: matchedRoute, params: routeParams } = matchRoute(
     routesToUse,
@@ -215,7 +274,9 @@ export function Router({
   );
 
   return (
-    <RouterContext.Provider value={{ routeParams, currentPath, content }}>
+    <RouterContext.Provider
+      value={{ routeParams, currentPath, content, preloadPath }}
+    >
       {children ?? content}
     </RouterContext.Provider>
   );

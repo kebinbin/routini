@@ -2,19 +2,19 @@
  * Bundle-size comparison, Astro-style horizontal bars.
  *
  * Sizes are minified + gzipped. Competitor figures are from bundlephobia
- * (verified 2026-05-30, versions noted below); routini is measured locally
- * the same way (terser --compress --mangle, react external, gzip) since it is
- * not yet published — keep this in sync with the figure quoted in i18n copy.
+ * (verified 2026-05-30, versions noted below); routini is measured locally the
+ * same way (terser --compress --mangle, react external, gzip) via `npm run
+ * size` since it is not yet published — keep this in sync with the i18n copy.
  *
  *   React Router    react-router-dom@7.16.0   59.97 KB
  *   TanStack Router @tanstack/react-router@1.170.10  39.3 KB
  *   Wouter          wouter@3.10.0             2.54 KB
- *   routini         (error boundary + view transitions)  2.26 KB
+ *   routini         (error boundary, view transitions, preload)  2.52 KB
  *
  * Ordered smallest → largest so routini leads as the highlighted reference.
  */
 const ENTRIES = [
-  { name: "routini", kb: 2.26, label: "2.3 KB", highlight: true },
+  { name: "routini", kb: 2.52, label: "2.5 KB", highlight: true },
   { name: "Wouter", kb: 2.54, label: "2.5 KB" },
   { name: "TanStack Router", kb: 39.3, label: "39 KB" },
   { name: "React Router", kb: 59.97, label: "60 KB" },

@@ -70,17 +70,20 @@ Client-side navigation. Handles modifier keys (cmd, ctrl, shift, alt) correctly.
 <Link to="/about">About</Link>
 ```
 
-Two optional props beyond the standard `<a>` attributes:
+Optional props beyond the standard `<a>` attributes:
 
 ```tsx
 <Link to="/dashboard" replace>Dashboard</Link>          {/* replace the history entry */}
 <Link to="/album/9" viewTransition>Open album</Link>    {/* animate the navigation */}
+<Link to="/album/9" preload="hover">Open album</Link>   {/* warm the chunk on hover */}
 ```
 
 - `replace` — swap the current history entry instead of pushing a new one.
 - `viewTransition` — animate the navigation with the View Transitions API
   (see [View Transitions](#view-transitions)); browsers without support
   navigate instantly.
+- `preload` — load the route's code-split chunk ahead of the click
+  (see [Preloading](#preloading)); `"hover"` or `"render"`.
 
 Hash anchors are handled too:
 
@@ -232,6 +235,10 @@ function App() {
 }
 ```
 
+In development, routini warns once if the `routes` array changes identity
+between renders **and** contains lazy routes — the exact case that causes the
+remounts above. (Eager routes are unaffected, so they don't trigger it.)
+
 ## Error handling
 
 Lazy routes can fail to load — most often a **stale chunk after a deploy** (an
@@ -341,10 +348,33 @@ Notes:
   navigate instantly. No feature checks needed in your code.
 - Transitions are opt-in per navigation: the page is non-interactive while an
   animation runs, so reserve it for navigations where motion adds meaning.
-- **Works best with eager routes.** On a lazy route whose chunk isn't loaded
-  yet, the transition animates to the loading fallback rather than the page.
-  Keep view-transition targets eager, or pair with route preloading when it
-  lands (see Roadmap).
+- **Pair lazy routes with preloading.** On a lazy route whose chunk isn't
+  loaded yet, the transition animates to the loading fallback rather than the
+  page. Add [`preload`](#preloading) to the link so the chunk is warm before
+  the click and the transition lands on the real page.
+
+## Preloading
+
+Load a lazy route's code-split chunk *before* the user navigates, so the page is
+ready on click — no loading fallback, and View Transitions land on the real page
+instead of a spinner.
+
+```tsx
+<Link to="/album/9" preload="hover">Open album</Link>  {/* on intent */}
+<Link to="/album/9" preload="render">Open album</Link> {/* when the link mounts */}
+```
+
+- `preload="hover"` — warms the chunk when the user hovers the link or focuses
+  it with the keyboard (they've signalled intent). Best for most links.
+- `preload="render"` — warms the chunk as soon as the link mounts, scheduled in
+  an idle callback so it never competes with the current page's own loading.
+  Best for the one route you expect almost everyone to visit next.
+
+Only **lazy** routes have a chunk to fetch — `preload` is a no-op for eager
+routes. Each chunk is fetched at most once, however many times it's hovered or
+however many links point at it. A failed preload is swallowed silently; the real
+navigation still surfaces the error through the
+[error boundary](#error-handling).
 
 ## Philosophy
 
@@ -386,8 +416,8 @@ Routini is intentionally small. These features aren't planned — if you need th
 ## Roadmap
 
 - [x] View Transitions API support (`viewTransition` on `Link` / `navigate`)
-- [ ] Link prefetching on hover (`preload="hover"`) — also makes view
-      transitions seamless on lazy routes
+- [x] Route preloading (`preload="hover" | "render"` on `Link`) — also makes
+      View Transitions seamless on lazy routes
 - [ ] SSR support via `ssrPath` prop
 - [ ] `@routini/vite-plugin` for file-based routing
 
@@ -421,6 +451,7 @@ Run from the repo root:
 | `npm test` | Runs Vitest across workspaces |
 | `npm run lint -w packages/routini` | Lints the library |
 | `npm run typecheck -w packages/routini` | Type-checks the library |
+| `npm run size -w packages/routini` | Measures the minified + gzipped/brotli size (fails over budget) |
 
 Open two terminals for the typical workflow: `npm run dev:package` and `npm run dev:website`.
 

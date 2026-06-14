@@ -1,7 +1,16 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { fireEvent, render } from "@testing-library/react";
+import { act, fireEvent, render } from "@testing-library/react";
+import type { ReactElement } from "react";
 import { Link } from "./Link";
+import { RouterContext } from "../context/RouterContext";
 import { EVENTS } from "../consts";
+
+const baseContext = {
+  routeParams: {},
+  currentPath: "/",
+  content: null,
+  preloadPath: () => {},
+};
 
 beforeEach(() => {
   window.history.replaceState({}, "", "/");
@@ -120,5 +129,119 @@ describe("Link", () => {
     const anchor = container.querySelector("a")!;
     expect(anchor.hasAttribute("replace")).toBe(false);
     expect(anchor.hasAttribute("viewtransition")).toBe(false);
+  });
+});
+
+describe("Link preload", () => {
+  const renderWithPreload = (
+    preloadPath: (to: string) => void,
+    ui: ReactElement,
+  ) =>
+    render(
+      <RouterContext.Provider value={{ ...baseContext, preloadPath }}>
+        {ui}
+      </RouterContext.Provider>,
+    );
+
+  it('preload="hover" warms the route on pointer-enter', () => {
+    const preloadPath = vi.fn();
+    const { container } = renderWithPreload(
+      preloadPath,
+      <Link to="/about" preload="hover">
+        about
+      </Link>,
+    );
+    fireEvent.mouseEnter(container.querySelector("a")!);
+    expect(preloadPath).toHaveBeenCalledWith("/about");
+  });
+
+  it('preload="hover" warms the route on keyboard focus', () => {
+    const preloadPath = vi.fn();
+    const { container } = renderWithPreload(
+      preloadPath,
+      <Link to="/about" preload="hover">
+        about
+      </Link>,
+    );
+    fireEvent.focus(container.querySelector("a")!);
+    expect(preloadPath).toHaveBeenCalledWith("/about");
+  });
+
+  it("does not preload without the preload prop", () => {
+    const preloadPath = vi.fn();
+    const { container } = renderWithPreload(
+      preloadPath,
+      <Link to="/about">about</Link>,
+    );
+    const anchor = container.querySelector("a")!;
+    fireEvent.mouseEnter(anchor);
+    fireEvent.focus(anchor);
+    expect(preloadPath).not.toHaveBeenCalled();
+  });
+
+  it("still calls a consumer-provided onMouseEnter / onFocus", () => {
+    const preloadPath = vi.fn();
+    const onMouseEnter = vi.fn();
+    const onFocus = vi.fn();
+    const { container } = renderWithPreload(
+      preloadPath,
+      <Link
+        to="/about"
+        preload="hover"
+        onMouseEnter={onMouseEnter}
+        onFocus={onFocus}
+      >
+        about
+      </Link>,
+    );
+    const anchor = container.querySelector("a")!;
+    fireEvent.mouseEnter(anchor);
+    fireEvent.focus(anchor);
+    expect(onMouseEnter).toHaveBeenCalledTimes(1);
+    expect(onFocus).toHaveBeenCalledTimes(1);
+    expect(preloadPath).toHaveBeenCalledTimes(2);
+  });
+
+  it('preload="render" warms the route in a deferred idle callback', () => {
+    vi.useFakeTimers();
+    const w = window as unknown as { requestIdleCallback?: unknown };
+    const originalRIC = w.requestIdleCallback;
+    w.requestIdleCallback = undefined; // force the setTimeout fallback
+    const preloadPath = vi.fn();
+    renderWithPreload(
+      preloadPath,
+      <Link to="/about" preload="render">
+        about
+      </Link>,
+    );
+    // Deferred to idle — nothing fires on mount.
+    expect(preloadPath).not.toHaveBeenCalled();
+    act(() => {
+      vi.runAllTimers();
+    });
+    expect(preloadPath).toHaveBeenCalledWith("/about");
+    w.requestIdleCallback = originalRIC;
+    vi.useRealTimers();
+  });
+
+  it("does not leak the preload prop onto the rendered anchor", () => {
+    const { container } = renderWithPreload(
+      () => {},
+      <Link to="/about" preload="hover">
+        about
+      </Link>,
+    );
+    expect(container.querySelector("a")!.hasAttribute("preload")).toBe(false);
+  });
+
+  it("is a no-op (does not throw) when rendered without a Router", () => {
+    const { container } = render(
+      <Link to="/about" preload="hover">
+        about
+      </Link>,
+    );
+    expect(() =>
+      fireEvent.mouseEnter(container.querySelector("a")!),
+    ).not.toThrow();
   });
 });

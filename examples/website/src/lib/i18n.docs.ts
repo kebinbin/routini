@@ -111,6 +111,11 @@ const docs = {
             desc: "Animate this navigation with the View Transitions API. Browsers without support navigate instantly.",
           },
           {
+            name: "preload",
+            type: '"hover" | "render"',
+            desc: "Warm this route's lazy chunk ahead of the click — on hover/focus, or when the link mounts. No-op for eager routes. See Preloading.",
+          },
+          {
             name: "...rest",
             type: "AnchorHTMLAttributes",
             desc: "Any standard <a> attribute (className, style, aria-*, target, …) is forwarded to the anchor.",
@@ -242,8 +247,29 @@ const docs = {
         notes: [
           "Progressive enhancement: browsers without document.startViewTransition navigate instantly — no feature checks needed in your code.",
           "Opt in per navigation: the page is non-interactive while an animation runs, so reserve it for navigations where motion adds meaning.",
-          "Works best with eager routes. On a lazy route whose chunk isn't loaded yet, the transition animates to the loading fallback rather than the page.",
+          "On a lazy route whose chunk isn't loaded yet, the transition animates to the loading fallback rather than the page — add preload to the Link so the chunk is warm first (see Preloading).",
           "Customize with the ::view-transition-old/new pseudo-elements; scope per-element morphs with view-transition-name.",
+        ],
+      },
+      preloading: {
+        body: 'Load a lazy route\'s code-split chunk before the user navigates, so the page is ready on click — no loading fallback, and View Transitions land on the real page instead of a spinner. Add preload to a Link: "hover" warms the chunk on pointer-enter or keyboard focus; "render" warms it as soon as the link mounts, in an idle callback that never competes with the current page\'s own loading.',
+        table: [
+          {
+            name: 'preload="hover"',
+            type: "on <Link>",
+            desc: "Warm the chunk on hover or keyboard focus — the user has signalled intent. The right default for most links.",
+          },
+          {
+            name: 'preload="render"',
+            type: "on <Link>",
+            desc: "Warm the chunk when the link mounts, scheduled in an idle callback. Best for the one route almost everyone visits next.",
+          },
+        ],
+        notes: [
+          "Only lazy routes have a chunk to fetch — preload is a no-op for eager routes.",
+          "Each chunk is fetched at most once, however many times it's hovered or however many links point at it.",
+          "A failed preload is swallowed silently; the real navigation still surfaces the error through the route error boundary.",
+          "Pairs with View Transitions: warm the chunk so the animation lands on the real page rather than the loading fallback.",
         ],
       },
     },
@@ -354,6 +380,11 @@ const docs = {
             name: "viewTransition",
             type: "boolean",
             desc: "Anima esta navegación con la View Transitions API. Los navegadores sin soporte navegan al instante.",
+          },
+          {
+            name: "preload",
+            type: '"hover" | "render"',
+            desc: "Precarga el chunk lazy de esta ruta antes del clic — al pasar el cursor/foco, o al montar el enlace. No hace nada en rutas eager. Ver Precarga.",
           },
           {
             name: "...rest",
@@ -487,8 +518,29 @@ const docs = {
         notes: [
           "Mejora progresiva: los navegadores sin document.startViewTransition navegan al instante — sin checks de soporte en tu código.",
           "Actívala por navegación: la página no es interactiva mientras corre la animación, así que resérvala para navegaciones donde el movimiento aporte significado.",
-          "Funciona mejor con rutas eager. En una ruta lazy cuyo chunk no está cargado, la transición anima hacia el fallback de carga en lugar de la página.",
+          "En una ruta lazy cuyo chunk no está cargado, la transición anima hacia el fallback de carga en lugar de la página — añade preload al Link para que el chunk esté caliente primero (ver Precarga).",
           "Personalízala con los pseudo-elementos ::view-transition-old/new; delimita transformaciones por elemento con view-transition-name.",
+        ],
+      },
+      preloading: {
+        body: 'Carga el chunk de una ruta lazy antes de que el usuario navegue, para que la página esté lista al hacer clic — sin fallback de carga, y las View Transitions aterrizan en la página real en lugar de un spinner. Añade preload a un Link: "hover" precarga el chunk al pasar el cursor o dar foco con el teclado; "render" lo precarga en cuanto el enlace se monta, en un callback de inactividad que nunca compite con la carga de la página actual.',
+        table: [
+          {
+            name: 'preload="hover"',
+            type: "en <Link>",
+            desc: "Precarga el chunk al pasar el cursor o dar foco — el usuario mostró intención. El valor por defecto adecuado para la mayoría de enlaces.",
+          },
+          {
+            name: 'preload="render"',
+            type: "en <Link>",
+            desc: "Precarga el chunk cuando el enlace se monta, programado en un callback de inactividad. Ideal para la ruta que casi todos visitan después.",
+          },
+        ],
+        notes: [
+          "Solo las rutas lazy tienen un chunk que cargar — preload no hace nada en rutas eager.",
+          "Cada chunk se carga como mucho una vez, sin importar cuántas veces se pase el cursor ni cuántos enlaces apunten a él.",
+          "Una precarga fallida se ignora en silencio; la navegación real sigue mostrando el error a través del error boundary de ruta.",
+          "Combina con View Transitions: precarga el chunk para que la animación aterrice en la página real en lugar del fallback de carga.",
         ],
       },
     },
