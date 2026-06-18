@@ -22,8 +22,7 @@ export interface ErrorFallbackContext {
 
 /**
  * What to render when a route errors. A static node, or a function that
- * receives the error plus recovery helpers — mirrors TanStack Router's
- * `errorComponent({ error, reset })`.
+ * receives the error plus recovery helpers.
  */
 export type ErrorFallback =
   | ReactNode
