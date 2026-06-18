@@ -168,40 +168,48 @@ const visuals: Record<string, ReactNode> = {
       </div>
     </div>
   ),
-  // Route params: a route pattern resolving to real values. At rest it's the
-  // pattern /users/:userId/posts/:postId (placeholders highlighted); on hover each
-  // :param resolves in place to its value (9, 4) and the captured object reveals
-  // below — what useParams() hands you, and proof multiple params work. Each swap
-  // uses an inline-grid overlap so the pill keeps the placeholder's width (no
-  // jump). Touch shows the resolved state.
+  // Route + search params: useParams reads the path, useSearchParams reads the
+  // query. At rest it's /products/:id?sort=:sort (slots highlighted); on hover
+  // each slot resolves and the read of each reveals below. useParams() hands back
+  // an object ({ id }); useSearchParams() hands back a [params, setParams] tuple
+  // (like useState) — params is the whole query bag, so you pull one value out
+  // with params.get("sort"), and setParams writes it. The tile shows the reads;
+  // inline-grid overlap keeps each pill's width (no jump). Touch shows resolved.
   "use-params": (
     <div className="flex flex-col items-center gap-3 font-mono">
       <div className="flex items-center text-xs">
-        <span className="text-bone-faint">/users/</span>
+        <span className="text-bone-faint">/products/</span>
         <span className="relative inline-grid rounded-md border border-accent/60 bg-accent/15 px-1 py-0.5 text-accent">
           <span className="col-start-1 row-start-1 text-center transition-opacity duration-300 group-hover:opacity-0 pointer-coarse:opacity-0">
-            :userId
+            :id
           </span>
           <span className="col-start-1 row-start-1 text-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-coarse:opacity-100">
             9
           </span>
         </span>
-        <span className="text-bone-faint">/posts/</span>
+        <span className="text-bone-faint">?sort=</span>
         <span className="relative inline-grid rounded-md border border-accent/60 bg-accent/15 px-1 py-0.5 text-accent">
           <span className="col-start-1 row-start-1 text-center transition-opacity duration-300 group-hover:opacity-0 pointer-coarse:opacity-0">
-            :postId
+            :sort
           </span>
           <span className="col-start-1 row-start-1 text-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-coarse:opacity-100">
-            4
+            price
           </span>
         </span>
       </div>
-      <div className="rounded-md border border-ink-3 bg-ink px-2.5 py-1 text-[11px] text-bone-dim opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-coarse:opacity-100">
-        {"{ userId: "}
-        <span className="text-accent">&quot;9&quot;</span>
-        {", postId: "}
-        <span className="text-accent">&quot;4&quot;</span>
-        {" }"}
+      <div className="flex flex-col items-center gap-1.5 opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-coarse:opacity-100">
+        <div className="rounded-md border border-ink-3 bg-ink px-2.5 py-1 text-[11px] text-bone-dim">
+          <span className="text-bone-faint">useParams().</span>id
+          {" → "}
+          <span className="text-accent">&quot;9&quot;</span>
+        </div>
+        <div className="rounded-md border border-ink-3 bg-ink px-2.5 py-1 text-[11px] text-bone-dim">
+          <span className="text-bone-faint">searchParams.get(</span>
+          <span className="text-accent">&quot;sort&quot;</span>
+          <span className="text-bone-faint">)</span>
+          {" → "}
+          <span className="text-accent">&quot;price&quot;</span>
+        </div>
       </div>
     </div>
   ),

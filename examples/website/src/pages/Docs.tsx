@@ -80,6 +80,14 @@ const DOCS_ENTRIES: DocEntry[] = [
     since: "0.1.0",
   },
   {
+    anchor: "use-search-params",
+    name: "useSearchParams",
+    signature: "useSearchParams(): [URLSearchParams, setSearchParams]",
+    snippet: "searchParams",
+    group: "hooks",
+    since: "0.1.0",
+  },
+  {
     anchor: "navigate-util",
     name: "navigate",
     signature: "navigate(to: string, options?: NavigateOptions): void",
@@ -93,7 +101,7 @@ const DOCS_ENTRIES: DocEntry[] = [
     signature: "<Router errorFallback onError />",
     snippet: "errorHandling",
     group: "guides",
-    since: "0.2.0",
+    since: "0.1.0",
   },
   {
     anchor: "view-transitions",
@@ -101,15 +109,15 @@ const DOCS_ENTRIES: DocEntry[] = [
     signature: '<Link viewTransition> · navigate(to, { viewTransition })',
     snippet: "viewTransitions",
     group: "guides",
-    since: "0.2.0",
+    since: "0.1.0",
   },
   {
     anchor: "preloading",
     name: "Preloading",
-    signature: '<Link preload="hover" | "render" />',
+    signature: '<Link preload="hover" | "render" | "viewport" />',
     snippet: "preload",
     group: "guides",
-    since: "0.3.0",
+    since: "0.1.0",
   },
 ];
 

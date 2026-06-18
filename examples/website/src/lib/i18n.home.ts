@@ -8,7 +8,7 @@ const home = {
       pretitle: "A tiny router for React",
       title1: "Routing.",
       title2: "Nothing else.",
-      sub: "2.5 KB gzipped. TypeScript-first. Lazy routes built in.",
+      sub: "2.8 KB gzipped. TypeScript-first. Lazy routes built in.",
       ctaDocs: "Read the docs",
       ctaGithub: "View on GitHub",
     },
@@ -17,8 +17,8 @@ const home = {
       subhead:
         "Small to ship, solid to type, scoped to one job, free of setup ceremony.",
       size: {
-        headline: "2.5 KB gzipped",
-        body: "Components, hooks, and the navigate utility — the whole library is 2.5 KB gzipped.",
+        headline: "2.8 KB gzipped",
+        body: "Components, hooks, and the navigate utility — the whole library is 2.8 KB gzipped.",
       },
       types: {
         headline: "TypeScript from day one",
@@ -47,7 +47,7 @@ const home = {
         {
           name: "Link preload",
           anchor: "preloading",
-          desc: "Warm a route's chunk on hover or on render, so the next page lands instantly.",
+          desc: "Warm a route's chunk on hover, on render, or when it scrolls into view, so the next page lands instantly.",
         },
         {
           name: "Declarative or imperative",
@@ -78,9 +78,9 @@ const home = {
         },
         // Row 4 — reading the URL, fundamentals last
         {
-          name: "Route params",
+          name: "Route & search params",
           anchor: "use-params",
-          desc: "Read any :segment off the URL with useParams() — then hand the id to your data layer.",
+          desc: "Read path segments with useParams() and the ?query with useSearchParams() — values straight off the URL, both reactive, no prop drilling.",
         },
         {
           name: "useLocation",
@@ -107,7 +107,7 @@ const home = {
       pretitle: "Un router pequeño para React",
       title1: "Solo routing.",
       title2: "Nada más.",
-      sub: "2.5 KB gzipped. TypeScript-first. Carga diferida integrada.",
+      sub: "2.8 KB gzipped. TypeScript-first. Carga diferida integrada.",
       ctaDocs: "Leer la documentación",
       ctaGithub: "Ver en GitHub",
     },
@@ -116,8 +116,8 @@ const home = {
       subhead:
         "Ligera al enviar, robusta en tipado, enfocada en una sola tarea, sin ceremonia de configuración.",
       size: {
-        headline: "2.5 KB gzipped",
-        body: "Componentes, hooks y la utilidad navigate — toda la librería pesa 2.5 KB comprimida.",
+        headline: "2.8 KB gzipped",
+        body: "Componentes, hooks y la utilidad navigate — toda la librería pesa 2.8 KB comprimida.",
       },
       types: {
         headline: "TypeScript desde el primer día",
@@ -145,7 +145,7 @@ const home = {
         {
           name: "Preload de enlaces",
           anchor: "preloading",
-          desc: "Precalienta el chunk de una ruta al pasar el cursor o al montar, para que la siguiente página sea instantánea.",
+          desc: "Precalienta el chunk de una ruta al pasar el cursor, al montar o al entrar en pantalla, para que la siguiente página sea instantánea.",
         },
         {
           name: "Declarativo o imperativo",
@@ -176,9 +176,9 @@ const home = {
         },
         // Fila 4 — leer la URL, fundamentos al final
         {
-          name: "Params de ruta",
+          name: "Params de ruta y search",
           anchor: "use-params",
-          desc: "Lee cualquier :segmento de la URL con useParams() — y pasa el id a tu capa de datos.",
+          desc: "Lee segmentos del path con useParams() y el ?query con useSearchParams() — valores directos de la URL, ambos reactivos, sin prop drilling.",
         },
         {
           name: "useLocation",
