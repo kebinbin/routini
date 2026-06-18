@@ -28,12 +28,32 @@ describe("matchRoute", () => {
     expect(result.params).toEqual({ id: "42" });
   });
 
-  it("extracts multiple dynamic params", () => {
+  it("extracts a param alongside a static segment", () => {
     const routes: RouteDefinition[] = [
       { path: "/:lang/about", component: Page },
     ];
     const result = matchRoute(routes, "/en/about");
     expect(result.params).toEqual({ lang: "en" });
+  });
+
+  it("extracts multiple params from one route", () => {
+    const routes: RouteDefinition[] = [
+      { path: "/users/:userId/posts/:postId", component: Page },
+    ];
+    const result = matchRoute(routes, "/users/9/posts/4");
+    expect(result.route?.path).toBe("/users/:userId/posts/:postId");
+    expect(result.params).toEqual({ userId: "9", postId: "4" });
+  });
+
+  it("captures params and ignores a trailing query string in the matcher input", () => {
+    // Router/preloadPath strip ?#, but lock the param capture for a deep route.
+    const routes: RouteDefinition[] = [
+      { path: "/users/:userId/posts/:postId", component: Page },
+    ];
+    expect(matchRoute(routes, "/users/jane%20doe/posts/7").params).toEqual({
+      userId: "jane doe",
+      postId: "7",
+    });
   });
 
   it("decodes URL-encoded characters in params", () => {

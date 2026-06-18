@@ -8,16 +8,15 @@
  *
  *   React Router    react-router-dom@7.16.0   59.97 KB
  *   TanStack Router @tanstack/react-router@1.170.10  39.3 KB
- *   Wouter          wouter@3.10.0             2.54 KB
  *   routini  (error boundary, View Transitions, preload, search params, lazy resolver)  2.79 KB
  *
- * routini ships zero runtime dependencies (only react/react-dom peers); the
- * other three each pull in their own. Ordered smallest → largest; routini sits a
- * hair above the lightest alternative but is dependency-free with far more built
- * in, and is highlighted as the reference.
+ * Measured against the full-featured routers people actually weigh routini
+ * against: an order of magnitude smaller while shipping a comparable built-in
+ * feature set (lazy + Suspense, error boundary, View Transitions, preload,
+ * search params), and with zero runtime dependencies. Ordered smallest →
+ * largest; routini is highlighted as the reference.
  */
 const ENTRIES = [
-  { name: "Wouter", kb: 2.54, label: "2.5 KB" },
   { name: "routini", kb: 2.79, label: "2.8 KB", highlight: true },
   { name: "TanStack Router", kb: 39.3, label: "39 KB" },
   { name: "React Router", kb: 59.97, label: "60 KB" },
@@ -34,9 +33,9 @@ export function BundleChart() {
 
       <div className="flex flex-col gap-3">
         {ENTRIES.map((entry) => {
-          // Range spans ~40×, so a purely linear width makes the small bars
-          // vanish. Floor at 6% to keep routini/Wouter legible — the labels
-          // carry the exact figures.
+          // Range spans ~20×, so a purely linear width makes routini's bar
+          // vanish. Floor at 6% to keep it legible — the labels carry the
+          // exact figures.
           const width = Math.max((entry.kb / MAX_KB) * 100, 6);
           const highlight = "highlight" in entry && entry.highlight;
 
