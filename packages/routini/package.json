@@ -1,7 +1,32 @@
 {
   "name": "routini",
   "version": "0.1.0",
-  "description": "A minimal TypeScript-first router for React",
+  "description": "A tiny, TypeScript-first router for React — lazy routes, error boundary, and View Transitions in ~2.3 KB gzipped",
+  "keywords": [
+    "react",
+    "router",
+    "routing",
+    "typescript",
+    "spa",
+    "navigation",
+    "history",
+    "lazy-loading",
+    "code-splitting",
+    "view-transitions",
+    "tiny",
+    "lightweight"
+  ],
+  "license": "MIT",
+  "author": "kebinbin",
+  "homepage": "https://routini.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kebinbin/routini.git",
+    "directory": "packages/routini"
+  },
+  "bugs": {
+    "url": "https://github.com/kebinbin/routini/issues"
+  },
   "type": "module",
   "sideEffects": false,
   "main": "./dist/index.cjs",
@@ -30,6 +55,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "check:exports": "publint",
+    "prepack": "cp ../../README.md ../../LICENSE .",
+    "postpack": "rm -f README.md LICENSE",
     "prepublishOnly": "npm run typecheck && npm run lint && npm test && npm run build && npm run check:exports"
   },
   "peerDependencies": {
