@@ -1,8 +1,8 @@
 // Measures routini's published size the way bundlephobia (and the website's
 // BundleChart) does, so every number lines up: bundle with esbuild, minify with
 // terser (--compress --mangle), then gzip + brotli. react / react-dom /
-// react/jsx-runtime are peer deps so they're externalized; regexparam is a real
-// dependency so it stays bundled in. Run with `npm run size`.
+// react/jsx-runtime are peer deps so they're externalized; routini has no
+// runtime dependencies, so nothing else is bundled. Run with `npm run size`.
 //
 // Exits non-zero if the gzip size exceeds the budget below, so size can't creep
 // without someone consciously bumping it.
@@ -12,13 +12,14 @@ import { gzipSync, brotliCompressSync } from "node:zlib";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 
-// gzip budget, in KB. Current is ~2.53 KB. This session added the custom lazy
-// resolver (no skeleton flash on a preloaded route) and back/forward View
-// Transitions, then dropped the regexparam dependency for a hand-rolled matcher
-// — net roughly flat, and routini is now dependency-free. This ceiling leaves a
-// little headroom while still catching a real regression — growing past it
-// should be a conscious decision, not a creep.
-const LIMIT_KB = 2.6;
+// gzip budget, in KB. Current is ~2.79 KB. This session added a reactive
+// `useSearchParams` hook (its own location subscription, so query-only
+// navigations re-render) and `<Link preload="viewport">` (one shared
+// IntersectionObserver across all viewport links). Both are real features, not
+// creep — bumped from 2.6 deliberately. This ceiling leaves a little headroom
+// while still catching a real regression; growing past it should be a conscious
+// decision.
+const LIMIT_KB = 2.8;
 
 const here = dirname(fileURLToPath(import.meta.url));
 const entry = resolve(here, "../src/index.ts");

@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { RouterContext } from "../context/RouterContext";
 import { navigate } from "../utils/navigate";
 
@@ -15,10 +15,37 @@ interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
    * Preload this route's code-split chunk ahead of navigation so the page is
    * ready on click. "hover" preloads on pointer-enter or keyboard focus (the
    * user signalled intent); "render" preloads when the link mounts, scheduled
-   * in an idle callback so it never competes with the current page's resources.
-   * No-op for eager routes and when rendered without a Router above it.
+   * in an idle callback so it never competes with the current page's resources;
+   * "viewport" preloads when the link scrolls into view (via
+   * IntersectionObserver). No-op for eager routes, when rendered without a
+   * Router above it, and (for "viewport") where IntersectionObserver is absent.
    */
-  preload?: "hover" | "render";
+  preload?: "hover" | "render" | "viewport";
+}
+
+// Every preload="viewport" link shares ONE IntersectionObserver, keyed to its
+// element via a WeakMap of preload callbacks — a page with 100 links uses one
+// observer, not 100 (the Next.js <Link> approach). Each link fires once: on
+// first intersection we run its preload, then stop observing it.
+const viewportPreloads = new WeakMap<Element, () => void>();
+let viewportObserver: IntersectionObserver | null = null;
+
+function observeViewport(el: Element, preload: () => void): () => void {
+  if (typeof IntersectionObserver === "undefined") return () => {};
+  viewportObserver ??= new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      viewportObserver!.unobserve(entry.target);
+      viewportPreloads.get(entry.target)?.();
+      viewportPreloads.delete(entry.target);
+    }
+  });
+  viewportPreloads.set(el, preload);
+  viewportObserver.observe(el);
+  return () => {
+    viewportObserver?.unobserve(el);
+    viewportPreloads.delete(el);
+  };
 }
 
 export function Link({
@@ -32,6 +59,7 @@ export function Link({
   ...props
 }: LinkProps) {
   const { preloadPath } = useContext(RouterContext);
+  const linkRef = useRef<HTMLAnchorElement>(null);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (e.button !== 0) return;
@@ -63,6 +91,14 @@ export function Link({
     return () => cancel(id);
   }, [preload, to, preloadPath]);
 
+  // "viewport": warm the chunk when the link scrolls into view, through the one
+  // shared observer (see observeViewport). Cleanup stops observing on unmount.
+  useEffect(() => {
+    const el = linkRef.current;
+    if (preload !== "viewport" || !el) return;
+    return observeViewport(el, () => preloadPath(to));
+  }, [preload, to, preloadPath]);
+
   // "hover": preload on intent (pointer-enter or keyboard focus). Compose with
   // any consumer-provided handlers rather than clobbering them.
   const handleMouseEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -76,6 +112,7 @@ export function Link({
 
   return (
     <a
+      ref={linkRef}
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onFocus={handleFocus}

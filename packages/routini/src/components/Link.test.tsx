@@ -18,6 +18,7 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.restoreAllMocks();
+  vi.unstubAllGlobals();
 });
 
 describe("Link", () => {
@@ -243,5 +244,127 @@ describe("Link preload", () => {
     expect(() =>
       fireEvent.mouseEnter(container.querySelector("a")!),
     ).not.toThrow();
+  });
+});
+
+describe('Link preload="viewport"', () => {
+  let lastCallback: IntersectionObserverCallback | undefined;
+  const observers: FakeIntersectionObserver[] = [];
+
+  class FakeIntersectionObserver {
+    observed = new Set<Element>();
+    constructor(callback: IntersectionObserverCallback) {
+      lastCallback = callback;
+      observers.push(this);
+    }
+    observe(el: Element) {
+      this.observed.add(el);
+    }
+    unobserve(el: Element) {
+      this.observed.delete(el);
+    }
+    disconnect() {
+      this.observed.clear();
+    }
+    takeRecords() {
+      return [];
+    }
+  }
+
+  const intersect = (el: Element, isIntersecting = true) =>
+    lastCallback?.(
+      [{ target: el, isIntersecting } as IntersectionObserverEntry],
+      {} as IntersectionObserver,
+    );
+
+  const renderViewport = (
+    preloadPath: (to: string) => void,
+    ui: ReactElement,
+  ) =>
+    render(
+      <RouterContext.Provider value={{ ...baseContext, preloadPath }}>
+        {ui}
+      </RouterContext.Provider>,
+    );
+
+  beforeEach(() => {
+    vi.stubGlobal("IntersectionObserver", FakeIntersectionObserver);
+  });
+
+  it("warms the route when the link scrolls into view", () => {
+    const preloadPath = vi.fn();
+    const { container } = renderViewport(
+      preloadPath,
+      <Link to="/about" preload="viewport">
+        about
+      </Link>,
+    );
+    const anchor = container.querySelector("a")!;
+    expect(preloadPath).not.toHaveBeenCalled(); // still off-screen
+    intersect(anchor);
+    expect(preloadPath).toHaveBeenCalledWith("/about");
+  });
+
+  it("does not warm while the link is off-screen", () => {
+    const preloadPath = vi.fn();
+    const { container } = renderViewport(
+      preloadPath,
+      <Link to="/about" preload="viewport">
+        about
+      </Link>,
+    );
+    intersect(container.querySelector("a")!, false);
+    expect(preloadPath).not.toHaveBeenCalled();
+  });
+
+  it("warms at most once, then stops observing", () => {
+    const preloadPath = vi.fn();
+    const { container } = renderViewport(
+      preloadPath,
+      <Link to="/about" preload="viewport">
+        about
+      </Link>,
+    );
+    const anchor = container.querySelector("a")!;
+    intersect(anchor);
+    intersect(anchor);
+    expect(preloadPath).toHaveBeenCalledTimes(1);
+  });
+
+  it("shares a single observer across many links", () => {
+    const preloadPath = vi.fn();
+    const { container } = renderViewport(
+      preloadPath,
+      <>
+        <Link to="/a" preload="viewport">
+          a
+        </Link>
+        <Link to="/b" preload="viewport">
+          b
+        </Link>
+        <Link to="/c" preload="viewport">
+          c
+        </Link>
+      </>,
+    );
+    // One observer is ever constructed, and it observes every viewport link.
+    expect(observers).toHaveLength(1);
+    const anchors = container.querySelectorAll("a");
+    expect(anchors).toHaveLength(3);
+    anchors.forEach((a) => expect(observers[0].observed.has(a)).toBe(true));
+  });
+
+  it("is a no-op where IntersectionObserver is unavailable", () => {
+    vi.stubGlobal("IntersectionObserver", undefined);
+    const preloadPath = vi.fn();
+    expect(() =>
+      renderViewport(
+        preloadPath,
+        <Link to="/about" preload="viewport">
+          about
+        </Link>,
+      ),
+    ).not.toThrow();
+    expect(preloadPath).not.toHaveBeenCalled();
   });
 });
