@@ -4,6 +4,9 @@ A tiny, TypeScript-first router for React.
 
 > Small to ship, solid to type, scoped to one job, free of setup ceremony.
 
+~2.5 KB gzipped · **zero runtime dependencies** · 7 exports. Lazy routes, an
+error boundary, View Transitions, and link preloading all ship in the box.
+
 ## Installation
 
 ```bash
@@ -188,6 +191,19 @@ const routes = [
 </Router>;
 ```
 
+### Path matching
+
+Patterns are matched by a small built-in matcher — no regex dependency. Three forms:
+
+- **Static** — `/about` matches `/about` exactly.
+- **`:param`** — `/product/:productId` captures that segment (URL-decoded) into
+  `useParams()`. Multiple params work: `/users/:userId/posts/:postId`.
+- **`*`** — catch-all, always tried last regardless of position.
+
+Matching is **case-sensitive** — `/About` does **not** match a `/about` route
+(the correct web default). One optional trailing slash is tolerated
+(`/about/` matches `/about`). Query strings and hashes never affect matching.
+
 ## Lazy Loading
 
 Routini encourages lazy loading by default. Use `lazy` for all page-level routes:
@@ -348,6 +364,10 @@ Notes:
   navigate instantly. No feature checks needed in your code.
 - Transitions are opt-in per navigation: the page is non-interactive while an
   animation runs, so reserve it for navigations where motion adds meaning.
+- **Back and forward animate too.** When a navigation opts into a transition,
+  routini tags the history entry — so pressing Back or Forward across that edge
+  replays the same animation automatically, with no extra code. Edges that were
+  never animated stay instant.
 - **Pair lazy routes with preloading.** On a lazy route whose chunk isn't
   loaded yet, the transition animates to the loading fallback rather than the
   page. Add [`preload`](#preloading) to the link so the chunk is warm before
