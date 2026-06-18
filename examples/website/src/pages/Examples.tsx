@@ -13,6 +13,7 @@ const RECIPES: { anchor: string; snippet: SnippetId }[] = [
   { anchor: "shared-element", snippet: "sharedElement" },
   { anchor: "error-handling", snippet: "errorHandling" },
   { anchor: "typed-params", snippet: "dataLayer" },
+  { anchor: "search-params", snippet: "searchParams" },
   { anchor: "active-nav", snippet: "activeNav" },
   { anchor: "redirects-404", snippet: "redirects404" },
   { anchor: "programmatic-nav", snippet: "navigateFromCode" },

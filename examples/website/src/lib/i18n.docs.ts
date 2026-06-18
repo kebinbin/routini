@@ -7,7 +7,7 @@ const docs = {
     docs: {
       pretitle: "/docs",
       title: "API reference",
-      sub: "Seven exports and one utility — the whole router. Each entry has a signature, a working example, and where it fits.",
+      sub: "Eight exports and one utility — the whole router. Each entry has a signature, a working example, and where it fits.",
       onThisPage: "On this page",
       groups: {
         components: "Components",
@@ -189,6 +189,26 @@ const docs = {
           "Returns an empty object on routes that declare no params.",
         ],
       },
+      "use-search-params": {
+        body: "Reads and updates the URL's query string reactively, returning a [params, setSearchParams] tuple — the same shape as useState. Reading re-renders the component whenever the query changes (typing, a link, Back/Forward), so search state lives in the URL: shareable, bookmarkable, and survivable across a refresh.",
+        table: [
+          {
+            name: "[0] params",
+            type: "URLSearchParams",
+            desc: 'The current query. Read values with params.get("q").',
+          },
+          {
+            name: "[1] setSearchParams",
+            type: "(init, options?) => void",
+            desc: "Navigate to the current pathname with a new query. init is a string, a Record<string, string>, or a URLSearchParams; options takes the usual { replace, viewTransition }.",
+          },
+        ],
+        notes: [
+          "Pushes a new history entry by default — pass { replace: true } for high-frequency updates like a sort toggle, so you don't flood the back button.",
+          "The setter keeps the current pathname and drops any #hash.",
+          "Why it's its own hook: routini's location store tracks the pathname only, so a query-only navigation never remounts the route. useSearchParams subscribes to the query separately — reading it stays reactive while your page keeps its state, scroll, and input focus.",
+        ],
+      },
       "navigate-util": {
         body: "Imperative navigation for use outside React components or inside event handlers. It updates the URL via the History API and notifies Router to re-render — the same function powering Link and Navigate.",
         table: [
@@ -252,7 +272,7 @@ const docs = {
         ],
       },
       preloading: {
-        body: 'Load a lazy route\'s code-split chunk before the user navigates, so the page is ready on click — no loading fallback, and View Transitions land on the real page instead of a spinner. Add preload to a Link: "hover" warms the chunk on pointer-enter or keyboard focus; "render" warms it as soon as the link mounts, in an idle callback that never competes with the current page\'s own loading.',
+        body: 'Load a lazy route\'s code-split chunk before the user navigates, so the page is ready on click — no loading fallback, and View Transitions land on the real page instead of a spinner. Add preload to a Link: "hover" warms the chunk on pointer-enter or keyboard focus; "render" warms it as soon as the link mounts, in an idle callback that never competes with the current page\'s own loading; "viewport" warms it when the link scrolls into view.',
         table: [
           {
             name: 'preload="hover"',
@@ -264,10 +284,16 @@ const docs = {
             type: "on <Link>",
             desc: "Warm the chunk when the link mounts, scheduled in an idle callback. Best for the one route almost everyone visits next.",
           },
+          {
+            name: 'preload="viewport"',
+            type: "on <Link>",
+            desc: "Warm the chunk when the link scrolls into view, via IntersectionObserver. Best for links far down a long page.",
+          },
         ],
         notes: [
           "Only lazy routes have a chunk to fetch — preload is a no-op for eager routes.",
           "Each chunk is fetched at most once, however many times it's hovered or however many links point at it.",
+          "All viewport links share a single IntersectionObserver, so a long list of links stays cheap; each warms once. A no-op where IntersectionObserver is unavailable.",
           "A failed preload is swallowed silently; the real navigation still surfaces the error through the route error boundary.",
           "Pairs with View Transitions: warm the chunk so the animation lands on the real page rather than the loading fallback.",
         ],
@@ -278,7 +304,7 @@ const docs = {
     docs: {
       pretitle: "/docs",
       title: "Referencia del API",
-      sub: "Siete exports y una utilidad — todo el router. Cada entrada tiene una firma, un ejemplo funcional y dónde encaja.",
+      sub: "Ocho exports y una utilidad — todo el router. Cada entrada tiene una firma, un ejemplo funcional y dónde encaja.",
       onThisPage: "En esta página",
       groups: {
         components: "Componentes",
@@ -460,6 +486,26 @@ const docs = {
           "Devuelve un objeto vacío en rutas que no declaran params.",
         ],
       },
+      "use-search-params": {
+        body: "Lee y actualiza el query string de la URL de forma reactiva, devolviendo una tupla [params, setSearchParams] — la misma forma que useState. Leer re-renderiza el componente cada vez que el query cambia (al escribir, un enlace, atrás/adelante), así que el estado de búsqueda vive en la URL: compartible, guardable y que sobrevive a un refresco.",
+        table: [
+          {
+            name: "[0] params",
+            type: "URLSearchParams",
+            desc: 'El query actual. Lee valores con params.get("q").',
+          },
+          {
+            name: "[1] setSearchParams",
+            type: "(init, options?) => void",
+            desc: "Navega al pathname actual con un nuevo query. init es un string, un Record<string, string> o un URLSearchParams; options acepta el habitual { replace, viewTransition }.",
+          },
+        ],
+        notes: [
+          "Añade una nueva entrada al historial por defecto — pasa { replace: true } para cambios frecuentes como un selector de orden, para no inundar el botón atrás.",
+          "El setter mantiene el pathname actual y descarta cualquier #hash.",
+          "Por qué es su propio hook: el store de ubicación de routini solo sigue el pathname, así que una navegación de solo-query nunca remonta la ruta. useSearchParams se suscribe al query por separado — leerlo sigue siendo reactivo mientras tu página conserva su estado, scroll y foco del input.",
+        ],
+      },
       "navigate-util": {
         body: "Navegación imperativa para usar fuera de componentes de React o dentro de event handlers. Actualiza la URL con la History API y notifica a Router para re-renderizar — la misma función que usan Link y Navigate.",
         table: [
@@ -523,7 +569,7 @@ const docs = {
         ],
       },
       preloading: {
-        body: 'Carga el chunk de una ruta lazy antes de que el usuario navegue, para que la página esté lista al hacer clic — sin fallback de carga, y las View Transitions aterrizan en la página real en lugar de un spinner. Añade preload a un Link: "hover" precarga el chunk al pasar el cursor o dar foco con el teclado; "render" lo precarga en cuanto el enlace se monta, en un callback de inactividad que nunca compite con la carga de la página actual.',
+        body: 'Carga el chunk de una ruta lazy antes de que el usuario navegue, para que la página esté lista al hacer clic — sin fallback de carga, y las View Transitions aterrizan en la página real en lugar de un spinner. Añade preload a un Link: "hover" precarga el chunk al pasar el cursor o dar foco con el teclado; "render" lo precarga en cuanto el enlace se monta, en un callback de inactividad que nunca compite con la carga de la página actual; "viewport" lo precarga cuando el enlace entra en pantalla.',
         table: [
           {
             name: 'preload="hover"',
@@ -535,10 +581,16 @@ const docs = {
             type: "en <Link>",
             desc: "Precarga el chunk cuando el enlace se monta, programado en un callback de inactividad. Ideal para la ruta que casi todos visitan después.",
           },
+          {
+            name: 'preload="viewport"',
+            type: "en <Link>",
+            desc: "Precarga el chunk cuando el enlace entra en pantalla, vía IntersectionObserver. Ideal para enlaces muy abajo en una página larga.",
+          },
         ],
         notes: [
           "Solo las rutas lazy tienen un chunk que cargar — preload no hace nada en rutas eager.",
           "Cada chunk se carga como mucho una vez, sin importar cuántas veces se pase el cursor ni cuántos enlaces apunten a él.",
+          "Todos los enlaces viewport comparten un único IntersectionObserver, así que una lista larga de enlaces sigue siendo barata; cada uno precarga una vez. No hace nada donde IntersectionObserver no está disponible.",
           "Una precarga fallida se ignora en silencio; la navegación real sigue mostrando el error a través del error boundary de ruta.",
           "Combina con View Transitions: precarga el chunk para que la animación aterrice en la página real en lugar del fallback de carga.",
         ],

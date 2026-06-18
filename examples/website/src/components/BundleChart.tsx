@@ -9,15 +9,16 @@
  *   React Router    react-router-dom@7.16.0   59.97 KB
  *   TanStack Router @tanstack/react-router@1.170.10  39.3 KB
  *   Wouter          wouter@3.10.0             2.54 KB
- *   routini         (error boundary, View Transitions, preload, lazy resolver)  2.53 KB
+ *   routini  (error boundary, View Transitions, preload, search params, lazy resolver)  2.79 KB
  *
  * routini ships zero runtime dependencies (only react/react-dom peers); the
- * other three each pull in their own. Ordered smallest → largest so routini
- * leads as the highlighted reference.
+ * other three each pull in their own. Ordered smallest → largest; routini sits a
+ * hair above the lightest alternative but is dependency-free with far more built
+ * in, and is highlighted as the reference.
  */
 const ENTRIES = [
-  { name: "routini", kb: 2.53, label: "2.5 KB", highlight: true },
   { name: "Wouter", kb: 2.54, label: "2.5 KB" },
+  { name: "routini", kb: 2.79, label: "2.8 KB", highlight: true },
   { name: "TanStack Router", kb: 39.3, label: "39 KB" },
   { name: "React Router", kb: 59.97, label: "60 KB" },
 ] as const;

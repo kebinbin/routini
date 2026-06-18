@@ -25,8 +25,8 @@ const examples = {
           body: "Mark any route lazy and routini wraps it in Suspense for you. Keep the landing route eager, split the rest, and give slow chunks a per-route fallback.",
         },
         preload: {
-          title: "Preload on hover or render",
-          body: 'Warm a lazy route\'s chunk before the click so the page is ready instantly. preload="hover" fetches on pointer-enter or keyboard focus; preload="render" fetches when the link mounts, in an idle callback. It\'s a no-op for eager routes, and each chunk is fetched at most once.',
+          title: "Preload on hover, render, or viewport",
+          body: 'Warm a lazy route\'s chunk before the click so the page is ready instantly. preload="hover" fetches on pointer-enter or keyboard focus; preload="render" fetches when the link mounts, in an idle callback; preload="viewport" fetches when the link scrolls into view (all viewport links share one IntersectionObserver). It\'s a no-op for eager routes, and each chunk is fetched at most once.',
         },
         "view-transitions": {
           title: "Animate with View Transitions",
@@ -43,6 +43,10 @@ const examples = {
         "typed-params": {
           title: "Typed params + your data layer",
           body: "Read URL params with useParams<T>() and hand the id to whatever you fetch with — SWR, React Query, fetch. routini gives you the route; your data layer does the rest.",
+        },
+        "search-params": {
+          title: "Search & filters in the URL",
+          body: "useSearchParams() makes the query string reactive: read it like state, write it to update the URL. Search and filters become shareable, bookmarkable, and Back/Forward-able — push as the user types, replace for high-frequency toggles like a sort. The route never remounts on a query change, so the input keeps focus and scroll holds.",
         },
         "active-nav": {
           title: "Layout with an active nav",
@@ -90,8 +94,8 @@ const examples = {
           body: "Marca cualquier ruta como lazy y routini la envuelve en Suspense por ti. Deja la landing eager, divide el resto y dale a los chunks lentos un fallback por ruta.",
         },
         preload: {
-          title: "Precarga al pasar el cursor o al montar",
-          body: 'Precalienta el chunk de una ruta lazy antes del clic para que la página esté lista al instante. preload="hover" carga al pasar el cursor o dar foco con el teclado; preload="render" carga cuando el enlace se monta, en un callback de inactividad. No hace nada en rutas eager, y cada chunk se carga como mucho una vez.',
+          title: "Precarga al pasar el cursor, al montar o en viewport",
+          body: 'Precalienta el chunk de una ruta lazy antes del clic para que la página esté lista al instante. preload="hover" carga al pasar el cursor o dar foco con el teclado; preload="render" carga cuando el enlace se monta, en un callback de inactividad; preload="viewport" carga cuando el enlace entra en pantalla (todos los enlaces viewport comparten un único IntersectionObserver). No hace nada en rutas eager, y cada chunk se carga como mucho una vez.',
         },
         "view-transitions": {
           title: "Anima con View Transitions",
@@ -108,6 +112,10 @@ const examples = {
         "typed-params": {
           title: "Params tipados + tu capa de datos",
           body: "Lee los params de la URL con useParams<T>() y pasa el id a lo que uses para fetch — SWR, React Query, fetch. routini te da la ruta; tu capa de datos hace el resto.",
+        },
+        "search-params": {
+          title: "Búsqueda y filtros en la URL",
+          body: "useSearchParams() hace reactivo el query string: léelo como estado, escríbelo para actualizar la URL. La búsqueda y los filtros pasan a ser compartibles, guardables y navegables con atrás/adelante — usa push mientras el usuario escribe, replace para cambios frecuentes como un orden. La ruta no se remonta al cambiar el query, así que el input mantiene el foco y el scroll se queda donde está.",
         },
         "active-nav": {
           title: "Layout con nav activa",

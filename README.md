@@ -4,8 +4,9 @@ A tiny, TypeScript-first router for React.
 
 > Small to ship, solid to type, scoped to one job, free of setup ceremony.
 
-~2.5 KB gzipped · **zero runtime dependencies** · 7 exports. Lazy routes, an
-error boundary, View Transitions, and link preloading all ship in the box.
+~2.8 KB gzipped · **zero runtime dependencies** · 8 exports. Lazy routes, an
+error boundary, View Transitions, reactive search params, and link preloading
+all ship in the box.
 
 ## Installation
 
@@ -86,7 +87,7 @@ Optional props beyond the standard `<a>` attributes:
   (see [View Transitions](#view-transitions)); browsers without support
   navigate instantly.
 - `preload` — load the route's code-split chunk ahead of the click
-  (see [Preloading](#preloading)); `"hover"` or `"render"`.
+  (see [Preloading](#preloading)); `"hover"`, `"render"`, or `"viewport"`.
 
 Hash anchors are handled too:
 
@@ -157,6 +158,38 @@ function Nav() {
   );
 }
 ```
+
+### `useSearchParams()`
+
+Read and update the URL's query string reactively — search state that's
+shareable, bookmarkable, and survives refresh and Back/Forward.
+
+```tsx
+function ProductSearch() {
+  const [params, setParams] = useSearchParams();
+  const q = params.get("q") ?? "";
+
+  return (
+    <input
+      value={q}
+      onChange={(e) => setParams({ q: e.target.value })} // updates ?q= in the URL
+    />
+  );
+}
+```
+
+Returns the current `URLSearchParams` and a setter. The setter navigates to the
+current pathname with the new query and accepts the usual navigate options:
+
+```tsx
+setParams({ q: "routers", sort: "stars" });      // push a new entry
+setParams({ q: "routers" }, { replace: true });   // swap the current entry
+```
+
+Routini's location store tracks the **pathname only**, so a normal route render
+never re-runs on a query-only change — this hook keeps its own subscription, so
+components that read the query stay in sync while the rest of the tree doesn't
+re-render on a query change.
 
 ### `navigate()`
 
@@ -380,8 +413,9 @@ ready on click — no loading fallback, and View Transitions land on the real pa
 instead of a spinner.
 
 ```tsx
-<Link to="/album/9" preload="hover">Open album</Link>  {/* on intent */}
-<Link to="/album/9" preload="render">Open album</Link> {/* when the link mounts */}
+<Link to="/album/9" preload="hover">Open album</Link>    {/* on intent */}
+<Link to="/album/9" preload="render">Open album</Link>   {/* when the link mounts */}
+<Link to="/album/9" preload="viewport">Open album</Link> {/* when it scrolls into view */}
 ```
 
 - `preload="hover"` — warms the chunk when the user hovers the link or focuses
@@ -389,6 +423,10 @@ instead of a spinner.
 - `preload="render"` — warms the chunk as soon as the link mounts, scheduled in
   an idle callback so it never competes with the current page's own loading.
   Best for the one route you expect almost everyone to visit next.
+- `preload="viewport"` — warms the chunk when the link scrolls into view. All
+  viewport links share a single `IntersectionObserver`, so a long list stays
+  cheap; a no-op where `IntersectionObserver` is unavailable. Best for links far
+  down a long page.
 
 Only **lazy** routes have a chunk to fetch — `preload` is a no-op for eager
 routes. Each chunk is fetched at most once, however many times it's hovered or
@@ -402,6 +440,7 @@ navigation still surfaces the error through the
 
 - `useParams()` — route parameters
 - `useLocation()` — current path
+- `useSearchParams()` — query string (`?q=…`)
 - React context — shared app state (theme, user, i18n)
 - Their own data fetching
 
@@ -411,7 +450,7 @@ clean React architecture.
 **Lazy by default.** Every page-level route should use `lazy`.
 Only use `component` for routes that must be eagerly loaded.
 
-**Minimal API.** Routini has 7 exports and nothing more.
+**Minimal API.** Routini has 8 exports and nothing more.
 No loaders, no actions, no data fetching — just routing.
 
 ## What's not in scope
@@ -436,8 +475,9 @@ Routini is intentionally small. These features aren't planned — if you need th
 ## Roadmap
 
 - [x] View Transitions API support (`viewTransition` on `Link` / `navigate`)
-- [x] Route preloading (`preload="hover" | "render"` on `Link`) — also makes
-      View Transitions seamless on lazy routes
+- [x] Route preloading (`preload="hover" | "render" | "viewport"` on `Link`) —
+      also makes View Transitions seamless on lazy routes
+- [x] Reactive query params (`useSearchParams`)
 - [ ] SSR support via `ssrPath` prop
 - [ ] `@routini/vite-plugin` for file-based routing
 

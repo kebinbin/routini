@@ -264,6 +264,10 @@ function Nav() {
       {/* on mount, in an idle callback — the route almost
           everyone visits next */}
       <Link to="/album/9" preload="render">Featured album</Link>
+
+      {/* when it scrolls into view — links far down a long page.
+          All viewport links share one IntersectionObserver. */}
+      <Link to="/album/42" preload="viewport">Deep cut</Link>
     </nav>
   );
 }
@@ -289,6 +293,39 @@ export default function App() {
         )
       }
     />
+  );
+}
+`,
+
+  searchParams: `import { useSearchParams } from "routini";
+
+// Search state that lives in the URL — shareable, bookmarkable,
+// and Back/Forward steps through each query. Reads re-render on
+// every query change; the route itself never remounts.
+function ProductSearch() {
+  const [params, setParams] = useSearchParams();
+  const q = params.get("q") ?? "";
+  const sort = params.get("sort") ?? "newest";
+
+  return (
+    <>
+      <input
+        value={q}
+        // push a new entry as the user types
+        onChange={(e) => setParams({ q: e.target.value, sort })}
+      />
+
+      <select
+        value={sort}
+        // replace, so changing the sort doesn't flood history
+        onChange={(e) => setParams({ q, sort: e.target.value }, { replace: true })}
+      >
+        <option value="newest">Newest</option>
+        <option value="price">Price</option>
+      </select>
+
+      <Results query={q} sort={sort} />
+    </>
   );
 }
 `,
