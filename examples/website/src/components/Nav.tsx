@@ -21,6 +21,7 @@ export function Nav() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <Link
           to={langPath(lang)}
+          viewTransition
           className="group inline-flex items-center gap-2.5 font-mono text-sm tracking-tight text-bone hover:text-accent"
           aria-label="routini home"
         >
@@ -30,10 +31,22 @@ export function Nav() {
         </Link>
 
         <nav className="flex items-center gap-6 font-mono text-sm text-bone-dim">
-          <Link to={langPath(lang, "/docs")} className="hover:text-bone">
+          {/* render, not hover: warm both primary routes during idle on load —
+              instant first click, and it works on touch (hover never fires). */}
+          <Link
+            to={langPath(lang, "/docs")}
+            preload="render"
+            viewTransition
+            className="hover:text-bone"
+          >
             {t.nav.docs}
           </Link>
-          <Link to={langPath(lang, "/examples")} className="hover:text-bone">
+          <Link
+            to={langPath(lang, "/examples")}
+            preload="render"
+            viewTransition
+            className="hover:text-bone"
+          >
             {t.nav.examples}
           </Link>
           <a

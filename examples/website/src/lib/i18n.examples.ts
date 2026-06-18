@@ -32,6 +32,10 @@ const examples = {
           title: "Animate with View Transitions",
           body: "Pass viewTransition on a Link (or { viewTransition: true } to navigate) and the browser animates between the old and new page. Give an element a view-transition-name to morph it across pages. Unsupported browsers navigate instantly — pair it with preload so lazy routes animate to the real page, not the loading fallback.",
         },
+        "shared-element": {
+          title: "Morph an element across pages",
+          body: "Give the same element on both pages a matching viewTransitionName and the browser morphs one into the other on navigation — no extra wiring. Names must be unique per item, so key them by id; add a shared viewTransitionClass and you can style the whole family with ::view-transition-group(.cover) instead of per-id rules. routini only owns the trigger (viewTransition) — the naming and the motion stay yours, in CSS. When many items link to the same page, set the name on the clicked element in onPointerDown so only that one morphs.",
+        },
         "error-handling": {
           title: "Recover from a failed chunk",
           body: "A stale chunk after a deploy — or a render error — would white-screen the app. routini wraps every route in an error boundary. Pass errorFallback for the UI and onError to log, or pass nothing for a minimal default: reset() retries in place, reload() does a full reload, and isChunkError tells the two apart.",
@@ -92,6 +96,10 @@ const examples = {
         "view-transitions": {
           title: "Anima con View Transitions",
           body: "Pasa viewTransition en un Link (o { viewTransition: true } a navigate) y el navegador anima entre la página vieja y la nueva. Dale a un elemento un view-transition-name para transformarlo entre páginas. Los navegadores sin soporte navegan al instante — combínalo con preload para que las rutas lazy aterricen en la página real, no en el fallback de carga.",
+        },
+        "shared-element": {
+          title: "Transforma un elemento entre páginas",
+          body: "Dale al mismo elemento en ambas páginas un viewTransitionName coincidente y el navegador transforma uno en otro al navegar — sin nada más. Los nombres deben ser únicos por elemento, así que indéxalos por id; añade un viewTransitionClass compartido y podrás dar estilo a toda la familia con ::view-transition-group(.cover) en vez de reglas por id. routini solo gestiona el disparador (viewTransition) — el nombrado y el movimiento son tuyos, en CSS. Cuando muchos elementos enlazan a la misma página, asigna el nombre al elemento pulsado en onPointerDown para que solo ese haga el morph.",
         },
         "error-handling": {
           title: "Recuperarse de un chunk fallido",

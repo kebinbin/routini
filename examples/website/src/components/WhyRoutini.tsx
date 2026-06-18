@@ -15,7 +15,8 @@ export function WhyRoutini() {
   const t = useHomeT();
 
   // Order matters — the numbered markers (01, 02, 03, 04) follow this sequence.
-  // Each cell pairs a claim with the visual that proves it.
+  // Each cell pairs a claim with the visual that proves it. This section is the
+  // "why" (philosophy); capabilities live in the separate "Built in" section.
   const features: Feature[] = [
     { ...t.why.size, snippet: null }, // 01 → bundle-size chart
     { ...t.why.types, snippet: "typedParams", caption: "Product.tsx" },
