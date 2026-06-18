@@ -6,7 +6,7 @@ import { Outlet } from "./Outlet";
 import { Navigate } from "./Navigate";
 import { Link } from "./Link";
 import { navigate } from "../utils/navigate";
-import { EVENTS } from "../consts";
+import { EVENTS, VIEW_TRANSITION_STATE_KEY } from "../consts";
 import type { RouteDefinition } from "./Router";
 
 const Home = () => <div>home page</div>;
@@ -58,6 +58,22 @@ describe("Router", () => {
     expect(screen.getByText("about page")).toBeTruthy();
   });
 
+  it("matches on pathname, ignoring the query string", () => {
+    const routes: RouteDefinition[] = [
+      { path: "/", component: Home },
+      { path: "/products", component: About },
+    ];
+    render(<Router routes={routes} />);
+
+    act(() => {
+      navigate("/products?sort=asc&page=2");
+    });
+
+    // The query rides along in the URL but doesn't affect which route matches.
+    expect(screen.getByText("about page")).toBeTruthy();
+    expect(window.location.search).toBe("?sort=asc&page=2");
+  });
+
   it("re-renders on programmatic navigate()", () => {
     const routes: RouteDefinition[] = [
       { path: "/", component: Home },
@@ -101,6 +117,61 @@ describe("Router", () => {
     });
 
     expect(domInsideCallback).toContain("about page");
+    expect(screen.getByText("about page")).toBeTruthy();
+    delete doc.startViewTransition;
+  });
+
+  // Back/forward has no call site, so it can't carry a `viewTransition` flag.
+  // navigate() tags animated entries in history.state; Router's popstate handler
+  // reads that tag and replays the transition only for tagged entries.
+  it("replays the View Transition on back/forward to an animated entry", () => {
+    const doc = document as unknown as {
+      startViewTransition?: (cb: () => void) => unknown;
+    };
+    const startViewTransition = vi.fn((cb: () => void) => cb());
+    doc.startViewTransition = startViewTransition;
+
+    const routes: RouteDefinition[] = [
+      { path: "/", component: Home },
+      { path: "/about", component: About },
+    ];
+    render(<Router routes={routes} />);
+
+    // The browser restores an entry navigate() tagged as animated, then fires
+    // popstate (the back/forward button).
+    act(() => {
+      window.history.replaceState(
+        { [VIEW_TRANSITION_STATE_KEY]: true },
+        "",
+        "/about",
+      );
+      window.dispatchEvent(new Event(EVENTS.POPSTATE));
+    });
+
+    expect(startViewTransition).toHaveBeenCalledTimes(1);
+    expect(screen.getByText("about page")).toBeTruthy();
+    delete doc.startViewTransition;
+  });
+
+  it("does not animate back/forward to a plain (untagged) entry", () => {
+    const doc = document as unknown as {
+      startViewTransition?: (cb: () => void) => unknown;
+    };
+    const startViewTransition = vi.fn((cb: () => void) => cb());
+    doc.startViewTransition = startViewTransition;
+
+    const routes: RouteDefinition[] = [
+      { path: "/", component: Home },
+      { path: "/about", component: About },
+    ];
+    render(<Router routes={routes} />);
+
+    act(() => {
+      window.history.replaceState({}, "", "/about"); // no flag
+      window.dispatchEvent(new Event(EVENTS.POPSTATE));
+    });
+
+    expect(startViewTransition).not.toHaveBeenCalled();
     expect(screen.getByText("about page")).toBeTruthy();
     delete doc.startViewTransition;
   });
@@ -494,5 +565,31 @@ describe("Router preloading", () => {
     expect(() =>
       fireEvent.mouseEnter(screen.getByText("to about")),
     ).not.toThrow();
+  });
+
+  it("renders a preloaded route synchronously (no fallback, no re-import)", async () => {
+    const importSpy = vi.fn(() => Promise.resolve({ default: About }));
+    const routes: RouteDefinition[] = [
+      { path: "/", component: Home },
+      { path: "/about", lazy: importSpy },
+    ];
+    render(
+      <Router routes={routes} loading={<div>loading...</div>}>
+        <Link to="/about" preload="hover">
+          to about
+        </Link>
+        <Outlet />
+      </Router>,
+    );
+    fireEvent.mouseEnter(screen.getByText("to about"));
+    await waitFor(() => expect(importSpy).toHaveBeenCalledTimes(1));
+    // Let the preloaded chunk resolve.
+    await act(async () => {});
+    // Navigation now finds the entry resolved → renders synchronously, with no
+    // loading fallback and without importing the chunk a second time.
+    act(() => navigate("/about"));
+    expect(screen.getByText("about page")).toBeTruthy();
+    expect(screen.queryByText("loading...")).toBeNull();
+    expect(importSpy).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,5 +1,5 @@
-import { flushSync } from "react-dom";
-import { EVENTS } from "../consts";
+import { EVENTS, VIEW_TRANSITION_STATE_KEY } from "../consts";
+import { withViewTransition } from "./viewTransition";
 
 export interface NavigateOptions {
   /** Replace the current history entry instead of pushing a new one. */
@@ -7,6 +7,9 @@ export interface NavigateOptions {
   /**
    * Animate this navigation with the View Transitions API. Ignored (instant
    * navigation) in browsers without `document.startViewTransition`.
+   *
+   * Back/forward to the resulting entry replays the transition automatically —
+   * the entry is tagged in `history.state`, so popstate inherits the intent.
    */
   viewTransition?: boolean;
 }
@@ -18,18 +21,25 @@ export interface NavigateOptions {
 export function navigate(to: string, options: NavigateOptions = {}) {
   if (typeof window === "undefined") return;
 
+  const { replace, viewTransition } = options;
+
+  // When animating, record it in history.state so a later back/forward to this
+  // entry replays the transition (popstate has no call site to carry the intent).
+  const state = viewTransition ? { [VIEW_TRANSITION_STATE_KEY]: true } : {};
+
   const update = () => {
-    // Update the URL without reloading the page.
-    window.history[options.replace ? "replaceState" : "pushState"]({}, "", to);
+    // Tag the entry we're leaving too (same URL), so going *back* to it also
+    // animates — both ends of an animated edge carry the flag. Skipped on
+    // replace, where there's no separate entry to return to.
+    if (viewTransition && !replace) {
+      window.history.replaceState(state, "", window.location.href);
+    }
+    window.history[replace ? "replaceState" : "pushState"](state, "", to);
     window.dispatchEvent(new Event(EVENTS.NAVIGATE)); // Emit event to listening router.
   };
 
-  // startViewTransition snapshots the page, runs the callback, then animates
-  // between the snapshots — so the React commit for the new route has to land
-  // synchronously inside the callback. flushSync forces that; React's default
-  // batching would otherwise commit after the snapshot is taken.
-  if (options.viewTransition && document.startViewTransition) {
-    document.startViewTransition(() => flushSync(update));
+  if (viewTransition) {
+    withViewTransition(update);
   } else {
     update();
   }

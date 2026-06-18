@@ -12,9 +12,13 @@ import { gzipSync, brotliCompressSync } from "node:zlib";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 
-// gzip budget, in KB. Current is ~2.53 KB; this leaves a little headroom while
-// still catching a real regression.
-const LIMIT_KB = 2.7;
+// gzip budget, in KB. Current is ~2.53 KB. This session added the custom lazy
+// resolver (no skeleton flash on a preloaded route) and back/forward View
+// Transitions, then dropped the regexparam dependency for a hand-rolled matcher
+// — net roughly flat, and routini is now dependency-free. This ceiling leaves a
+// little headroom while still catching a real regression — growing past it
+// should be a conscious decision, not a creep.
+const LIMIT_KB = 2.6;
 
 const here = dirname(fileURLToPath(import.meta.url));
 const entry = resolve(here, "../src/index.ts");

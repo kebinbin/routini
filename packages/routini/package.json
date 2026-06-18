@@ -37,9 +37,6 @@
     "react": ">=18",
     "react-dom": ">=18"
   },
-  "dependencies": {
-    "regexparam": "^3.0.0"
-  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@testing-library/react": "^16.3.2",

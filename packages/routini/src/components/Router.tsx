@@ -8,15 +8,15 @@ import {
   useCallback,
   useMemo,
   Children,
-  lazy,
   Suspense,
 } from "react";
-import { EVENTS } from "../consts";
+import { EVENTS, VIEW_TRANSITION_STATE_KEY } from "../consts";
 import { RouterContext } from "../context/RouterContext";
 import { matchRoute } from "../utils/matchRoute";
 import { isRouteType } from "./Route";
 import { RouteErrorBoundary, type ErrorFallback } from "./RouteErrorBoundary";
 import { markChunkError } from "../utils/isChunkError";
+import { withViewTransition } from "../utils/viewTransition";
 
 export type DynamicImport = () => Promise<{ default: React.ComponentType }>;
 
@@ -43,25 +43,60 @@ export interface RouterProps {
   onError?: (error: Error, info: React.ErrorInfo) => void;
 }
 
-const lazyComponentsCache = new WeakMap<
-  DynamicImport,
-  React.LazyExoticComponent<React.ComponentType>
->();
+// Lazy-route resolution keyed by import thunk. routini resolves chunks itself
+// (not via React.lazy) so a *preloaded* route renders synchronously on
+// navigation — React.lazy always suspends one frame on first render, flashing
+// the fallback even when the chunk is already cached.
+type LazyEntry =
+  | { status: "pending"; promise: Promise<unknown> }
+  | { status: "resolved"; Component: React.ComponentType }
+  | { status: "rejected"; error: unknown };
 
-// Thunks whose chunk has already been preloaded — so repeated hovers (or a
-// re-mounting "render" preload) fire the import at most once.
-const preloadedThunks = new WeakSet<DynamicImport>();
+const lazyEntries = new WeakMap<DynamicImport, LazyEntry>();
 
-/**
- * Speculatively warm a route's code-split chunk: call the import thunk so the
- * browser caches the module before navigation. Failures are swallowed (the real
- * navigation surfaces them through the error boundary) and the thunk is
- * forgotten so a later navigation can retry.
- */
+// Stable wrapper per thunk (a new identity each render would remount the page).
+const lazyComponentsCache = new WeakMap<DynamicImport, React.ComponentType>();
+
+// Start (or reuse) a thunk's import, recording its state as it settles.
+// Idempotent, so a hover preload and the later navigation share one import.
+function loadLazy(dynamicImport: DynamicImport): LazyEntry {
+  const existing = lazyEntries.get(dynamicImport);
+  if (existing) return existing;
+
+  const promise = dynamicImport().then(
+    (module) => {
+      if (!module.default) {
+        const error = new Error(
+          "Lazy route module must have a default export. Did you forget to add `export default`?",
+        );
+        lazyEntries.set(dynamicImport, { status: "rejected", error });
+        throw error;
+      }
+      lazyEntries.set(dynamicImport, {
+        status: "resolved",
+        Component: module.default,
+      });
+    },
+    (cause) => {
+      // Failed dynamic import() — tag it so the error boundary recognises it.
+      const error = markChunkError(cause);
+      lazyEntries.set(dynamicImport, { status: "rejected", error });
+      throw error;
+    },
+  );
+  // Recorded on the entry above; swallow so a failed preload isn't an unhandled
+  // rejection — navigation re-surfaces it via the entry.
+  promise.catch(() => {});
+
+  const entry: LazyEntry = { status: "pending", promise };
+  lazyEntries.set(dynamicImport, entry);
+  return entry;
+}
+
+// Resolve a route's chunk ahead of navigation so a preloaded route renders with
+// no fallback. Idempotent.
 function preloadRoute(dynamicImport: DynamicImport) {
-  if (preloadedThunks.has(dynamicImport)) return;
-  preloadedThunks.add(dynamicImport);
-  dynamicImport().catch(() => preloadedThunks.delete(dynamicImport));
+  loadLazy(dynamicImport);
 }
 
 /**
@@ -69,11 +104,22 @@ function preloadRoute(dynamicImport: DynamicImport) {
  * renders (otherwise useSyncExternalStore would re-subscribe every render).
  */
 function subscribeToLocation(callback: () => void): () => void {
+  // Forward navigation already wraps itself in the transition (in navigate()),
+  // so the NAVIGATE event just commits. Back/forward (popstate) has no call
+  // site to request one, so it reads the flag navigate() left in history.state:
+  // animate iff this entry was reached by an animated navigation.
+  const onPopState = () => {
+    if (window.history.state?.[VIEW_TRANSITION_STATE_KEY]) {
+      withViewTransition(callback);
+    } else {
+      callback();
+    }
+  };
   window.addEventListener(EVENTS.NAVIGATE, callback);
-  window.addEventListener(EVENTS.POPSTATE, callback);
+  window.addEventListener(EVENTS.POPSTATE, onPopState);
   return () => {
     window.removeEventListener(EVENTS.NAVIGATE, callback);
-    window.removeEventListener(EVENTS.POPSTATE, callback);
+    window.removeEventListener(EVENTS.POPSTATE, onPopState);
   };
 }
 
@@ -94,46 +140,49 @@ const useIsomorphicLayoutEffect =
  */
 function ScrollToHash() {
   useIsomorphicLayoutEffect(() => {
-    const scrollToHash = () => {
+    const scrollToHash = (behavior?: ScrollBehavior) => {
       const id = window.location.hash.slice(1);
-      if (id) document.getElementById(id)?.scrollIntoView();
+      if (id)
+        document
+          .getElementById(id)
+          ?.scrollIntoView(behavior ? { behavior } : undefined);
     };
     // On mount: the route just committed (eager, lazy-resolved, or a deep link
-    // on first load) — scroll if the URL carries a hash.
-    scrollToHash();
-    // Same-route hash changes don't re-render Router (pathname is unchanged),
-    // so listen for navigations and scroll to the new hash directly.
-    window.addEventListener(EVENTS.NAVIGATE, scrollToHash);
-    return () => window.removeEventListener(EVENTS.NAVIGATE, scrollToHash);
+    // on first load). Scroll *instantly* — matching how the browser lands on a
+    // fragment at page load (scroll-behavior:smooth doesn't apply there). It
+    // also lands before a View Transition snapshots the page.
+    scrollToHash("instant");
+    // Same-route hash changes don't re-render Router (pathname is unchanged), so
+    // listen for navigations and scroll to the new hash. No explicit behavior,
+    // so the consumer's CSS `scroll-behavior` (e.g. smooth) is respected — just
+    // like a native same-page anchor click.
+    const onNavigate = () => scrollToHash();
+    window.addEventListener(EVENTS.NAVIGATE, onNavigate);
+    return () => window.removeEventListener(EVENTS.NAVIGATE, onNavigate);
   }, []);
 
   return null;
 }
 
-const resolveLazyComponent = (dynamicImport: DynamicImport) => {
-  if (lazyComponentsCache.has(dynamicImport))
-    return lazyComponentsCache.get(dynamicImport);
+const resolveLazyComponent = (
+  dynamicImport: DynamicImport,
+): React.ComponentType => {
+  const cached = lazyComponentsCache.get(dynamicImport);
+  if (cached) return cached;
 
-  const lazyComponent = lazy(() =>
-    dynamicImport().then(
-      (module) => {
-        if (!module.default) {
-          throw new Error(
-            "Lazy route module must have a default export. Did you forget to add `export default`?",
-          );
-        }
-        return module;
-      },
-      (cause) => {
-        // The dynamic import() itself rejected — a genuine chunk-load failure.
-        // Tag it so the error boundary recognises it without message-sniffing.
-        // (Separate from the missing-default throw above, which is a dev bug.)
-        throw markChunkError(cause);
-      },
-    ),
-  );
-  lazyComponentsCache.set(dynamicImport, lazyComponent);
-  return lazyComponent;
+  // Reads the entry each render: render when resolved (no Suspense tick),
+  // suspend while pending, throw to the error boundary if it failed.
+  const LazyRoute: React.ComponentType = () => {
+    const entry = lazyEntries.get(dynamicImport) ?? loadLazy(dynamicImport);
+    if (entry.status === "resolved") {
+      const Loaded = entry.Component;
+      return <Loaded />;
+    }
+    throw entry.status === "rejected" ? entry.error : entry.promise;
+  };
+  LazyRoute.displayName = "LazyRoute";
+  lazyComponentsCache.set(dynamicImport, LazyRoute);
+  return LazyRoute;
 };
 
 export function Router({
@@ -248,11 +297,10 @@ export function Router({
     pageContent
   );
 
-  // reset() from the error boundary drops the cached (poisoned) lazy component
-  // for the current route and forces a re-render, so the retry mints a fresh
-  // lazy() and re-runs the import.
+  // reset() drops the failed entry and re-renders; the cached wrapper re-reads
+  // the cleared entry and re-runs the import.
   const resetRoute = () => {
-    if (matchedRoute?.lazy) lazyComponentsCache.delete(matchedRoute.lazy);
+    if (matchedRoute?.lazy) lazyEntries.delete(matchedRoute.lazy);
     forceRetry();
   };
 
