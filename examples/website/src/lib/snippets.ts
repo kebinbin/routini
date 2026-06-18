@@ -211,6 +211,64 @@ function AlbumCard({ album }) {
 navigate("/album/9", { viewTransition: true });
 `,
 
+  sharedElement: `import { Link } from "routini";
+
+// Same view-transition-name on the element on BOTH pages, then navigate with
+// viewTransition — the browser morphs one into the other. Names must be UNIQUE
+// per item (two elements can't share a name on one page), so key them by id.
+
+// List page
+function ProductCard({ product }) {
+  return (
+    <Link to={\`/product/\${product.id}\`} viewTransition>
+      <img
+        src={product.cover}
+        style={{
+          viewTransitionName: \`cover-\${product.id}\`,
+          viewTransitionClass: "cover", // shared hook for styling
+        }}
+      />
+    </Link>
+  );
+}
+
+// Detail page — same name + class on the matching element
+function Product({ product }) {
+  return (
+    <img
+      src={product.cover}
+      style={{
+        viewTransitionName: \`cover-\${product.id}\`,
+        viewTransitionClass: "cover",
+      }}
+    />
+  );
+}
+
+// Style the whole family by class — no per-id rules:
+//   ::view-transition-group(.cover) { animation-duration: 300ms }
+// (Or ::view-transition-group(*) to target every transition, for wider support.)
+`,
+
+  preload: `import { Link } from "routini";
+
+// Warm a lazy route's code-split chunk before the click, so
+// the page is ready instantly — and View Transitions land on
+// the real page, not the loading fallback. No-op for eager routes.
+function Nav() {
+  return (
+    <nav>
+      {/* on hover / keyboard focus — the user signalled intent */}
+      <Link to="/dashboard" preload="hover">Dashboard</Link>
+
+      {/* on mount, in an idle callback — the route almost
+          everyone visits next */}
+      <Link to="/album/9" preload="render">Featured album</Link>
+    </nav>
+  );
+}
+`,
+
   errorHandling: `import { Router } from "routini";
 
 // A failed lazy chunk or a render error shows this instead
@@ -234,6 +292,7 @@ export default function App() {
   );
 }
 `,
+
 } as const;
 
 export type SnippetId = keyof typeof snippets;

@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { InstallCommand } from "../components/InstallCommand";
 import { Logo } from "../components/Logo";
 import { WhyRoutini } from "../components/WhyRoutini";
-import { ApiAtAGlance } from "../components/ApiAtAGlance";
+import { BuiltIn } from "../components/BuiltIn";
 import { BuiltWith } from "../components/BuiltWith";
 import { langPath, useLang } from "../lib/i18n";
 import { useHomeT } from "../lib/i18n.home";
@@ -37,6 +37,7 @@ export default function Home() {
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <Link
               to={langPath(lang, "/docs")}
+              viewTransition
               className="group inline-flex items-center gap-2 bg-accent px-5 py-3 font-mono text-sm text-white transition-colors hover:bg-accent-dim"
             >
               {t.home.ctaDocs}
@@ -49,7 +50,7 @@ export default function Home() {
       </section>
 
       <WhyRoutini />
-      <ApiAtAGlance />
+      <BuiltIn />
       <BuiltWith />
     </>
   );

@@ -8,6 +8,9 @@ import { snippets, type SnippetId } from "../lib/snippets";
 const RECIPES: { anchor: string; snippet: SnippetId }[] = [
   { anchor: "basic-app", snippet: "setup" },
   { anchor: "code-split", snippet: "codeSplit" },
+  { anchor: "preload", snippet: "preload" },
+  { anchor: "view-transitions", snippet: "viewTransitions" },
+  { anchor: "shared-element", snippet: "sharedElement" },
   { anchor: "error-handling", snippet: "errorHandling" },
   { anchor: "typed-params", snippet: "dataLayer" },
   { anchor: "active-nav", snippet: "activeNav" },

@@ -27,6 +27,7 @@ export function LangSwitcher() {
           {i > 0 && <span className="px-1.5 text-bone-faint">/</span>}
           <Link
             to={pathForLang(path, lang)}
+            viewTransition
             aria-current={lang === active ? "true" : undefined}
             className={
               lang === active

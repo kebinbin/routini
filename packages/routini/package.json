@@ -54,6 +54,7 @@
     "test:watch": "vitest",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "size": "node scripts/size.mjs",
     "check:exports": "publint",
     "prepack": "cp ../../README.md ../../LICENSE .",
     "postpack": "rm -f README.md LICENSE",
@@ -63,19 +64,18 @@
     "react": ">=18",
     "react-dom": ">=18"
   },
-  "dependencies": {
-    "regexparam": "^3.0.0"
-  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@testing-library/react": "^16.3.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "esbuild": "^0.27.7",
     "eslint": "^10.4.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.6.0",
     "happy-dom": "^20.9.0",
     "publint": "^0.3.21",
+    "terser": "^5.48.0",
     "tsup": "^8.0.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.4",

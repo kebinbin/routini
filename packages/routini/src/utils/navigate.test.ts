@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { navigate } from "./navigate";
-import { EVENTS } from "../consts";
+import { EVENTS, VIEW_TRANSITION_STATE_KEY } from "../consts";
 
 describe("navigate", () => {
   beforeEach(() => {
@@ -73,6 +73,46 @@ describe("navigate", () => {
     navigate("/about");
     expect(startViewTransition).not.toHaveBeenCalled();
     delete doc.startViewTransition;
+  });
+
+  it("tags history.state so back/forward replays the transition", () => {
+    const startViewTransition = vi.fn((cb: () => void) => cb());
+    doc.startViewTransition = startViewTransition;
+    navigate("/about", { viewTransition: true });
+    expect(window.history.state).toEqual({
+      [VIEW_TRANSITION_STATE_KEY]: true,
+    });
+    delete doc.startViewTransition;
+  });
+
+  it("tags both ends of the animated edge — the entry left and the one pushed", () => {
+    const replaceSpy = vi.spyOn(window.history, "replaceState");
+    const pushSpy = vi.spyOn(window.history, "pushState");
+    const startViewTransition = vi.fn((cb: () => void) => cb());
+    doc.startViewTransition = startViewTransition;
+
+    navigate("/about", { viewTransition: true });
+
+    // The entry we leave is tagged in place (same URL); the new one is pushed tagged.
+    expect(replaceSpy).toHaveBeenCalledWith(
+      { [VIEW_TRANSITION_STATE_KEY]: true },
+      "",
+      expect.any(String),
+    );
+    expect(pushSpy).toHaveBeenCalledWith(
+      { [VIEW_TRANSITION_STATE_KEY]: true },
+      "",
+      "/about",
+    );
+
+    replaceSpy.mockRestore();
+    pushSpy.mockRestore();
+    delete doc.startViewTransition;
+  });
+
+  it("does not tag history.state for a plain navigation", () => {
+    navigate("/about");
+    expect(window.history.state).toEqual({});
   });
 });
 

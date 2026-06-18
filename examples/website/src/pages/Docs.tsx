@@ -103,6 +103,14 @@ const DOCS_ENTRIES: DocEntry[] = [
     group: "guides",
     since: "0.2.0",
   },
+  {
+    anchor: "preloading",
+    name: "Preloading",
+    signature: '<Link preload="hover" | "render" />',
+    snippet: "preload",
+    group: "guides",
+    since: "0.3.0",
+  },
 ];
 
 interface DocsEntryContent {

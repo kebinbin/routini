@@ -1,10 +1,20 @@
-import { Outlet } from "routini";
+import { Outlet, useParams } from "routini";
+import { lazy, Suspense } from "react";
 import { Nav } from "./Nav";
 import { Footer } from "./Footer";
-import { useT } from "../lib/i18n";
+import { isLang, useT } from "../lib/i18n";
+
+// /:lang matches any single segment, so an unknown language (e.g. /edsfsdfgsdfg)
+// resolves to the lang route instead of 404ing. A router can't constrain :lang
+// to "en"|"es" (per-param patterns are out of scope), so reject unknown
+// languages here — one spot covers /:lang, /:lang/docs and /:lang/examples. The
+// "*" and "/" routes have no lang param, so they pass straight through.
+const NotFound = lazy(() => import("../pages/NotFound"));
 
 export function Layout() {
   const t = useT();
+  const { lang } = useParams<{ lang?: string }>();
+  const unknownLang = lang !== undefined && !isLang(lang);
   return (
     <div className="flex min-h-screen flex-col">
       {/* Skip link: first focusable element, lets keyboard/SR users jump past
@@ -18,7 +28,13 @@ export function Layout() {
       </a>
       <Nav />
       <main id="main" tabIndex={-1} className="flex-1 focus:outline-none">
-        <Outlet />
+        {unknownLang ? (
+          <Suspense fallback={null}>
+            <NotFound />
+          </Suspense>
+        ) : (
+          <Outlet />
+        )}
       </main>
       <Footer />
     </div>

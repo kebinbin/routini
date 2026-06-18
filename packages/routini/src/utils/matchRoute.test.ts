@@ -69,4 +69,37 @@ describe("matchRoute", () => {
       params: {},
     });
   });
+
+  it("tolerates an optional trailing slash", () => {
+    const routes: RouteDefinition[] = [
+      { path: "/about", component: Page },
+      { path: "/product/:id", component: Page },
+    ];
+    expect(matchRoute(routes, "/about/").route?.path).toBe("/about");
+    expect(matchRoute(routes, "/product/42/").params).toEqual({ id: "42" });
+  });
+
+  it("matches case-sensitively", () => {
+    const routes: RouteDefinition[] = [
+      { path: "/about", component: Page },
+      { path: "/:lang/docs", component: Page },
+    ];
+    // Static segments must match case exactly (no catch-all → undefined).
+    expect(matchRoute(routes, "/About").route).toBeUndefined();
+    expect(matchRoute(routes, "/en/Docs").route).toBeUndefined();
+    // A :param still captures whatever case the URL uses.
+    expect(matchRoute(routes, "/en/docs").params).toEqual({ lang: "en" });
+  });
+
+  it("compares static segments literally, not as patterns", () => {
+    const routes: RouteDefinition[] = [{ path: "/files/a.b", component: Page }];
+    // "." is a literal dot here, not a regex "any char".
+    expect(matchRoute(routes, "/files/a.b").route?.path).toBe("/files/a.b");
+    expect(matchRoute(routes, "/files/axb").route).toBeUndefined();
+  });
+
+  it("does not let a :param swallow a missing segment", () => {
+    const routes: RouteDefinition[] = [{ path: "/user/:name", component: Page }];
+    expect(matchRoute(routes, "/user").route).toBeUndefined();
+  });
 });

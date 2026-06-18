@@ -1,14 +1,14 @@
 import { useLang } from "./i18n";
 
 // Landing-page copy. Home is an eager route, so this loads in the initial
-// bundle alongside it (used by Home + Hero/WhyRoutini/ApiAtAGlance/BuiltWith).
+// bundle alongside it (used by Home + Hero/WhyRoutini/BuiltIn/BuiltWith).
 const home = {
   en: {
     home: {
       pretitle: "A tiny router for React",
       title1: "Routing.",
       title2: "Nothing else.",
-      sub: "2.3 KB gzipped. TypeScript-first. Lazy routes built in.",
+      sub: "2.5 KB gzipped. TypeScript-first. Lazy routes built in.",
       ctaDocs: "Read the docs",
       ctaGithub: "View on GitHub",
     },
@@ -17,8 +17,8 @@ const home = {
       subhead:
         "Small to ship, solid to type, scoped to one job, free of setup ceremony.",
       size: {
-        headline: "2.3 KB gzipped",
-        body: "Components, hooks, and the navigate utility — the whole library is 2.3 KB gzipped.",
+        headline: "2.5 KB gzipped",
+        body: "Components, hooks, and the navigate utility — the whole library is 2.5 KB gzipped.",
       },
       types: {
         headline: "TypeScript from day one",
@@ -33,49 +33,64 @@ const home = {
         body: "No config file, no codegen, no Vite plugin. Install, define a routes array, and you're done.",
       },
     },
-    api: {
-      pretitle: "API at a glance",
-      intro: "Seven exports and one utility — the whole API fits in your head.",
+    builtIn: {
+      pretitle: "Built in",
+      intro: "Small, but not stripped — the essentials ship in the box.",
       entries: [
+        // Row 1 — perf headline, then the route the user hits next, then the
+        // tall "use it your way" card.
         {
-          name: "Router",
-          anchor: "router",
-          desc: "Root config wrapper. Pass a routes array and/or <Route> children.",
-        },
-        {
-          name: "Route",
+          name: "Lazy + code-split routes",
           anchor: "route",
-          desc: "JSX form of a route definition. Renders null; matched by Router via Symbol.",
+          desc: "Mark a route lazy and routini wraps it in Suspense — each page ships as its own chunk.",
         },
         {
-          name: "Link",
-          anchor: "link",
-          desc: "Client-side navigation. Respects cmd-click, target, and modifier keys.",
+          name: "Link preload",
+          anchor: "preloading",
+          desc: "Warm a route's chunk on hover or on render, so the next page lands instantly.",
         },
         {
-          name: "Outlet",
+          name: "Declarative or imperative",
+          anchor: "router",
+          desc: "Describe routing with JSX — <Route>, <Link> — or drive it from code — a routes array, navigate(). Your call, for routes and navigation alike.",
+        },
+        // Row 2 — app structure / resilience
+        {
+          name: "Layouts with Outlet",
           anchor: "outlet",
-          desc: "Renders the matched page inside a layout. Optional.",
+          desc: "Wrap pages in a shared layout; <Outlet/> renders the matched page inside it.",
         },
         {
-          name: "Navigate",
+          name: "Error boundary",
+          anchor: "error-handling",
+          desc: "A failed chunk or a render error shows a fallback instead of white-screening the app.",
+        },
+        // Row 3 — the wide showcase, lower down
+        {
+          name: "View Transitions",
+          anchor: "view-transitions",
+          desc: "Animate any navigation — forward and back — with the platform View Transitions API.",
+        },
+        {
+          name: "Redirects",
           anchor: "navigate-component",
-          desc: "Declarative redirect. Mounts → calls navigate(to).",
+          desc: "Send visitors from a guarded route to /login with <Navigate> — it replaces by default, so Back never bounces them into the redirect again.",
+        },
+        // Row 4 — reading the URL, fundamentals last
+        {
+          name: "Route params",
+          anchor: "use-params",
+          desc: "Read any :segment off the URL with useParams() — then hand the id to your data layer.",
         },
         {
           name: "useLocation",
           anchor: "use-location",
-          desc: "Hook → { path, navigate }. Re-renders on URL change.",
+          desc: "Read the current path with useLocation() to highlight the active link; it re-renders on every navigation.",
         },
         {
-          name: "useParams",
-          anchor: "use-params",
-          desc: "Hook → typed route params. Generic: useParams<T>().",
-        },
-        {
-          name: "navigate",
-          anchor: "navigate-util",
-          desc: "Imperative navigation utility. Use outside components or in event handlers.",
+          name: "Hash-anchor scrolling",
+          anchor: "link",
+          desc: "Links to #sections scroll into view smoothly, and keep working on lazy routes.",
         },
       ],
     },
@@ -92,7 +107,7 @@ const home = {
       pretitle: "Un router pequeño para React",
       title1: "Solo routing.",
       title2: "Nada más.",
-      sub: "2.3 KB gzipped. TypeScript-first. Carga diferida integrada.",
+      sub: "2.5 KB gzipped. TypeScript-first. Carga diferida integrada.",
       ctaDocs: "Leer la documentación",
       ctaGithub: "Ver en GitHub",
     },
@@ -101,8 +116,8 @@ const home = {
       subhead:
         "Ligera al enviar, robusta en tipado, enfocada en una sola tarea, sin ceremonia de configuración.",
       size: {
-        headline: "2.3 KB gzipped",
-        body: "Componentes, hooks y la utilidad navigate — toda la librería pesa 2.3 KB comprimida.",
+        headline: "2.5 KB gzipped",
+        body: "Componentes, hooks y la utilidad navigate — toda la librería pesa 2.5 KB comprimida.",
       },
       types: {
         headline: "TypeScript desde el primer día",
@@ -117,51 +132,66 @@ const home = {
         body: "Sin archivo de configuración, sin codegen, sin plugin de Vite. Instala, define un array de rutas y listo.",
       },
     },
-    api: {
-      pretitle: "La API de un vistazo",
-      intro: "Siete exports y una utilidad — y con eso conoces toda la API.",
+    builtIn: {
+      pretitle: "Incluido",
+      intro: "Pequeña, pero no recortada — lo esencial viene de fábrica.",
       entries: [
+        // Fila 1 — titular de rendimiento, la ruta siguiente, y la tarjeta alta.
         {
-          name: "Router",
-          anchor: "router",
-          desc: "Wrapper de configuración raíz. Acepta un array de rutas y/o hijos <Route>.",
-        },
-        {
-          name: "Route",
+          name: "Rutas lazy + code-splitting",
           anchor: "route",
-          desc: "Forma JSX de una definición de ruta. Renderiza null; Router la detecta mediante un Symbol.",
+          desc: "Marca una ruta como lazy y routini la envuelve en Suspense — cada página viaja en su propio chunk.",
         },
         {
-          name: "Link",
-          anchor: "link",
-          desc: "Navegación en cliente. Respeta cmd-click, target y teclas modificadoras.",
+          name: "Preload de enlaces",
+          anchor: "preloading",
+          desc: "Precalienta el chunk de una ruta al pasar el cursor o al montar, para que la siguiente página sea instantánea.",
         },
         {
-          name: "Outlet",
+          name: "Declarativo o imperativo",
+          anchor: "router",
+          desc: "Describe el routing con JSX — <Route>, <Link> — o contrólalo desde código — un array de rutas, navigate(). Tú eliges, tanto para rutas como para navegación.",
+        },
+        // Fila 2 — estructura de la app / resiliencia
+        {
+          name: "Layouts con Outlet",
           anchor: "outlet",
-          desc: "Renderiza la página coincidente dentro de un layout. Opcional.",
+          desc: "Envuelve páginas en un layout compartido; <Outlet/> renderiza dentro la página coincidente.",
         },
         {
-          name: "Navigate",
+          name: "Error boundary",
+          anchor: "error-handling",
+          desc: "Un chunk fallido o un error de render muestra un fallback en vez de dejar la app en blanco.",
+        },
+        // Fila 3 — el showcase ancho, más abajo
+        {
+          name: "View Transitions",
+          anchor: "view-transitions",
+          desc: "Anima cualquier navegación — hacia delante y atrás — con la API de View Transitions del navegador.",
+        },
+        {
+          name: "Redirecciones",
           anchor: "navigate-component",
-          desc: "Redirección declarativa. Al montar → llama a navigate(to).",
+          desc: "Envía a los visitantes de una ruta protegida a /login con <Navigate> — reemplaza por defecto, así Atrás nunca los devuelve al redirect.",
+        },
+        // Fila 4 — leer la URL, fundamentos al final
+        {
+          name: "Params de ruta",
+          anchor: "use-params",
+          desc: "Lee cualquier :segmento de la URL con useParams() — y pasa el id a tu capa de datos.",
         },
         {
           name: "useLocation",
           anchor: "use-location",
-          desc: "Hook → { path, navigate }. Re-renderiza al cambiar la URL.",
+          desc: "Lee la ruta actual con useLocation() para resaltar el enlace activo; se re-renderiza en cada navegación.",
         },
         {
-          name: "useParams",
-          anchor: "use-params",
-          desc: "Hook → params tipados. Genérico: useParams<T>().",
-        },
-        {
-          name: "navigate",
-          anchor: "navigate-util",
-          desc: "Utilidad imperativa. Útil fuera de componentes o en event handlers.",
+          name: "Scroll a anclas #hash",
+          anchor: "link",
+          desc: "Los enlaces a #secciones hacen scroll suave y siguen funcionando en rutas lazy.",
         },
       ],
+
     },
     builtWith: {
       pretitle: "Hecho con routini",
