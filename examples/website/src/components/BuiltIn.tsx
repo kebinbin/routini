@@ -4,13 +4,13 @@ import { Link } from "routini";
 import { langPath, useLang } from "../lib/i18n";
 import { useHomeT } from "../lib/i18n.home";
 
-// The "what it does" counterpart to WhyRoutini's "why it's small". A bento:
+// The "what it does" bento of built-in features. A bento:
 // most cards are 1x1 (visual on top, text below). One WIDE card (declarative/
 // imperative) spans two columns on desktop with text left + visual right; one
 // TALL card (View Transitions) spans two rows in a single column with a portrait
 // visual. They tile a clean grid on lg (12 cells, 4 rows) and collapse to plain
 // 1x1 cards below lg. Layout matches the site: a hairline grid (gap-px over
-// bg-ink-3), sharp corners, cells filling on hover:bg-ink-2. Visuals are
+// bg-ink-3), sharp corners, cells filling on hover:bg-ink-hover. Visuals are
 // restrained, sharp, ink+accent motifs (no icons) animating on group-hover;
 // keyed by docs anchor since they're code.
 const WIDE = "view-transitions";
@@ -307,7 +307,7 @@ export function BuiltIn() {
         <p className="mb-4 text-center font-mono text-xs uppercase tracking-[0.2em] text-bone-faint">
           {t.builtIn.pretitle}
         </p>
-        <h2 className="text-pretty mx-auto mb-12 max-w-3xl text-center text-3xl font-medium tracking-tight text-bone md:mb-16 md:text-4xl">
+        <h2 className="text-pretty mx-auto mb-16 max-w-3xl text-center text-3xl font-medium tracking-tight text-bone md:mb-24 md:text-4xl">
           {t.builtIn.intro}
         </h2>
 
@@ -328,7 +328,7 @@ export function BuiltIn() {
                   to={`${langPath(lang, "/docs")}#${entry.anchor}`}
                   viewTransition
                   className={[
-                    "group flex h-full w-full flex-col bg-ink p-8 transition-colors hover:bg-ink-2",
+                    "group flex h-full w-full flex-col bg-ink p-8 transition-colors hover:bg-ink-hover",
                     wide && "lg:flex-row lg:items-center lg:gap-10",
                   ]
                     .filter(Boolean)

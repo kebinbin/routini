@@ -330,6 +330,40 @@ function ProductSearch() {
 }
 `,
 
+  overview: `import { Router, Link, useParams, navigate } from "routini";
+import Home from "./pages/Home";
+
+// One routes array: an eager landing page, lazy (code-split) pages,
+// a URL param, and a catch-all 404.
+const routes = [
+  { path: "/", component: Home },
+  { path: "/products/:id", lazy: () => import("./pages/Product") },
+  { path: "*", lazy: () => import("./pages/NotFound") },
+];
+
+export default function App() {
+  return <Router routes={routes} />;
+}
+
+// Pages are self-contained — read the matched URL, link, or navigate.
+function Product() {
+  const { id } = useParams<{ id: string }>();
+
+  return (
+    <article>
+      <h1>Product {id}</h1>
+
+      {/* preload warms the chunk on hover; viewTransition animates it */}
+      <Link to="/products/42" preload="hover" viewTransition>
+        Next product
+      </Link>
+
+      <button onClick={() => navigate("/")}>Done</button>
+    </article>
+  );
+}
+`,
+
 } as const;
 
 export type SnippetId = keyof typeof snippets;

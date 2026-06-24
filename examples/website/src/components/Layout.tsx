@@ -17,6 +17,11 @@ export function Layout() {
   const unknownLang = lang !== undefined && !isLang(lang);
   return (
     <div className="flex min-h-screen flex-col">
+      {/* Film-grain atmosphere — a fixed, non-interactive texture overlay. */}
+      <div
+        aria-hidden
+        className="grain pointer-events-none fixed inset-0 z-60 opacity-5"
+      />
       {/* Skip link: first focusable element, lets keyboard/SR users jump past
           the nav. Pure HTML — href="#main" + a focusable <main id="main"
           tabIndex={-1}> works on modern browsers. */}

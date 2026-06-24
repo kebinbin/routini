@@ -8,16 +8,16 @@
  *
  *   React Router    react-router-dom@7.16.0   59.97 KB
  *   TanStack Router @tanstack/react-router@1.170.10  39.3 KB
- *   Wouter          wouter@3.10.0             2.54 KB
  *   routini  (error boundary, View Transitions, preload, search params, lazy resolver)  2.79 KB
  *
- * routini ships zero runtime dependencies (only react/react-dom peers); the
- * other three each pull in their own. Ordered smallest → largest; routini sits a
- * hair above the lightest alternative but is dependency-free with far more built
- * in, and is highlighted as the reference.
+ * Measured against the full-featured routers people weigh routini against. They
+ * carry much more — loaders, a data layer, type-safe routing, SSR — so they're
+ * larger by nature; routini is scoped to routing (lazy, error boundary, View
+ * Transitions, preload, search params) and ships an order of magnitude smaller.
+ * The honest takeaway is SCOPE, not "we win": same core routing job, far less
+ * framework. Ordered smallest → largest; routini is highlighted as the reference.
  */
 const ENTRIES = [
-  { name: "Wouter", kb: 2.54, label: "2.5 KB" },
   { name: "routini", kb: 2.79, label: "2.8 KB", highlight: true },
   { name: "TanStack Router", kb: 39.3, label: "39 KB" },
   { name: "React Router", kb: 59.97, label: "60 KB" },
@@ -27,35 +27,48 @@ const MAX_KB = Math.max(...ENTRIES.map((e) => e.kb));
 
 export function BundleChart() {
   return (
-    <figure className="border border-ink-3 bg-ink-2 p-5">
-      <figcaption className="mb-5 font-mono text-xs text-bone-faint">
+    <div className="mx-auto w-full max-w-3xl rounded-md border border-ink-3 p-8 md:p-10">
+      <p className="mb-7 font-mono text-xs uppercase tracking-[0.15em] text-bone-faint">
         Bundle size · minified + gzipped
-      </figcaption>
+      </p>
 
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-5">
         {ENTRIES.map((entry) => {
-          // Range spans ~40×, so a purely linear width makes the small bars
-          // vanish. Floor at 6% to keep routini/Wouter legible — the labels
-          // carry the exact figures.
-          const width = Math.max((entry.kb / MAX_KB) * 100, 6);
+          // Range spans ~20×, so a purely linear width makes routini's bar
+          // vanish. Floor at 8% to keep it legible — the labels carry the
+          // exact figures.
+          const width = Math.max((entry.kb / MAX_KB) * 100, 8);
           const highlight = "highlight" in entry && entry.highlight;
 
           return (
-            <div key={entry.name} className="flex items-center gap-3">
+            <div key={entry.name} className="flex items-center gap-4">
               <span
                 className={[
-                  "w-28 shrink-0 text-right text-sm",
+                  "w-32 shrink-0 text-right text-sm",
                   highlight ? "font-medium text-bone" : "text-bone-dim",
                 ].join(" ")}
               >
                 {entry.name}
               </span>
 
-              <div className="h-6 flex-1 overflow-hidden border border-ink-3 bg-ink">
+              {/* Each bar shows at rest (subtle). On hover a deeper fill sweeps
+                  in from left to right — accent for routini, grey for the rest —
+                  matching the bento's bordered, semi-transparent motifs. */}
+              <div className="h-7 flex-1 overflow-hidden rounded-sm">
                 <div
-                  className={`h-full ${highlight ? "bg-accent" : "bg-bone-faint"}`}
+                  className={`relative h-full overflow-hidden rounded-sm border transition-colors ${
+                    highlight
+                      ? "border-accent/60 bg-accent/30 group-hover:border-accent/80"
+                      : "border-ink-3 bg-bone-faint/15"
+                  }`}
                   style={{ width: `${width}%` }}
-                />
+                >
+                  <div
+                    className={`absolute inset-0 origin-left scale-x-0 transition-transform duration-500 ease-out group-hover:scale-x-100 pointer-coarse:scale-x-100 ${
+                      highlight ? "bg-accent/35" : "bg-bone-faint/20"
+                    }`}
+                  />
+                </div>
               </div>
 
               <span
@@ -70,10 +83,6 @@ export function BundleChart() {
           );
         })}
       </div>
-
-      <p className="mt-5 border-t border-ink-3 pt-4 font-mono text-xs text-bone-faint">
-        routini · zero runtime dependencies
-      </p>
-    </figure>
+    </div>
   );
 }
