@@ -24,7 +24,7 @@ export function InstallCommand() {
       aria-label={copied ? t.install.copied : t.install.copy}
       className="group inline-flex items-center gap-3 border border-ink-3 bg-ink-2 px-4 py-3 font-mono text-sm text-bone-dim transition-colors hover:border-accent hover:text-bone"
     >
-      <span className="text-bone-faint">$</span>
+      <span className="text-accent">$</span>
       <span>{COMMAND}</span>
       <span className="ml-2 inline-flex h-4 w-4 items-center justify-center">
         {copied ? (

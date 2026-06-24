@@ -1,7 +1,7 @@
 import { useLang } from "./i18n";
 
 // Landing-page copy. Home is an eager route, so this loads in the initial
-// bundle alongside it (used by Home + Hero/WhyRoutini/BuiltIn/BuiltWith).
+// bundle alongside it (used by Home + Highlights/Bundle/BuiltIn/BuiltWith).
 const home = {
   en: {
     home: {
@@ -11,27 +11,32 @@ const home = {
       sub: "2.8 KB gzipped. TypeScript-first. Lazy routes built in.",
       ctaDocs: "Read the docs",
       ctaGithub: "View on GitHub",
+      trust: "MIT licensed · Zero dependencies · React 18+",
     },
-    why: {
+    highlights: {
+      pretitle: "Self-contained",
+      heading: "Add it, don't adopt it.",
+      sub: "Start routing in minutes, and keep the rest of your stack exactly as it is.",
+      items: [
+        {
+          name: "Just routing",
+          desc: "A minimal routing library, not a framework — it maps URLs to components and nothing more. Bring your own data fetching, state, and build.",
+        },
+        {
+          name: "Effortless",
+          desc: "A small, familiar API and zero config — a routes array and you're running. If you know React, you already know routini.",
+        },
+        {
+          name: "Fast",
+          desc: "Built with performance in mind — lazy, code-split routes, link preloading, and a tiny runtime that stays out of the way.",
+        },
+      ],
+    },
+    bundle: {
       pretitle: "Small on purpose",
-      subhead:
-        "Small to ship, solid to type, scoped to one job, free of setup ceremony.",
-      size: {
-        headline: "2.8 KB gzipped",
-        body: "Components, hooks, and the navigate utility — the whole library is 2.8 KB gzipped.",
-      },
-      types: {
-        headline: "TypeScript from day one",
-        body: "Written in TypeScript, not retrofitted. useParams<T>() is generic and every export is fully typed.",
-      },
-      scope: {
-        headline: "Routing, not a framework",
-        body: "routini matches URLs to components — nothing more. Your data layer — SWR, React Query, fetch — stays yours.",
-      },
-      config: {
-        headline: "Zero configuration",
-        body: "No config file, no codegen, no Vite plugin. Install, define a routes array, and you're done.",
-      },
+      headline: "Tiny by design.",
+      sub: "Small to ship, solid to type, scoped to one job, free of setup ceremony — the whole router in 2.8 KB gzipped, with zero runtime dependencies.",
+      compare: "routini is scoped to routing, so it stays small. The bigger routers add loaders, type-safe routes, and SSR for when you need them.",
     },
     builtIn: {
       pretitle: "Built in",
@@ -110,27 +115,32 @@ const home = {
       sub: "2.8 KB gzipped. TypeScript-first. Carga diferida integrada.",
       ctaDocs: "Leer la documentación",
       ctaGithub: "Ver en GitHub",
+      trust: "Licencia MIT · Cero dependencias · React 18+",
     },
-    why: {
+    highlights: {
+      pretitle: "Autocontenida",
+      heading: "Añádelo, no lo adoptes.",
+      sub: "Empieza a enrutar en minutos y deja el resto de tu stack tal como está.",
+      items: [
+        {
+          name: "Solo routing",
+          desc: "Una librería de routing mínima, no un framework — mapea URLs a componentes y nada más. Maneja tú el fetching de datos, el estado y el build.",
+        },
+        {
+          name: "Sin esfuerzo",
+          desc: "Una API pequeña y familiar, cero configuración — un array de rutas y a funcionar. Si sabes React, ya sabes routini.",
+        },
+        {
+          name: "Rápida",
+          desc: "Construida pensando en el rendimiento — rutas lazy con code-splitting, preload de enlaces y un runtime diminuto que no estorba.",
+        },
+      ],
+    },
+    bundle: {
       pretitle: "Pequeño a propósito",
-      subhead:
-        "Ligera al enviar, robusta en tipado, enfocada en una sola tarea, sin ceremonia de configuración.",
-      size: {
-        headline: "2.8 KB gzipped",
-        body: "Componentes, hooks y la utilidad navigate — toda la librería pesa 2.8 KB comprimida.",
-      },
-      types: {
-        headline: "TypeScript desde el primer día",
-        body: "Escrita en TypeScript, no añadida después. useParams<T>() es genérico y cada export está completamente tipado.",
-      },
-      scope: {
-        headline: "Routing, no un framework",
-        body: "routini empareja URLs con componentes — nada más. Tu capa de datos — SWR, React Query, fetch — sigue siendo tuya.",
-      },
-      config: {
-        headline: "Cero configuración",
-        body: "Sin archivo de configuración, sin codegen, sin plugin de Vite. Instala, define un array de rutas y listo.",
-      },
+      headline: "Diminuto por diseño.",
+      sub: "Ligera al enviar, robusta en tipado, enfocada en una sola tarea, sin ceremonia — todo el router en 2.8 KB comprimido, con cero dependencias en runtime.",
+      compare: "routini se enfoca en el routing, por eso es pequeña. Los routers grandes añaden loaders, rutas tipadas y SSR para cuando los necesitas.",
     },
     builtIn: {
       pretitle: "Incluido",

@@ -2,7 +2,9 @@ import { Link } from "routini";
 import { ArrowRight } from "lucide-react";
 import { InstallCommand } from "../components/InstallCommand";
 import { Logo } from "../components/Logo";
-import { WhyRoutini } from "../components/WhyRoutini";
+import { GithubMark } from "../components/GithubMark";
+import { Highlights } from "../components/Highlights";
+import { Bundle } from "../components/Bundle";
 import { BuiltIn } from "../components/BuiltIn";
 import { BuiltWith } from "../components/BuiltWith";
 import { langPath, useLang } from "../lib/i18n";
@@ -34,22 +36,34 @@ export default function Home() {
             {t.home.sub}
           </p>
 
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-            <Link
-              to={langPath(lang, "/docs")}
-              viewTransition
-              className="group inline-flex items-center gap-2 bg-accent px-5 py-3 font-mono text-sm text-white transition-colors hover:bg-accent-dim"
-            >
-              {t.home.ctaDocs}
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </Link>
+          <div className="mt-10 flex flex-col items-end gap-4">
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <Link
+                to={langPath(lang, "/docs")}
+                viewTransition
+                className="group inline-flex items-center gap-2 bg-accent px-5 py-3 font-mono text-sm text-white transition-colors hover:bg-accent-dim"
+              >
+                {t.home.ctaDocs}
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              </Link>
+              <InstallCommand />
+            </div>
 
-            <InstallCommand />
+            <a
+              href="https://github.com/kebinbin/routini"
+              target="_blank"
+              rel="noreferrer"
+              className="group inline-flex items-center gap-1.5 font-mono text-xs text-bone-faint opacity-60 underline-offset-4 transition hover:text-bone hover:opacity-100 hover:underline"
+            >
+              <GithubMark className="h-3 w-3" />
+              {t.home.ctaGithub}
+            </a>
           </div>
         </div>
       </section>
 
-      <WhyRoutini />
+      <Highlights />
+      <Bundle />
       <BuiltIn />
       <BuiltWith />
     </>
