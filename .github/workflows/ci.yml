@@ -21,8 +21,15 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
 
+      # `npm ci` enforces the lockfile (fails on any package.json/lock drift),
+      # but on a cold cache it silently skips the platform-specific rolldown
+      # native binding vitest needs at runtime (npm/cli#4828). The follow-up
+      # `npm install` installs that one optional binding without touching the
+      # already-satisfied lockfile.
       - name: Install
         run: npm ci
+      - name: Install platform optional deps (rolldown native binding)
+        run: npm install --no-audit --no-fund
 
       - name: Typecheck
         run: npm run typecheck -w packages/routini
