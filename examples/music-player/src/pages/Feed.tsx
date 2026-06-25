@@ -24,7 +24,7 @@ function Heart() {
       aria-label={liked ? "Saved" : "Save"}
       className={`relative z-10 shrink-0 transition ${liked ? "text-text" : "text-text-faint hover:text-text"}`}
     >
-      <svg viewBox="0 0 24 24" width="24" height="24" fill={liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.6" aria-hidden>
+      <svg viewBox="0 0 24 24" width="26" height="26" fill={liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.6" aria-hidden>
         <path d="M12 20.8S3 15.4 3 9.3A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 9 2.3c0 6.1-9 11.5-9 11.5z" />
       </svg>
     </button>
@@ -88,7 +88,7 @@ export default function Feed() {
                 aria-label={rowPlaying ? `Pause ${a.name}` : `Play ${a.name}`}
                 className="relative z-10 grid h-full w-10 shrink-0 place-items-center text-text-dim transition hover:text-text sm:w-16"
               >
-                <PlayPause playing={rowPlaying} className="h-6 w-6" />
+                <PlayPause playing={rowPlaying} className="h-7 w-7" />
               </button>
 
               <div
@@ -121,11 +121,11 @@ export default function Feed() {
                 )}
               </div>
 
-              <span className="pointer-events-none hidden min-w-0 flex-1 truncate px-2 text-center text-sm text-text-dim md:block">
+              <span className="pointer-events-none hidden min-w-0 flex-1 truncate px-2 text-left text-sm text-text-dim md:block">
                 {a.genres.join(", ")}
               </span>
 
-              <span className="pointer-events-none hidden min-w-0 flex-1 truncate px-2 text-center text-sm text-text-faint lg:block">
+              <span className="pointer-events-none hidden min-w-0 flex-1 truncate px-2 text-left text-sm text-text-faint lg:block">
                 {a.songs.length} more songs
               </span>
 

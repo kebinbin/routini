@@ -60,6 +60,15 @@ function InfoIcon({ className }: { className?: string }) {
   );
 }
 
+function BellIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+      <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+    </svg>
+  );
+}
+
 // Generic placeholder avatar (no real user photo) in a circle.
 function Avatar({ className }: { className?: string }) {
   return (
@@ -94,14 +103,18 @@ function TopBar() {
       </div>
       {/* Secondary actions live in the bottom bar on mobile; the top bar keeps
           just the logo + search there. */}
-      <nav className="hidden shrink-0 items-center gap-3 text-sm lg:flex">
-        <button className="rounded-full bg-text px-4 py-1.5 font-medium text-bg transition hover:opacity-90">
+      <nav className="hidden shrink-0 items-center gap-4 text-sm lg:flex">
+        <button className="rounded-full bg-text-dim px-4 py-1.5 font-medium text-bg transition hover:opacity-90">
           Explore near you
         </button>
         <a href="#" className="text-text-dim transition hover:text-text">
           About this project
         </a>
-        <Avatar className="h-8 w-8" />
+        <button aria-label="Notifications" className="relative text-text-dim transition hover:text-text">
+          <BellIcon className="h-5 w-5" />
+          <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-text ring-2 ring-bg" />
+        </button>
+        <Avatar className="h-8 w-8 ring-1 ring-border" />
       </nav>
     </header>
   );

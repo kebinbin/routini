@@ -1,17 +1,15 @@
 // Mock dataset for the demo (no backend — routing only).
 //
-// Display layer (names, photos, genres, events, copy) follows the Figma.
-// The audio + album art are real Creative-Commons albums from the design's
-// `artists/` set — so the demo is legally shippable and actually plays. Each
-// Figma artist is matched to one CC album; `credit` records the real source for
-// attribution (see the About/credits surface).
+// Display layer (names, photos, genres, events, copy) is fictional, paired with
+// stock photography. Audio is shared from one Creative-Commons album for now
+// (real per-artist albums come later); see README/NOTES for credits.
 
 export interface Song {
   id: string;
   title: string;
   artist: string;
   artistId: string;
-  cover: string; // square album art
+  cover: string;
   audioSrc: string;
   duration: string;
 }
@@ -20,10 +18,10 @@ export interface Artist {
   id: string;
   name: string;
   photo: string; // landscape — feed rectangle + page hero
+  avatar: string; // square — shown in a circle
   genres: string[];
   bio: string;
   performing?: { date: string; venue: string };
-  credit: string; // real CC source for the audio/art
   songs: Song[];
 }
 
@@ -34,206 +32,350 @@ export interface MusicEvent {
   date: string;
   venue: string;
   description: string;
-  lineup: string[];
+  lineup: string[]; // artist ids
 }
 
-const DUR = ["3:24", "4:12", "2:58", "3:47", "4:05", "3:31"];
+const SHARED_ALBUM = "tony-croatto";
+const TITLES = ["Amanecer", "Calle Sin Nombre", "Bajo la Lluvia", "Raíz", "Mar de Fondo", "Último Tren"];
+const DUR = ["3:24", "4:12", "2:58", "0:45", "0:45", "0:45"];
 
-function album(slug: string, artist: string, titles: string[]): Song[] {
-  const cover = `/albums/${slug}/cover.jpg`;
-  return titles.map((title, i) => ({
-    id: `${slug}-${i + 1}`,
+function songsFor(artistId: string, artist: string): Song[] {
+  return TITLES.map((title, i) => ({
+    id: `${artistId}-${i + 1}`,
     title,
     artist,
-    artistId: slug,
-    cover,
-    audioSrc: `/albums/${slug}/${String(i + 1).padStart(2, "0")}.mp3`,
+    artistId,
+    cover: `/albums/${SHARED_ALBUM}/cover.jpg`,
+    audioSrc: `/albums/${SHARED_ALBUM}/${String(i + 1).padStart(2, "0")}.mp3`,
     duration: DUR[i] ?? "3:00",
   }));
 }
 
 export const artists: Artist[] = [
   {
-    id: "tony-croatto",
-    name: "Tony Croatto",
-    photo: "/artists/tony-croatto.webp",
-    genres: ["Folk", "Trova", "Latin"],
-    bio: "A defining voice of Puerto Rican folk music, blending European roots with the island's traditions.",
-    performing: { date: "May 6", venue: "Viejo San Juan" },
-    credit: "The Wanderer — Seven Elements",
-    songs: album("tony-croatto", "Tony Croatto", [
-      "The River",
-      "Coldness",
-      "The Storm",
-      "The Sky",
-      "Thunder",
-      "The Wind",
-    ]),
+    id: "marisol-vega",
+    name: "Marisol Vega",
+    photo: "/artists/marisol-vega/cover.webp",
+    avatar: "/artists/marisol-vega/avatar.webp",
+    genres: ["Bolero","Trova"],
+    bio: "Velvet-voiced boleros that turn a plaza into a living room.",
+    performing: { date: "Jun 6", venue: "Anfiteatro Tito Puente" },
+    songs: songsFor("marisol-vega", "Marisol Vega"),
   },
   {
-    id: "ile",
-    name: "iLe",
-    photo: "/artists/ile.webp",
-    genres: ["Bolero", "Latin", "Soul"],
-    bio: "Singer and composer whose voice bridges classic Latin American song and a bold contemporary edge.",
-    performing: { date: "May 8", venue: "Santurce" },
-    credit: "Soft and Furious — You Know Where to Find Me",
-    songs: album("ile", "iLe", [
-      "Is This Fruit Edible",
-      "Return to the Basis",
-      "Granular Dreams",
-      "Still Weaker than Them",
-      "Falling into the Game",
-      "And Never Come Back",
-    ]),
+    id: "los-hijos-del-caribe",
+    name: "Los Hijos del Caribe",
+    photo: "/artists/los-hijos-del-caribe/cover.webp",
+    avatar: "/artists/los-hijos-del-caribe/avatar.webp",
+    genres: ["Salsa","Son"],
+    bio: "A nine-piece machine built for sweaty, all-night salsa.",
+    performing: { date: "May 28", venue: "Hacienda Carabalí" },
+    songs: songsFor("los-hijos-del-caribe", "Los Hijos del Caribe"),
   },
   {
-    id: "residente",
-    name: "Residente",
-    photo: "/artists/residente.webp",
-    genres: ["Hip-hop", "Latin", "Alternative"],
-    bio: "Puerto Rican rapper, singer, songwriter and filmmaker — co-founder of the alternative band Calle 13, and one of the most awarded Latin artists of his generation.",
-    performing: { date: "May 5", venue: "Surfin, Aguadilla" },
-    credit: "Ane-Chrysalide — Koi-discovery",
-    songs: album("residente", "Residente", [
-      "Erase Data",
-      "Ultimate Rainbow",
-      "Next Step",
-      "Atlas Shoulders",
-      "Blue Moment",
-      "Negative Vortex",
-    ]),
+    id: "andres-montalvo",
+    name: "Andrés Montalvo",
+    photo: "/artists/andres-montalvo/cover.webp",
+    avatar: "/artists/andres-montalvo/avatar.webp",
+    genres: ["Jazz Latino","Bolero"],
+    bio: "Piano-led Latin jazz with a late-night, smoke-curl mood.",
+    performing: { date: "May 10", venue: "Plaza del Mercado" },
+    songs: songsFor("andres-montalvo", "Andrés Montalvo"),
   },
   {
-    id: "plenero",
-    name: "Plenero de la Cresta",
-    photo: "/artists/plenero.webp",
-    genres: ["Plena", "Bomba", "Folk"],
-    bio: "Carrying bomba and plena — the heartbeat of Puerto Rican street music — to a new generation.",
-    performing: { date: "May 10", venue: "Loíza" },
-    credit: "Breuss Arrizabalaga Quintet — Nfamoudou-Boudougou",
-    songs: album("plenero", "Plenero de la Cresta", [
-      "The Dark Side of Frigiliana",
-      "Tsurugi",
-      "Zubaida",
-      "Pensamiento",
-      "Mount Fuji",
-      "They Dwell on Other Planes",
-    ]),
+    id: "calle-sonora",
+    name: "Calle Sonora",
+    photo: "/artists/calle-sonora/cover.webp",
+    avatar: "/artists/calle-sonora/avatar.webp",
+    genres: ["Reggaetón","Trap Latino"],
+    bio: "Street-born reggaetón with hooks you can't shake.",
+    performing: { date: "Jun 6", venue: "Anfiteatro Tito Puente" },
+    songs: songsFor("calle-sonora", "Calle Sonora"),
   },
   {
-    id: "buena-vista",
-    name: "Buena Vista",
-    photo: "/artists/buena-vista.webp",
-    genres: ["Son", "Salsa", "Trova"],
-    bio: "An ensemble keeping the golden-era Caribbean sound alive on stages across the island.",
-    performing: { date: "May 9", venue: "Ponce" },
-    credit: "Monplaisir — Le chant des Stompbox",
-    songs: album("buena-vista", "Buena Vista", [
-      "Ceci n'est pas un exercice",
-      "Cette histoire n'a pas de fin",
-      "Comme ces morceaux longs et chiants",
-      "J'ai eu peur alors j'ai fui",
-      "Tu vois le genre",
-      "Une cathédrale au fond de mon sac",
-    ]),
+    id: "ruben-iglesias",
+    name: "Rubén Iglesias",
+    photo: "/artists/ruben-iglesias/cover.webp",
+    avatar: "/artists/ruben-iglesias/avatar.webp",
+    genres: ["Trova","Folk"],
+    bio: "Just a guitar, a notebook, and stories about the island.",
+    performing: { date: "Jun 22", venue: "Coliseo de Puerto Rico" },
+    songs: songsFor("ruben-iglesias", "Rubén Iglesias"),
   },
   {
-    id: "control-machete",
-    name: "Control Machete",
-    photo: "/artists/control-machete.webp",
-    genres: ["Hip-hop", "Latin", "Rap"],
-    bio: "Pioneers of Latin hip-hop with a raw, unmistakable sound.",
-    performing: { date: "May 12", venue: "Mayagüez" },
-    credit: "Holizna — City Slacker",
-    songs: album("control-machete", "Control Machete", [
-      "Busking in the Sunlight",
-      "Bus Stop",
-      "Busted AC Unit",
-      "Nowhere to Be, Nothing to Do",
-      "Hooptie with the Windows Down",
-      "Fresh Fit",
-    ]),
+    id: "la-tribu-de-yaguez",
+    name: "La Tribu de Yagüez",
+    photo: "/artists/la-tribu-de-yaguez/cover.webp",
+    avatar: "/artists/la-tribu-de-yaguez/avatar.webp",
+    genres: ["Bomba","Plena"],
+    bio: "Barrel drums and call-and-response straight from the bateys.",
+    performing: { date: "May 17", venue: "Corredor de la Plena" },
+    songs: songsFor("la-tribu-de-yaguez", "La Tribu de Yagüez"),
+  },
+  {
+    id: "camila-reyes",
+    name: "Camila Reyes",
+    photo: "/artists/camila-reyes/cover.webp",
+    avatar: "/artists/camila-reyes/avatar.webp",
+    genres: ["Pop Latino","Indie"],
+    bio: "Bedroom-pop sweetness with a coastal, sunburnt glow.",
+    performing: { date: "Jun 8", venue: "La Respuesta" },
+    songs: songsFor("camila-reyes", "Camila Reyes"),
+  },
+  {
+    id: "trio-boriken",
+    name: "Trío Borikén",
+    photo: "/artists/trio-boriken/cover.webp",
+    avatar: "/artists/trio-boriken/avatar.webp",
+    genres: ["Trova","Bolero"],
+    bio: "Three voices, tight harmonies, old-school serenade energy.",
+    performing: { date: "May 31", venue: "Nuyorican Café" },
+    songs: songsFor("trio-boriken", "Trío Borikén"),
+  },
+  {
+    id: "diego-salcedo",
+    name: "Diego Salcedo",
+    photo: "/artists/diego-salcedo/cover.webp",
+    avatar: "/artists/diego-salcedo/avatar.webp",
+    genres: ["Rock en Español","Indie"],
+    bio: "Fuzzed-out guitars and shout-along choruses in Spanish.",
+    performing: { date: "May 31", venue: "Nuyorican Café" },
+    songs: songsFor("diego-salcedo", "Diego Salcedo"),
+  },
+  {
+    id: "las-olas",
+    name: "Las Olas",
+    photo: "/artists/las-olas/cover.webp",
+    avatar: "/artists/las-olas/avatar.webp",
+    genres: ["Surf Rock","Indie"],
+    bio: "Reverb-drenched surf rock made for the Ocean Park shoreline.",
+    performing: { date: "May 4", venue: "Surfin" },
+    songs: songsFor("las-olas", "Las Olas"),
+  },
+  {
+    id: "joaquin-ferrer",
+    name: "Joaquín Ferrer",
+    photo: "/artists/joaquin-ferrer/cover.webp",
+    avatar: "/artists/joaquin-ferrer/avatar.webp",
+    genres: ["Jazz Latino","Bolero"],
+    bio: "Trumpet that aches; arrangements that swing.",
+    performing: { date: "Jun 8", venue: "La Respuesta" },
+    songs: songsFor("joaquin-ferrer", "Joaquín Ferrer"),
+  },
+  {
+    id: "sonido-cangrejo",
+    name: "Sonido Cangrejo",
+    photo: "/artists/sonido-cangrejo/cover.webp",
+    avatar: "/artists/sonido-cangrejo/avatar.webp",
+    genres: ["Plena","Bomba"],
+    bio: "Carnival-loud plena that drags the whole block into the parade.",
+    performing: { date: "May 24", venue: "Casa Aboy" },
+    songs: songsFor("sonido-cangrejo", "Sonido Cangrejo"),
+  },
+  {
+    id: "valeria-cordero",
+    name: "Valeria Cordero",
+    photo: "/artists/valeria-cordero/cover.webp",
+    avatar: "/artists/valeria-cordero/avatar.webp",
+    genres: ["Bachata","Bolero"],
+    bio: "Heartbreak bachata with a smoky, modern edge.",
+    performing: { date: "Jun 18", venue: "Museo de Arte de PR" },
+    songs: songsFor("valeria-cordero", "Valeria Cordero"),
+  },
+  {
+    id: "el-bloque",
+    name: "El Bloque",
+    photo: "/artists/el-bloque/cover.webp",
+    avatar: "/artists/el-bloque/avatar.webp",
+    genres: ["Hip-Hop","Trap Latino"],
+    bio: "Hard verses about the neighborhood that raised them.",
+    performing: { date: "May 10", venue: "Plaza del Mercado" },
+    songs: songsFor("el-bloque", "El Bloque"),
+  },
+  {
+    id: "natalia-quinones",
+    name: "Natalia Quiñones",
+    photo: "/artists/natalia-quinones/cover.webp",
+    avatar: "/artists/natalia-quinones/avatar.webp",
+    genres: ["Folk","Indie"],
+    bio: "Fingerpicked folk and diary-page lyrics.",
+    performing: { date: "May 17", venue: "Corredor de la Plena" },
+    songs: songsFor("natalia-quinones", "Natalia Quiñones"),
+  },
+  {
+    id: "conjunto-mar-afuera",
+    name: "Conjunto Mar Afuera",
+    photo: "/artists/conjunto-mar-afuera/cover.webp",
+    avatar: "/artists/conjunto-mar-afuera/avatar.webp",
+    genres: ["Salsa","Son"],
+    bio: "Classic conjunto sound, horns bright as midday sun.",
+    performing: { date: "May 24", venue: "Casa Aboy" },
+    songs: songsFor("conjunto-mar-afuera", "Conjunto Mar Afuera"),
+  },
+  {
+    id: "tomas-beltran",
+    name: "Tomás Beltrán",
+    photo: "/artists/tomas-beltran/cover.webp",
+    avatar: "/artists/tomas-beltran/avatar.webp",
+    genres: ["Trova","Folk"],
+    bio: "Protest songs and lullabies, sometimes in the same set.",
+    performing: { date: "May 17", venue: "Corredor de la Plena" },
+    songs: songsFor("tomas-beltran", "Tomás Beltrán"),
+  },
+  {
+    id: "bahia-negra",
+    name: "Bahía Negra",
+    photo: "/artists/bahia-negra/cover.webp",
+    avatar: "/artists/bahia-negra/avatar.webp",
+    genres: ["Post-Punk","Indie"],
+    bio: "Cold-wave gloom with a tropical undertow.",
+    performing: { date: "Jun 13", venue: "Balneario El Escambrón" },
+    songs: songsFor("bahia-negra", "Bahía Negra"),
   },
 ];
 
 export const events: MusicEvent[] = [
   {
     id: "feria-del-vinilo",
-    title: "Feria del vinilo",
+    title: "Feria del Vinilo",
     poster: "/events/feria-del-vinilo.webp",
-    date: "May 7",
-    venue: "Aguadilla",
-    description:
-      "A powerful homecoming concert in Puerto Rico. Music, passion and protest — expect an electric atmosphere filled with pride, unity and raw energy.",
-    lineup: ["residente", "tony-croatto", "ile"],
+    date: "May 10",
+    venue: "Plaza del Mercado, Santurce",
+    description: "A day of crate-digging, live sets, and the best record stalls on the island.",
+    lineup: ["andres-montalvo","el-bloque"],
   },
   {
-    id: "feria-de-vida",
-    title: "Feria de Vida",
-    poster: "/events/feria-de-vida.webp",
-    date: "May 9",
-    venue: "Santurce",
-    description:
-      "A day of bomba, plena and son under the open sky — the island's living traditions, on one stage.",
-    lineup: ["buena-vista", "plenero", "tony-croatto"],
-  },
-  {
-    id: "concierto-de-guitarra",
-    title: "Concierto de Guitarra",
-    poster: "/events/concierto-de-guitarra.webp",
-    date: "May 11",
-    venue: "Ponce",
-    description:
-      "An intimate evening of strings and song, celebrating the guitar across genres and generations.",
-    lineup: ["ile", "control-machete", "residente"],
-  },
-  {
-    id: "concierto-soledad",
-    title: "Concierto Soledad",
-    poster: "/events/concierto-soledad.webp",
-    date: "May 13",
-    venue: "Rincón",
-    description:
-      "A stripped-back, candle-lit set by the sea — just voices, strings, and the night.",
-    lineup: ["ile", "tony-croatto"],
-  },
-  {
-    id: "el-banquito",
-    title: "El Banquito",
-    poster: "/events/el-banquito.webp",
-    date: "May 15",
-    venue: "Cabo Rojo",
-    description:
-      "The neighborhood block party that became a festival — local acts, food, and dancing till late.",
-    lineup: ["plenero", "buena-vista"],
-  },
-  {
-    id: "raices-del-sol",
-    title: "Raíces del Sol",
-    poster: "/events/raices-del-sol.webp",
+    id: "noche-de-bomba-y-plena",
+    title: "Noche de Bomba y Plena",
+    poster: "/events/noche-de-bomba-y-plena.webp",
     date: "May 17",
-    venue: "Fajardo",
-    description:
-      "A celebration of the island's roots — where hip-hop, bomba and son meet at sundown.",
-    lineup: ["residente", "control-machete", "plenero"],
+    venue: "Corredor de la Plena, Loíza",
+    description: "Barrel drums until sunrise — the rhythms that built Puerto Rico.",
+    lineup: ["la-tribu-de-yaguez","el-bloque","natalia-quinones","tomas-beltran"],
+  },
+  {
+    id: "festival-de-trova",
+    title: "Festival de Trova",
+    poster: "/events/festival-de-trova.webp",
+    date: "May 24",
+    venue: "Casa Aboy, Miramar",
+    description: "An intimate evening of songwriters trading verses on the porch.",
+    lineup: ["andres-montalvo","sonido-cangrejo","el-bloque","natalia-quinones","conjunto-mar-afuera"],
+  },
+  {
+    id: "san-juan-jazz-nights",
+    title: "San Juan Jazz Nights",
+    poster: "/events/san-juan-jazz-nights.webp",
+    date: "May 31",
+    venue: "Nuyorican Café, Viejo San Juan",
+    description: "Latin jazz in a candlelit room, sets running late into the night.",
+    lineup: ["trio-boriken","diego-salcedo"],
+  },
+  {
+    id: "ritmo-caribe",
+    title: "Ritmo Caribe",
+    poster: "/events/ritmo-caribe.webp",
+    date: "Jun 6",
+    venue: "Anfiteatro Tito Puente",
+    description: "An open-air celebration of every rhythm the Caribbean ever invented.",
+    lineup: ["marisol-vega","calle-sonora"],
   },
   {
     id: "sesion-nocturna",
     title: "Sesión Nocturna",
     poster: "/events/sesion-nocturna.webp",
+    date: "Jun 8",
+    venue: "La Respuesta, Santurce",
+    description: "Late-night showcase for the city's loudest new acts.",
+    lineup: ["andres-montalvo","camila-reyes","joaquin-ferrer","sonido-cangrejo","natalia-quinones"],
+  },
+  {
+    id: "raices-del-sol",
+    title: "Raíces del Sol",
+    poster: "/events/raices-del-sol.webp",
+    date: "Jun 13",
+    venue: "Balneario El Escambrón",
+    description: "Sunset on the beach, roots music with sand between your toes.",
+    lineup: ["conjunto-mar-afuera","bahia-negra"],
+  },
+  {
+    id: "concierto-soledad",
+    title: "Concierto Soledad",
+    poster: "/events/concierto-soledad.webp",
+    date: "Jun 1",
+    venue: "Teatro Tapia",
+    description: "A seated, hushed night for boleros and slow-burning ballads.",
+    lineup: ["andres-montalvo","la-tribu-de-yaguez","trio-boriken","tomas-beltran"],
+  },
+  {
+    id: "feria-de-vida",
+    title: "Feria de Vida",
+    poster: "/events/feria-de-vida.webp",
+    date: "May 4",
+    venue: "Surfin, Aguadilla",
+    description: "West-coast festival pairing surf culture with live music.",
+    lineup: ["la-tribu-de-yaguez","las-olas","conjunto-mar-afuera"],
+  },
+  {
+    id: "fiesta-neon",
+    title: "Fiesta Neón",
+    poster: "/events/fiesta-neon.webp",
+    date: "Jun 20",
+    venue: "Club Ingeniería",
+    description: "Neon-soaked dance night for the after-hours crowd.",
+    lineup: ["diego-salcedo","las-olas"],
+  },
+  {
+    id: "encuentro-rustico",
+    title: "Encuentro Rústico",
+    poster: "/events/encuentro-rustico.webp",
+    date: "May 28",
+    venue: "Hacienda Carabalí, Luquillo",
+    description: "Mountain-side gathering, acoustic sets under the canopy.",
+    lineup: ["marisol-vega","los-hijos-del-caribe","la-tribu-de-yaguez","natalia-quinones","tomas-beltran"],
+  },
+  {
+    id: "arte-y-musica",
+    title: "Arte y Música",
+    poster: "/events/arte-y-musica.webp",
+    date: "Jun 18",
+    venue: "Museo de Arte de PR",
+    description: "Galleries open late, courtyards turned into stages.",
+    lineup: ["valeria-cordero","conjunto-mar-afuera"],
+  },
+  {
+    id: "concierto-de-guitarra",
+    title: "Concierto de Guitarra",
+    poster: "/events/concierto-de-guitarra.webp",
     date: "May 20",
-    venue: "Viejo San Juan",
-    description:
-      "Late-night sets in a candlelit courtyard — a minimal stage, maximum atmosphere.",
-    lineup: ["ile", "residente"],
+    venue: "Conservatorio de Música",
+    description: "A recital celebrating the six-string in all its forms.",
+    lineup: ["los-hijos-del-caribe","joaquin-ferrer"],
+  },
+  {
+    id: "mundo-tour",
+    title: "Mundo Tour",
+    poster: "/events/mundo-tour.webp",
+    date: "Jun 22",
+    venue: "Coliseo de Puerto Rico",
+    description: "The big room — headliners and a full production show.",
+    lineup: ["ruben-iglesias","diego-salcedo","joaquin-ferrer"],
   },
 ];
 
 export function getArtist(id: string): Artist | undefined {
   return artists.find((a) => a.id === id);
 }
-
 export function getEvent(id: string): MusicEvent | undefined {
   return events.find((e) => e.id === id);
+}
+/** Events this artist appears in. */
+export function eventsForArtist(id: string): MusicEvent[] {
+  return events.filter((e) => e.lineup.includes(id));
+}
+/** Other artists sharing any event with this one (de-duped). */
+export function coPerformers(id: string): Artist[] {
+  const ids = new Set<string>();
+  for (const e of eventsForArtist(id)) for (const a of e.lineup) if (a !== id) ids.add(a);
+  return [...ids].map(getArtist).filter((a): a is Artist => !!a);
 }
