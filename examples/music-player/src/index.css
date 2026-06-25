@@ -17,6 +17,22 @@
   --font-sans: "acumin-pro", "Inter Variable", system-ui, sans-serif;
 }
 
+/* Light theme: override the same tokens, so every `bg-surface`, `text-text`,
+   etc. flips automatically. `html[data-theme]` beats @theme's `:root`. The
+   no-flash <script> in index.html sets the attribute before first paint. */
+html[data-theme="light"] {
+  color-scheme: light;
+  --color-bg: #ffffff;
+  --color-surface: #f4f4f5;
+  --color-surface-2: #ffffff;
+  --color-surface-3: #e7e7ea;
+  --color-border: #e4e4e7;
+  --color-text: #18181b;
+  --color-text-dim: #52525b;
+  --color-text-faint: #8a8a93;
+  --color-accent: #18181b;
+}
+
 @layer base {
   html {
     background: var(--color-bg);
@@ -29,6 +45,12 @@
   }
   ::selection {
     background: color-mix(in oklab, var(--color-text) 25%, transparent);
+  }
+  /* Tailwind v4's reset doesn't add this; enabled buttons should show a pointer. */
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  summary {
+    cursor: pointer;
   }
 }
 
@@ -72,4 +94,57 @@
 ::view-transition-group(*) {
   animation-duration: 0.45s;
   animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Leaflet popup, themed to the palette. Scoped under .sona-popup (the class on
+   the popup root) so these win over Leaflet's own stylesheet, which loads after
+   index.css. Also fixes the inherited font and Leaflet's blue link color. */
+.sona-popup .leaflet-popup-content-wrapper {
+  padding: 0;
+  overflow: hidden;
+  border-radius: 0.75rem; /* match Sona's rounded-xl panels */
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.45);
+}
+.sona-popup .leaflet-popup-content {
+  margin: 0;
+  width: auto !important;
+  font-family: var(--font-sans);
+}
+.sona-popup .leaflet-popup-tip {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: none;
+}
+.sona-popup .leaflet-popup-close-button {
+  padding: 0.5rem 0.6rem 0 0;
+  color: var(--color-text-faint);
+}
+.sona-popup .leaflet-popup-close-button:hover {
+  color: var(--color-text);
+}
+/* Kill Leaflet's blue link color; the filled CTA keeps its bg-colored text. */
+.sona-popup a {
+  color: inherit;
+}
+.sona-popup .sona-cta {
+  color: var(--color-bg);
+}
+
+/* Explore map pins (Leaflet divIcon). A themed dot that pops on the map. */
+.sona-pin {
+  display: block;
+  height: 16px;
+  width: 16px;
+  border-radius: 9999px;
+  background: var(--color-text);
+  border: 3px solid var(--color-surface);
+  box-shadow: 0 0 0 1px var(--color-border), 0 2px 6px rgb(0 0 0 / 0.45);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.sona-pin:hover {
+  transform: scale(1.35);
 }

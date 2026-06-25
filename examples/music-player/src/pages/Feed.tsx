@@ -60,7 +60,9 @@ export default function Feed() {
       </div>
 
       <ul className="mt-6 flex flex-col gap-2.5">
-        {artists.map((a) => {
+        {[...artists]
+          .sort((a, b) => a.distanceKm - b.distanceKm)
+          .map((a) => {
           const first = a.songs[0];
           const isCurrent =
             !!currentSong && a.songs.some((s) => s.id === currentSong.id);
@@ -68,7 +70,7 @@ export default function Feed() {
           return (
             <li
               key={a.id}
-              className="group relative flex h-16 items-center overflow-hidden bg-surface-2 pr-3 transition hover:bg-surface-3 sm:h-24 lg:h-36 lg:pr-6"
+              className="group relative flex h-12 items-center overflow-hidden bg-surface-2 pr-3 transition hover:bg-surface-3 sm:h-16 lg:h-24 lg:pr-6"
             >
               {/* Whole row navigates to the artist; sits under the buttons.
                   The image/title/date carry per-artist view-transition names
@@ -92,7 +94,7 @@ export default function Feed() {
               </button>
 
               <div
-                className="pointer-events-none relative h-full w-32 shrink-0 overflow-hidden sm:w-48 lg:w-72"
+                className="pointer-events-none relative h-full w-36 shrink-0 overflow-hidden sm:w-48 lg:w-72"
                 style={{ viewTransitionName: `img-${a.id}` }}
               >
                 <img
@@ -102,32 +104,38 @@ export default function Feed() {
                 />
               </div>
 
-              <div className="pointer-events-none ml-3 min-w-0 flex-1 lg:ml-5 lg:w-56 lg:flex-none">
-                <p
-                  className={`truncate text-base font-semibold ${
-                    isCurrent ? "text-accent" : "text-text"
-                  }`}
-                  style={{ viewTransitionName: `name-${a.id}` }}
-                >
-                  {a.name}
-                </p>
-                {a.performing && (
+              <div className="pointer-events-none ml-4 flex min-w-0 flex-1 items-center gap-6 lg:ml-6 lg:gap-10">
+                <div className="min-w-0 flex-[1.4]">
                   <p
-                    className="mt-0.5 truncate text-sm text-text-faint"
-                    style={{ viewTransitionName: `date-${a.id}` }}
+                    className={`truncate text-base font-semibold ${
+                      isCurrent ? "text-accent" : "text-text"
+                    }`}
+                    style={{ viewTransitionName: `name-${a.id}` }}
                   >
-                    {a.performing.date} @ {a.performing.venue}
+                    {a.name}
                   </p>
-                )}
+                  {a.performing && (
+                    <p
+                      className="mt-0.5 truncate text-sm text-text-faint"
+                      style={{ viewTransitionName: `date-${a.id}` }}
+                    >
+                      {a.performing.date} @ {a.performing.venue}
+                    </p>
+                  )}
+                </div>
+
+                <span className="hidden min-w-0 flex-1 truncate text-sm text-text-dim md:block">
+                  {a.genres.join(", ")}
+                </span>
+
+                <span className="hidden min-w-0 flex-1 truncate text-sm text-text-faint lg:block">
+                  {a.songs.length} songs
+                </span>
+
+                <span className="hidden min-w-0 flex-1 truncate text-sm text-text-faint lg:block">
+                  {a.distanceKm.toFixed(1)}km from you
+                </span>
               </div>
-
-              <span className="pointer-events-none hidden min-w-0 flex-1 truncate px-2 text-left text-sm text-text-dim md:block">
-                {a.genres.join(", ")}
-              </span>
-
-              <span className="pointer-events-none hidden min-w-0 flex-1 truncate px-2 text-left text-sm text-text-faint lg:block">
-                {a.songs.length} more songs
-              </span>
 
               <Heart />
             </li>

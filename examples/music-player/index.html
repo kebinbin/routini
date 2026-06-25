@@ -8,6 +8,19 @@
          Falls back to Inter without it. See NOTES.md.
          <link rel="stylesheet" href="https://use.typekit.net/XXXX.css" /> -->
     <title>Sona — discover artists near you</title>
+    <!-- Apply the saved (or system) theme before paint to avoid a flash. -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("sona-theme");
+          if (t !== "light" && t !== "dark")
+            t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+          document.documentElement.setAttribute("data-theme", t);
+        } catch (e) {
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

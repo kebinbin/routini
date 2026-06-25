@@ -1,6 +1,9 @@
-import { Link, Outlet } from "routini";
+import { useEffect, useRef, useState } from "react";
+import { Link, Outlet, useLocation } from "routini";
 import { Player } from "../player/Player";
 import { events } from "../lib/data";
+import { setTheme, useTheme } from "../lib/theme";
+import { FEED } from "./NotificationList";
 
 // Equalizer-bars logo (from the design), recolorable via currentColor.
 function Logo({ className }: { className?: string }) {
@@ -85,6 +88,109 @@ function Avatar({ className }: { className?: string }) {
   );
 }
 
+function SunIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+    </svg>
+  );
+}
+
+function MoonIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+    </svg>
+  );
+}
+
+function CheckIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  );
+}
+
+// Avatar that opens a dropdown with the theme switch. `variant` sets the trigger
+// and which way the menu opens (top bar opens downward, bottom bar upward).
+function UserMenu({ variant }: { variant: "topbar" | "bottom" }) {
+  const [open, setOpen] = useState(false);
+  const theme = useTheme();
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  return (
+    <div className={`relative ${variant === "bottom" ? "flex-1" : ""}`} ref={ref}>
+      {variant === "topbar" ? (
+        <button
+          onClick={() => setOpen((o) => !o)}
+          aria-label="Account"
+          aria-haspopup="menu"
+          aria-expanded={open}
+          className="block rounded-full"
+        >
+          <Avatar className="h-8 w-8 ring-1 ring-border" />
+        </button>
+      ) : (
+        <button
+          onClick={() => setOpen((o) => !o)}
+          aria-label="Account"
+          aria-haspopup="menu"
+          aria-expanded={open}
+          className="flex w-full flex-col items-center gap-1 py-1 text-text-faint transition hover:text-text"
+        >
+          <Avatar className="h-6 w-6" />
+          <span className="text-[10px] font-medium">Account</span>
+        </button>
+      )}
+      {open && (
+        <div
+          role="menu"
+          className={`absolute right-0 z-50 w-48 rounded-xl border border-border bg-surface p-1 shadow-xl ${
+            variant === "bottom" ? "bottom-full mb-2" : "top-full mt-2"
+          }`}
+        >
+          <p className="px-3 pt-1.5 pb-1 text-xs font-medium text-text-faint">
+            Appearance
+          </p>
+          {(["light", "dark"] as const).map((t) => (
+            <button
+              key={t}
+              role="menuitemradio"
+              aria-checked={theme === t}
+              onClick={() => setTheme(t)}
+              className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm capitalize text-text transition hover:bg-surface-2"
+            >
+              {t === "light" ? (
+                <SunIcon className="h-4 w-4" />
+              ) : (
+                <MoonIcon className="h-4 w-4" />
+              )}
+              {t}
+              {theme === t && <CheckIcon className="ml-auto h-4 w-4 text-text-dim" />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function TopBar() {
   return (
     <header className="flex items-center gap-4 px-2 py-1">
@@ -103,18 +209,35 @@ function TopBar() {
       </div>
       {/* Secondary actions live in the bottom bar on mobile; the top bar keeps
           just the logo + search there. */}
-      <nav className="hidden shrink-0 items-center gap-4 text-sm lg:flex">
-        <button className="rounded-full bg-text-dim px-4 py-1.5 font-medium text-bg transition hover:opacity-90">
+      <nav className="hidden shrink-0 items-center gap-7 text-sm lg:flex">
+        <Link
+          to="/explore"
+          preload="hover"
+          className="rounded-full bg-text px-4 py-1.5 font-medium text-bg transition hover:opacity-90"
+        >
           Explore near you
-        </button>
-        <a href="#" className="text-text-dim transition hover:text-text">
+        </Link>
+        <Link
+          to="/about"
+          preload="hover"
+          className="text-text-dim transition hover:text-text"
+        >
           About this project
-        </a>
-        <button aria-label="Notifications" className="relative text-text-dim transition hover:text-text">
+        </Link>
+        <Link
+          to="/notifications"
+          preload="hover"
+          aria-label={`Notifications, ${FEED.length} unread`}
+          className="relative text-text-dim transition hover:text-text"
+        >
           <BellIcon className="h-5 w-5" />
-          <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-text ring-2 ring-bg" />
-        </button>
-        <Avatar className="h-8 w-8 ring-1 ring-border" />
+          {FEED.length > 0 && (
+            <span className="absolute -right-2 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-text px-1 text-[10px] font-bold leading-none text-bg ring-2 ring-bg">
+              {FEED.length}
+            </span>
+          )}
+        </Link>
+        <UserMenu variant="topbar" />
       </nav>
     </header>
   );
@@ -172,39 +295,48 @@ function Sidebar() {
 // sidebar take over). "Events" stands in for the desktop sidebar; the user
 // sits at the right.
 const BOTTOM_NAV = [
-  { Icon: CalendarIcon, label: "Events" },
-  { Icon: CompassIcon, label: "Explore" },
-  { Icon: InfoIcon, label: "About" },
+  { Icon: CalendarIcon, label: "Events", to: "/events" },
+  { Icon: CompassIcon, label: "Explore", to: "/explore" },
+  { Icon: InfoIcon, label: "About", to: "/about" },
 ];
 
 function BottomNav() {
   return (
     <nav className="flex items-center justify-around px-1 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] lg:hidden">
-      {BOTTOM_NAV.map(({ Icon, label }) => (
-        <button
+      {BOTTOM_NAV.map(({ Icon, label, to }) => (
+        <Link
           key={label}
+          to={to}
+          preload="hover"
           className="flex flex-1 flex-col items-center gap-1 py-1 text-text-faint transition hover:text-text"
         >
           <Icon className="h-5 w-5" />
           <span className="text-[10px] font-medium">{label}</span>
-        </button>
+        </Link>
       ))}
-      <button className="flex flex-1 flex-col items-center gap-1 py-1 text-text-faint transition hover:text-text">
-        <Avatar className="h-6 w-6" />
-        <span className="text-[10px] font-medium">Account</span>
-      </button>
+      <UserMenu variant="bottom" />
     </nav>
   );
 }
 
 export function AppLayout() {
+  // Read the path so a page can opt out of the events sidebar and take the full
+  // width (About has its own in-page section nav; notifications has its own
+  // list/message split).
+  const { path } = useLocation();
+  const fullWidth = path === "/about" || path.startsWith("/notifications");
+
   return (
     <div className="grid h-screen grid-rows-[auto_1fr_auto] bg-bg">
-      <div className="px-2.5 pt-2.5" style={{ viewTransitionName: "sona-topbar" }}>
+      <div className="relative z-30 px-2.5 pt-2.5" style={{ viewTransitionName: "sona-topbar" }}>
         <TopBar />
       </div>
-      <div className="grid min-h-0 gap-2.5 px-2.5 py-2.5 lg:grid-cols-[300px_1fr]">
-        <Sidebar />
+      <div
+        className={`grid min-h-0 gap-2.5 px-2.5 py-2.5 ${
+          fullWidth ? "" : "lg:grid-cols-[300px_1fr]"
+        }`}
+      >
+        {!fullWidth && <Sidebar />}
         <main className="min-h-0 overflow-y-auto rounded-xl bg-surface">
           <Outlet />
         </main>
