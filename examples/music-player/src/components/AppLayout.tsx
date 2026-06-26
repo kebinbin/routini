@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, Outlet, useLocation } from "routini";
 import { Player } from "../player/Player";
-import { events } from "../lib/data";
 import { setTheme, useTheme } from "../lib/theme";
-import { FEED } from "./NotificationList";
+import { ActivityFeed, SortIcon } from "./ActivityFeed";
+import { activitiesFor } from "../lib/activity";
+import { useFollowStore } from "../lib/follow";
 
 // Equalizer-bars logo (from the design), recolorable via currentColor.
 function Logo({ className }: { className?: string }) {
@@ -23,14 +24,6 @@ function SearchIcon({ className }: { className?: string }) {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={className} aria-hidden>
       <circle cx="11" cy="11" r="7" />
       <path d="m21 21-4.3-4.3" />
-    </svg>
-  );
-}
-
-function FilterIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={className} aria-hidden>
-      <path d="M4 6h16M7 12h10M10 18h4" />
     </svg>
   );
 }
@@ -192,8 +185,10 @@ function UserMenu({ variant }: { variant: "topbar" | "bottom" }) {
 }
 
 function TopBar() {
+  const following = useFollowStore((s) => s.following);
+  const activityCount = activitiesFor(following).length;
   return (
-    <header className="flex items-center gap-4 px-2 py-1">
+    <header className="flex items-center gap-4 px-2 py-3">
       <Link to="/" viewTransition aria-label="Sona home" className="shrink-0 px-1 text-text">
         <Logo className="h-5 w-auto" />
       </Link>
@@ -225,15 +220,15 @@ function TopBar() {
           About this project
         </Link>
         <Link
-          to="/notifications"
+          to="/activity"
           preload="hover"
-          aria-label={`Notifications, ${FEED.length} unread`}
+          aria-label={`For you, ${activityCount} updates`}
           className="relative text-text-dim transition hover:text-text"
         >
           <BellIcon className="h-5 w-5" />
-          {FEED.length > 0 && (
+          {activityCount > 0 && (
             <span className="absolute -right-2 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-text px-1 text-[10px] font-bold leading-none text-bg ring-2 ring-bg">
-              {FEED.length}
+              {activityCount}
             </span>
           )}
         </Link>
@@ -243,50 +238,37 @@ function TopBar() {
   );
 }
 
-// Events panel — the desktop left column. On mobile it's replaced by the
-// "Events" item in the bottom bar, so it's hidden below lg.
+// "For you" panel — the desktop left column: activity (new shows + releases)
+// from the artists you follow. On mobile it's the bell → /activity instead, so
+// it's hidden below lg.
 function Sidebar() {
   return (
     <aside
       className="hidden min-h-0 flex-col rounded-xl bg-surface lg:flex"
       style={{ viewTransitionName: "sona-sidebar" }}
     >
-      <div className="px-4 pt-4">
-        <p className="text-base font-semibold text-text">Events for you</p>
-        <div className="mt-3 flex items-center justify-between text-text-faint">
-          <button className="grid h-7 w-7 place-items-center rounded-md transition hover:bg-surface-2 hover:text-text" aria-label="Search events">
-            <SearchIcon className="h-4 w-4" />
+      <div className="flex items-center justify-between px-4 pt-4">
+        <p className="text-base font-semibold text-text">For you</p>
+        <div className="flex items-center gap-1.5 text-text-faint">
+          <button
+            type="button"
+            aria-label="Sort activity"
+            className="grid h-7 w-7 place-items-center rounded-md transition hover:bg-surface-2 hover:text-text"
+          >
+            <SortIcon className="h-4 w-4" />
           </button>
-          <button className="flex items-center gap-1.5 text-xs transition hover:text-text">
-            <FilterIcon className="h-3.5 w-3.5" />
-            Filters
-          </button>
+          <Link
+            to="/activity"
+            preload="hover"
+            className="text-xs transition hover:text-text"
+          >
+            See all
+          </Link>
         </div>
       </div>
-      <ul className="mt-2 flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto px-2 pb-3">
-        {events.map((e) => (
-          <li key={e.id}>
-            <Link
-              to={`/event/${e.id}`}
-              preload="hover"
-              viewTransition
-              className="flex items-center gap-3 rounded-lg px-2 py-2 transition hover:bg-surface-2"
-            >
-              <img
-                src={e.poster}
-                alt=""
-                className="h-20 w-14 shrink-0 rounded-md object-cover"
-              />
-              <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-text">{e.title}</p>
-                <p className="mt-0.5 truncate text-xs text-text-faint">
-                  {e.date} @ {e.venue}
-                </p>
-              </div>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <div className="mt-2 min-h-0 flex-1 overflow-y-auto px-2 pb-3">
+        <ActivityFeed />
+      </div>
     </aside>
   );
 }
@@ -297,6 +279,7 @@ function Sidebar() {
 const BOTTOM_NAV = [
   { Icon: CalendarIcon, label: "Events", to: "/events" },
   { Icon: CompassIcon, label: "Explore", to: "/explore" },
+  { Icon: BellIcon, label: "For you", to: "/activity" },
   { Icon: InfoIcon, label: "About", to: "/about" },
 ];
 
@@ -320,11 +303,10 @@ function BottomNav() {
 }
 
 export function AppLayout() {
-  // Read the path so a page can opt out of the events sidebar and take the full
-  // width (About has its own in-page section nav; notifications has its own
-  // list/message split).
+  // Read the path so a page can opt out of the "For you" sidebar and take the
+  // full width (About has its own section nav; Activity is the full-page feed).
   const { path } = useLocation();
-  const fullWidth = path === "/about" || path.startsWith("/notifications");
+  const fullWidth = path === "/about" || path === "/activity";
 
   return (
     <div className="grid h-screen grid-rows-[auto_1fr_auto] bg-bg">
@@ -333,7 +315,7 @@ export function AppLayout() {
       </div>
       <div
         className={`grid min-h-0 gap-2.5 px-2.5 py-2.5 ${
-          fullWidth ? "" : "lg:grid-cols-[300px_1fr]"
+          fullWidth ? "" : "lg:grid-cols-[340px_1fr]"
         }`}
       >
         {!fullWidth && <Sidebar />}

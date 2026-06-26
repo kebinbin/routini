@@ -21,11 +21,15 @@ const ROUTINI = [
   ],
   [
     "useParams",
-    "The artist (/artist/:id), event (/event/:id), and notifications (/notifications/:id) pages read the route param. The open notification being a real URL means it's deep-linkable and back/forward works — /notifications and /notifications/:id share one lazy import so the page never remounts between them.",
+    "The artist (/artist/:id) and event (/event/:id) pages read the route param to look up their record from the static dataset — so each page is self-contained and deep-linkable, and back/forward just work.",
   ],
   [
     "useLocation",
-    "This very page is full-width with no events sidebar: AppLayout reads useLocation().path and drops the sidebar when you're on /about, handing the screen to the section nav on the left.",
+    "AppLayout reads useLocation().path to drop the \"For you\" sidebar and go full-width on a couple of routes (this About page, the Activity page).",
+  ],
+  [
+    "useSearchParams",
+    "The Explore map keeps its center and zoom in the URL (?lat&lng&z). Pan or zoom and the link updates in place (replace, so it never floods history); refresh or share it and the map opens on the exact same view. Because routini's location store is pathname-only, writing the query never remounts the map.",
   ],
   [
     "Catch-all \"*\"",
@@ -38,6 +42,7 @@ const SECTIONS = [
   ["app", "What the app does"],
   ["architecture", "How it's built"],
   ["routini", "How routini is used"],
+  ["map-url", "Shareable map state"],
   ["stack", "Stack"],
   ["status", "Status"],
 ];
@@ -59,9 +64,31 @@ function Section({
   );
 }
 
+function GlobeIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={className} aria-hidden>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18M12 3a14 14 0 0 1 0 18A14 14 0 0 1 12 3z" />
+    </svg>
+  );
+}
+
+// A faux address bar — the path dim, the live query string highlighted.
+function UrlBar({ path, query }: { path: string; query: string }) {
+  return (
+    <div className="flex items-center gap-2.5 rounded-lg border border-border bg-surface-2 px-3.5 py-2.5 font-mono text-xs sm:text-sm">
+      <GlobeIcon className="h-4 w-4 shrink-0 text-text-faint" />
+      <span className="truncate">
+        <span className="text-text-faint">{path}</span>
+        <span className="text-text">{query}</span>
+      </span>
+    </div>
+  );
+}
+
 export default function About() {
   return (
-    <div className="mx-auto max-w-6xl px-8 pb-20 pt-16 sm:px-12 lg:pb-28 lg:pt-24">
+    <div className="mx-auto max-w-360 px-8 pb-20 pt-16 sm:px-12 lg:pb-28 lg:pt-24">
       <div className="lg:grid lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-16">
         {/* Section nav — sticky in-page anchors, like a docs sidebar */}
         <aside className="hidden lg:block">
@@ -118,8 +145,9 @@ export default function About() {
               you"), nearest first. Each artist has a page with their tracks, the
               events they'll play, and the other acts they're performing
               alongside. Events live both on an interactive map (Explore) and in
-              a grid. A player docked at the bottom keeps playing while you
-              browse, notifications are deep-linkable, and the whole app supports
+              a grid. Follow an artist (the heart) and their new shows and
+              releases show up in your "For you" feed. A player docked at the
+              bottom keeps playing while you browse, and the whole app supports
               light and dark themes.
             </p>
           </Section>
@@ -161,9 +189,69 @@ export default function About() {
             </ul>
             <p className="mt-4 text-sm">
               Available but not yet wired in this prototype:{" "}
-              <code className="text-text">&lt;Navigate&gt;</code>,{" "}
-              <code className="text-text">useSearchParams</code>, and the
+              <code className="text-text">&lt;Navigate&gt;</code> and the
               imperative <code className="text-text">navigate()</code>.
+            </p>
+          </Section>
+
+          <Section id="map-url" title="Shareable map state">
+            <p>
+              Open the Explore map and pan or zoom. Watch the address bar — it
+              rewrites itself live:
+            </p>
+            <figure className="not-prose">
+              <div className="space-y-2.5 rounded-xl border border-border bg-surface p-4">
+                <UrlBar path="sona.app/explore" query="?lat=18.41&lng=-66.06&z=11" />
+                <p className="pl-1 text-xs text-text-faint">
+                  zoomed out to the whole metro
+                </p>
+                <UrlBar path="sona.app/explore" query="?lat=18.47&lng=-66.11&z=15" />
+                <p className="pl-1 text-xs text-text-faint">
+                  zoomed into a single venue — same page, different view
+                </p>
+              </div>
+              <figcaption className="mt-2 text-xs text-text-faint">
+                The query string (lat, lng, zoom) is written as you move the map.
+              </figcaption>
+            </figure>
+            <p>
+              Copy that link to another device, or just refresh the tab: the map
+              opens on the <strong className="text-text">exact same spot and
+              zoom</strong>. The URL is the single source of truth for the view —
+              the same idea behind the <code className="text-text">@lat,lng,zoom</code>{" "}
+              in a Google Maps link. It makes a view shareable, bookmarkable and
+              refresh-safe.
+            </p>
+            <p>
+              This uses routini's{" "}
+              <code className="text-text">useSearchParams()</code> — a reactive{" "}
+              <code className="text-text">[URLSearchParams, setter]</code> pair.
+              The map reads it once on load to set its starting view, and on every
+              move calls the setter to write <code className="text-text">lat</code>,{" "}
+              <code className="text-text">lng</code> and{" "}
+              <code className="text-text">z</code> back to the URL. The only
+              app-specific glue is listening to Leaflet's{" "}
+              <code className="text-text">moveend</code> event.
+            </p>
+            <p>
+              The subtle part is what <em>doesn't</em> happen: routini's location
+              store tracks the <strong className="text-text">pathname only</strong>,
+              not the query string. So writing{" "}
+              <code className="text-text">?lat&amp;lng&amp;z</code> updates the URL{" "}
+              <strong className="text-text">without remounting the route</strong> —
+              the Leaflet map (expensive to recreate) is never torn down as you
+              pan. A router that tracked the whole URL would rebuild the map on
+              every drag.
+            </p>
+            <p>
+              <strong className="text-text">Keeping history clean.</strong> A new
+              history entry per pan would bury the Back button — ten little drags,
+              ten entries to step through before you leave the page. So each write
+              uses <code className="text-text">replace</code> (one of routini's
+              navigate options): it swaps the current URL in place instead of
+              pushing a new one. Back still does the obvious thing — it leaves
+              Explore — while the URL always mirrors the live view. Coordinates are
+              rounded to four decimals (~11 m) to keep the link tidy.
             </p>
           </Section>
 
@@ -178,10 +266,10 @@ export default function About() {
           <Section id="status" title="Status">
             <p>
               Prototype, actively in progress. Done so far: the feed, artist,
-              event, explore map, events grid, notifications, this page,
-              light/dark theming, and a responsive desktop↔mobile shell. Next up:
-              an event-page pass, an in-app credits surface, a landing page, and
-              a public deploy.
+              event, explore map, events grid, follow + a "For you" activity
+              feed, this page, light/dark theming, and a responsive
+              desktop↔mobile shell. Next up: music-first previews, an event-page
+              pass, an in-app credits surface, a landing page, and a public deploy.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a

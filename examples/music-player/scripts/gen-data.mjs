@@ -24,26 +24,26 @@ const shuffle = (arr) => {
   return arr;
 };
 
-// ── Artists (name, genres, bio) — unchanged ────────────────────────────────
+// ── Artists (name, genres, bio) ─────────────────────────────────────────────
 const A = [
-  ["Marisol Vega", ["Bolero", "Trova"], "Velvet-voiced boleros that turn a plaza into a living room."],
-  ["Los Hijos del Caribe", ["Salsa", "Son"], "A nine-piece machine built for sweaty, all-night salsa."],
-  ["Andrés Montalvo", ["Jazz Latino", "Bolero"], "Piano-led Latin jazz with a late-night, smoke-curl mood."],
-  ["Calle Sonora", ["Reggaetón", "Trap Latino"], "Street-born reggaetón with hooks you can't shake."],
-  ["Rubén Iglesias", ["Trova", "Folk"], "Just a guitar, a notebook, and stories about the island."],
-  ["La Tribu de Yagüez", ["Bomba", "Plena"], "Barrel drums and call-and-response straight from the bateys."],
-  ["Camila Reyes", ["Pop Latino", "Indie"], "Bedroom-pop sweetness with a coastal, sunburnt glow."],
-  ["Trío Borikén", ["Trova", "Bolero"], "Three voices, tight harmonies, old-school serenade energy."],
-  ["Diego Salcedo", ["Rock en Español", "Indie"], "Fuzzed-out guitars and shout-along choruses in Spanish."],
-  ["Las Olas", ["Surf Rock", "Indie"], "Reverb-drenched surf rock made for the Ocean Park shoreline."],
-  ["Joaquín Ferrer", ["Jazz Latino", "Bolero"], "Trumpet that aches; arrangements that swing."],
-  ["Sonido Cangrejo", ["Plena", "Bomba"], "Carnival-loud plena that drags the whole block into the parade."],
-  ["Valeria Cordero", ["Bachata", "Bolero"], "Heartbreak bachata with a smoky, modern edge."],
-  ["El Bloque", ["Hip-Hop", "Trap Latino"], "Hard verses about the neighborhood that raised them."],
-  ["Natalia Quiñones", ["Folk", "Indie"], "Fingerpicked folk and diary-page lyrics."],
-  ["Conjunto Mar Afuera", ["Salsa", "Son"], "Classic conjunto sound, horns bright as midday sun."],
-  ["Tomás Beltrán", ["Trova", "Folk"], "Protest songs and lullabies, sometimes in the same set."],
-  ["Bahía Negra", ["Post-Punk", "Indie"], "Cold-wave gloom with a tropical undertow."],
+  ["Marisol Vega", ["Bolero", "Trova"], "Velvet-voiced boleros that turn a plaza into a living room. She learned to sing in her grandmother's kitchen in Ponce, and that warmth never left her phrasing. Backed by a single nylon-string guitar, she trades the genre's grand gestures for something closer and quieter. Her shows feel less like concerts than late conversations that happen to rhyme."],
+  ["Los Hijos del Caribe", ["Salsa", "Son"], "A nine-piece machine built for sweaty, all-night salsa. The horn section came up playing weddings and rallies across the island, and they swing like the floor might give out. Every arrangement leaves a window open for the dancers to answer back. They've backed half the sonero legends who pass through San Juan."],
+  ["Andrés Montalvo", ["Jazz Latino", "Bolero"], "Piano-led Latin jazz with a late-night, smoke-curl mood. Andrés studied classical in Madrid, then unlearned most of it in the clubs of Santurce. His trio stretches a standard until it's barely recognizable, then folds it home just as you give up on it. Nothing is rushed; nothing is wasted."],
+  ["Calle Sonora", ["Reggaetón", "Trap Latino"], "Street-born reggaetón with hooks you can't shake loose. The duo built their first beats on a cracked laptop in Río Piedras and never lost that scrappy, blown-out energy. Underneath the bravado are real songs about leaving and staying. Live, the bass is less a sound than a physical event."],
+  ["Rubén Iglesias", ["Trova", "Folk"], "Just a guitar, a notebook, and stories about the island. Rubén writes the kind of trova that sounds offhand until a single line stops you cold. He's spent twenty years playing peñas where everyone already knows the words. No theatrics — only a steady voice and an unusually good ear for other people's lives."],
+  ["La Tribu de Yagüez", ["Bomba", "Plena"], "Barrel drums and call-and-response straight from the bateys. The collective treats bomba as living history, not a museum piece, pulling new dancers out of the crowd all night. Their rhythms argue with each other, speed up, double back. By the second number the line between stage and audience is gone."],
+  ["Camila Reyes", ["Pop Latino", "Indie"], "Bedroom-pop sweetness with a coastal, sunburnt glow. Camila records most of what you hear in a spare room facing the water in Rincón. Her melodies are featherlight, but the lyrics keep catching on something sharper underneath. It's the sound of a long, slightly sad summer afternoon."],
+  ["Trío Borikén", ["Trova", "Bolero"], "Three voices, tight harmonies, old-school serenade energy. The Borikén brothers have sung together since they were kids, and it shows in how they breathe as one. Their repertoire runs from century-old boleros to songs written last week in the same style. Close your eyes and it could be any decade you like."],
+  ["Diego Salcedo", ["Rock en Español", "Indie"], "Fuzzed-out guitars and shout-along choruses in Spanish. Diego fronts the loudest band on this bill and seems genuinely delighted about it. The songs are bigger than the rooms he plays, which is most of the fun. Expect feedback, a broken string or two, and a crowd that knows every word by the bridge."],
+  ["Las Olas", ["Surf Rock", "Indie"], "Reverb-drenched surf rock made for the Ocean Park shoreline. The four-piece writes instrumentals that sound like a perfect, slightly dangerous wave. There's a vintage warmth to their tone and a sly humor to the song titles. Best heard with sand still on your feet and the tide coming in."],
+  ["Joaquín Ferrer", ["Jazz Latino", "Bolero"], "Trumpet that aches and arrangements that swing. Joaquín spent years in pit orchestras before stepping out front, and that discipline anchors even his wildest solos. He builds a set like a conversation, leaving long silences he knows exactly how to fill. The ballads are where he'll quietly get you."],
+  ["Sonido Cangrejo", ["Plena", "Bomba"], "Carnival-loud plena that drags the whole block into the parade. The group started as a neighborhood comparsa in Cangrejos and still plays like the street is the venue. Their songs are gossip, protest, and celebration in equal measure. Resistance is futile; you will be dancing before you decide to."],
+  ["Valeria Cordero", ["Bachata", "Bolero"], "Heartbreak bachata with a smoky, modern edge. Valeria writes about the messy end of things with a frankness that can sting. Her band keeps the classic guitar figures but lets the arrangements breathe and bruise. It's old-school romance for people who've stopped believing in it and want to anyway."],
+  ["El Bloque", ["Hip-Hop", "Trap Latino"], "Hard verses about the neighborhood that raised them. The crew trades bars like they're finishing each other's sentences, because they basically are. Beneath the swagger is a real chronicle of a corner of San Juan most songs ignore. Loud, funny, and a great deal sharper than it lets on."],
+  ["Natalia Quiñones", ["Folk", "Indie"], "Fingerpicked folk and diary-page lyrics. Natalia plays so quietly that a full room will lean in without realizing it has. Her songs are small and specific — a kitchen, a bus stop, a phone that won't ring. The effect builds slowly and then stays with you for days."],
+  ["Conjunto Mar Afuera", ["Salsa", "Son"], "Classic conjunto sound, horns bright as midday sun. The band reveres the golden-age records but plays them loose enough that it never feels like a tribute. Founded by three cousins, it's grown into a rotating cast of the city's best players. Pure, unfussy, slightly sweaty joy."],
+  ["Tomás Beltrán", ["Trova", "Folk"], "Protest songs and lullabies, sometimes in the same set. Tomás has been the conscience of the local trova scene for decades, and age has only sharpened his pen. He'll make you laugh, then quietly break your heart two verses later. A national treasure who would hate being called one."],
+  ["Bahía Negra", ["Post-Punk", "Indie"], "Cold-wave gloom with a tropical undertow. The band marries icy post-punk guitars to rhythms that could only come from here. Their shows are dim, smoke-machine affairs that somehow still make you move. Heartbreak you can dance to, played in a stubborn minor key."],
 ];
 
 // ── Events — unchanged ─────────────────────────────────────────────────────
@@ -80,6 +80,19 @@ for (const a of artists) {
 }
 for (const ev of events) if (ev.lineup.length === 0) ev.lineup.push(artists[Math.floor(rand() * artists.length)].id);
 
+// A few "headliners" play most of the festival circuit — each ends up in 8-10
+// events, so their Artist-page "will be in" rail scrolls horizontally (and their
+// co-performer list gets long).
+const HEADLINERS = ["andres-montalvo", "diego-salcedo", "los-hijos-del-caribe"];
+const countFor = (id) => events.filter((e) => e.lineup.includes(id)).length;
+for (const id of HEADLINERS) {
+  const target = 8 + Math.floor(rand() * 3); // 8..10
+  for (const ei of shuffle(events.map((_, i) => i))) {
+    if (countFor(id) >= target) break;
+    if (!events[ei].lineup.includes(id)) events[ei].lineup.push(id);
+  }
+}
+
 // Real-ish San Juan coordinates, spread across the metro (Viejo SJ, Santurce,
 // Condado, Miramar, Río Piedras, Hato Rey, the beaches...).
 const COORDS = [
@@ -94,6 +107,15 @@ events.forEach((e, i) => {
 
 // ── Song POOL: 15 tracks across all 6 albums (real cover art) ──────────────
 const ALBUMS = ["buena-vista", "control-machete", "ile", "plenero", "residente", "tony-croatto"];
+// Real CC album titles (see README credits) — shown as the song subtitle.
+const ALBUM_NAMES = {
+  "buena-vista": "Le chant des Stompbox",
+  "control-machete": "City Slacker",
+  "ile": "You Know Where to Find Me",
+  "plenero": "Nfamoudou-Boudougou",
+  "residente": "Koi-discovery",
+  "tony-croatto": "Seven Elements",
+};
 const TITLES = [
   "Amanecer", "Calle Sin Nombre", "Bajo la Lluvia", "Raíz", "Mar de Fondo",
   "Último Tren", "Luz de Patio", "Tormenta", "Son del Cangrejo", "Noche en Vela",
@@ -119,12 +141,24 @@ const dur = (album, track) => {
     return "3:00";
   }
 };
-const POOL = poolPairs.map((p, i) => ({ title: TITLES[i], album: p.album, track: p.track, duration: dur(p.album, p.track) }));
+// Genres are assigned per artist-song below (mostly the artist's own genres),
+// so a song list reads as coherent rather than randomly mixed.
+const GENRE_POOL = ["Bolero", "Trova", "Salsa", "Son", "Jazz Latino", "Reggaetón", "Trap Latino", "Bomba", "Plena", "Pop Latino", "Indie", "Folk", "Bachata", "Hip-Hop", "Cumbia", "Rock en Español"];
+const songGenresFor = (base) => {
+  const r = rand();
+  if (r < 0.6) return base; // both of the artist's genres — most songs
+  if (r < 0.82) return [base[Math.floor(rand() * base.length)]]; // just one of them
+  const extra = GENRE_POOL[Math.floor(rand() * GENRE_POOL.length)]; // one crossover
+  return base.includes(extra) ? base : [...base, extra];
+};
 
-// each artist gets 5-13 random songs from the pool
+const POOL = poolPairs.map((p, i) => ({ title: TITLES[i], album: p.album, albumName: ALBUM_NAMES[p.album], track: p.track, year: 2017 + Math.floor(rand() * 8), duration: dur(p.album, p.track) }));
+
+// each artist gets 5-13 random songs from the pool + per-song genres
 for (const a of artists) {
   const n = 5 + Math.floor(rand() * 9); // 5..13
   a.songIdx = pick(Math.min(n, POOL.length), POOL.length).sort((x, y) => x - y);
+  a.songGenres = a.songIdx.map(() => songGenresFor(a.genres));
 }
 
 // Display order: surface these six first, rest keep their original order.
@@ -158,8 +192,11 @@ export interface Song {
   title: string;
   artist: string;
   artistId: string;
+  album: string;
+  genres: string[];
   cover: string;
   audioSrc: string;
+  year: number;
   duration: string;
 }
 
@@ -190,16 +227,19 @@ export interface MusicEvent {
 // 15 tracks pulled from 6 albums, each keeping its real album art.
 const POOL = ${JSON.stringify(POOL, null, 2).replace(/\n/g, "\n")};
 
-function songsFor(artistId: string, artist: string, idxs: number[]): Song[] {
-  return idxs.map((pi) => {
+function songsFor(artistId: string, artist: string, idxs: number[], genres: string[][]): Song[] {
+  return idxs.map((pi, i) => {
     const p = POOL[pi];
     return {
       id: \`\${artistId}-\${pi}\`,
       title: p.title,
       artist,
       artistId,
+      album: p.albumName,
+      genres: genres[i],
       cover: \`/albums/\${p.album}/cover.jpg\`,
       audioSrc: \`/albums/\${p.album}/\${String(p.track).padStart(2, "0")}.mp3\`,
+      year: p.year,
       duration: p.duration,
     };
   });
@@ -218,7 +258,7 @@ ${ordered.map((a) => {
     bio: ${lit(a.bio)},
     performing: ${performing},
     distanceKm: ${a.distanceKm},
-    songs: songsFor(${lit(a.id)}, ${lit(a.name)}, ${JSON.stringify(a.songIdx)}),
+    songs: songsFor(${lit(a.id)}, ${lit(a.name)}, ${JSON.stringify(a.songIdx)}, ${JSON.stringify(a.songGenres)}),
   },`;
 }).join("\n")}
 ];

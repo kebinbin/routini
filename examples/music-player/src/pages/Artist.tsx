@@ -1,11 +1,101 @@
 import { Link, useParams } from "routini";
-import { getArtist, eventsForArtist, coPerformers } from "../lib/data";
+import { getArtist, eventsForArtist, coPerformers, type Song } from "../lib/data";
 import { usePlayerStore } from "../player/playerStore";
+import { useFollowStore } from "../lib/follow";
+import { SpotifyIcon, SoundCloudIcon, YouTubeIcon } from "../components/BrandIcons";
+import { PlayPause } from "../components/PlayPause";
+
+function FollowButton({ artistId }: { artistId: string }) {
+  const following = useFollowStore((s) => s.following.includes(artistId));
+  const toggle = useFollowStore((s) => s.toggle);
+  return (
+    <button
+      onClick={() => toggle(artistId)}
+      aria-pressed={following}
+      className={`mt-7 inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-medium transition ${
+        following
+          ? "border border-border text-text hover:bg-surface-2"
+          : "bg-text text-bg hover:opacity-90"
+      }`}
+    >
+      <svg viewBox="0 0 24 24" width="16" height="16" fill={following ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" aria-hidden>
+        <path d="M12 20.8S3 15.4 3 9.3A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 9 2.3c0 6.1-9 11.5-9 11.5z" />
+      </svg>
+      {following ? "Following" : "Follow"}
+    </button>
+  );
+}
+
+// Play/pause toggle for a song row. Icon-only, like the feed and the player —
+// brighter when it's the active track, no chrome.
+function PlayButton({ song, queue }: { song: Song; queue: Song[] }) {
+  const current = usePlayerStore((s) => s.currentSong);
+  const isPlaying = usePlayerStore((s) => s.isPlaying);
+  const play = usePlayerStore((s) => s.play);
+  const setIsPlaying = usePlayerStore((s) => s.setIsPlaying);
+
+  const isCurrent = current?.id === song.id;
+  const showPause = isCurrent && isPlaying;
+
+  return (
+    <button
+      onClick={() => (isCurrent ? setIsPlaying(!isPlaying) : play(song, queue))}
+      aria-label={showPause ? `Pause ${song.title}` : `Play ${song.title}`}
+      className={`grid h-11 w-11 shrink-0 place-items-center transition hover:text-text ${
+        isCurrent ? "text-text" : "text-text-dim"
+      }`}
+    >
+      <PlayPause playing={showPause} className="h-6 w-6" />
+    </button>
+  );
+}
+
+function ChevronDownIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  );
+}
+
+function FiltersIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <path d="M4 6h16M7 12h10M10 18h4" />
+    </svg>
+  );
+}
+
+// The artist's streaming links — a single row at the foot of the track list.
+function StreamingLinks({ artist }: { artist: string }) {
+  const q = encodeURIComponent(artist);
+  const items: Array<[string, string, React.FC<{ className?: string }>]> = [
+    ["Spotify", `https://open.spotify.com/search/${q}`, SpotifyIcon],
+    ["SoundCloud", `https://soundcloud.com/search?q=${q}`, SoundCloudIcon],
+    ["Youtube", `https://www.youtube.com/results?search_query=${q}`, YouTubeIcon],
+  ];
+  return (
+    <div className="mt-6 flex items-center justify-end gap-7 text-sm text-text-faint">
+      {items.map(([label, href, Icon]) => (
+        <a
+          key={label}
+          href={href}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`${artist} on ${label}`}
+          className="flex items-center gap-2 transition hover:text-text"
+        >
+          <Icon className="h-4 w-4" />
+          {label}
+        </a>
+      ))}
+    </div>
+  );
+}
 
 export default function Artist() {
   const { id } = useParams<{ id: string }>();
   const artist = id ? getArtist(id) : undefined;
-  const play = usePlayerStore((s) => s.play);
 
   if (!artist) {
     return <div className="p-6 text-text-dim">Artist not found.</div>;
@@ -35,120 +125,142 @@ export default function Artist() {
           <div className="absolute inset-x-0 bottom-0 h-2/5 bg-linear-to-t from-surface to-transparent" />
         </div>
         <div className="absolute inset-0 flex flex-col justify-center px-5 sm:px-8 lg:px-10">
-          <div className="max-w-xl">
+          <div className="max-w-2xl">
             {artist.performing && (
               <p
-                className="text-sm text-text-dim"
+                className="text-base font-medium text-text-dim sm:text-lg"
                 style={{ viewTransitionName: `date-${artist.id}` }}
               >
                 Performing {artist.performing.date} @ {artist.performing.venue}
               </p>
             )}
             <h1
-              className="mt-2 text-4xl font-black leading-[0.95] tracking-tight sm:text-5xl lg:text-7xl"
+              className="mt-3.5 text-5xl font-black leading-[0.92] tracking-tight sm:text-6xl lg:text-[5rem]"
               style={{ viewTransitionName: `name-${artist.id}` }}
             >
               {artist.name}
             </h1>
             <p
-              className="mt-4 max-w-md text-sm leading-relaxed text-text-dim"
+              className="mt-7 max-w-lg text-sm leading-relaxed text-text-dim sm:mt-8"
               style={{ viewTransitionName: "artist-bio" }}
             >
               {artist.bio}
             </p>
+            <FollowButton artistId={artist.id} />
           </div>
         </div>
       </div>
 
-      <div className="px-4 py-5 sm:px-6 lg:py-6">
-        <h2 className="text-lg font-bold">Hear more from {artist.name}</h2>
-        <ul className="mt-4 flex flex-col">
-          {artist.songs.map((s, i) => (
-            <li
-              key={s.id}
-              className="group flex items-center gap-4 rounded-md px-3 py-2 transition hover:bg-surface-2"
-            >
-              <button
-                onClick={() => play(s, artist.songs)}
-                aria-label={`Play ${s.title}`}
-                className="w-6 shrink-0 text-center text-sm text-text-faint group-hover:text-text"
-              >
-                {i + 1}
+      <div className="space-y-12 px-4 py-8 sm:px-6 lg:space-y-16 lg:px-8 lg:py-12">
+        <section>
+          <div className="flex items-center justify-between gap-4">
+            <h2 className="text-lg font-bold">Hear more from {artist.name}</h2>
+            <div className="hidden items-center gap-5 text-sm text-text-faint sm:flex">
+              <button type="button" className="flex items-center gap-1.5 transition hover:text-text">
+                Sort by album
+                <ChevronDownIcon className="h-4 w-4" />
               </button>
-              <img
-                src={s.cover}
-                alt=""
-                className="h-10 w-10 shrink-0 rounded object-cover"
-              />
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium">{s.title}</p>
-                <p className="truncate text-xs text-text-dim">{s.artist}</p>
-              </div>
-              <span className="shrink-0 text-sm text-text-faint tabular-nums">
-                {s.duration}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
+              <button type="button" className="flex items-center gap-1.5 transition hover:text-text">
+                <FiltersIcon className="h-4 w-4" />
+                Filters
+              </button>
+            </div>
+          </div>
 
-      {upcoming.length > 0 && (
-        <div className="px-4 py-5 sm:px-6 lg:py-6">
-          <h2 className="text-lg font-bold">{artist.name} will be in</h2>
-          <ul className="mt-4 flex gap-4 overflow-x-auto pb-2">
-            {upcoming.map((e) => (
-              <li key={e.id} className="w-40 shrink-0 sm:w-44">
-                <Link
-                  to={`/event/${e.id}`}
-                  preload="hover"
-                  viewTransition
-                  className="group block"
-                >
-                  <img
-                    src={e.poster}
-                    alt=""
-                    className="aspect-3/4 w-full rounded-lg object-cover transition group-hover:opacity-90"
-                  />
-                  <p className="mt-2 truncate text-sm font-medium">{e.title}</p>
-                  <p className="truncate text-xs text-text-faint">
-                    {e.date} @ {e.venue}
-                  </p>
-                </Link>
+          <ul className="mt-4 flex flex-col gap-2">
+            {artist.songs.map((s) => (
+              <li
+                key={s.id}
+                className="group flex items-center gap-3 rounded-lg bg-surface-2 px-2 py-2.5 transition hover:bg-surface-3 sm:gap-4 sm:px-3"
+              >
+                <PlayButton song={s} queue={artist.songs} />
+                <img
+                  src={s.cover}
+                  alt=""
+                  className="h-11 w-11 shrink-0 rounded object-cover"
+                />
+                {/* Equal, left-aligned columns — same shape as the feed rows */}
+                <div className="flex min-w-0 flex-1 items-center gap-6 lg:gap-10">
+                  <div className="min-w-0 flex-[1.4]">
+                    <p className="truncate text-sm font-medium">{s.title}</p>
+                    <p className="truncate text-xs text-text-dim">{s.album}</p>
+                  </div>
+                  <span className="hidden min-w-0 flex-1 truncate text-sm text-text-dim md:block">
+                    {s.genres.join(", ")}
+                  </span>
+                  <span className="hidden min-w-0 flex-1 truncate text-sm tabular-nums text-text-faint lg:block">
+                    {s.year}
+                  </span>
+                  <span className="hidden min-w-0 flex-1 truncate text-sm tabular-nums text-text-faint sm:block">
+                    {s.duration}
+                  </span>
+                </div>
               </li>
             ))}
           </ul>
-        </div>
-      )}
 
-      {peers.length > 0 && (
-        <div className="px-4 py-5 sm:px-6 lg:py-6">
-          <h2 className="text-lg font-bold">Performing soon with</h2>
-          <ul className="mt-4 flex gap-5 overflow-x-auto pb-2">
-            {peers.map((c) => (
-              <li key={c.id} className="w-24 shrink-0 text-center">
-                <Link
-                  to={`/artist/${c.id}`}
-                  preload="hover"
-                  viewTransition
-                  className="group block"
-                >
-                  <img
-                    src={c.avatar}
-                    alt=""
-                    className="aspect-square w-24 rounded-full object-cover transition group-hover:opacity-90"
-                  />
-                  <p className="mt-2 truncate text-sm font-medium">{c.name}</p>
-                  {c.performing && (
+          <StreamingLinks artist={artist.name} />
+        </section>
+
+        {upcoming.length > 0 && (
+          <section>
+            <h2 className="text-lg font-bold">{artist.name} will be in</h2>
+            <ul className="no-scrollbar mt-4 flex gap-4 overflow-x-auto pb-2">
+              {upcoming.map((e) => (
+                <li key={e.id} className="w-40 shrink-0 sm:w-44">
+                  <Link
+                    to={`/event/${e.id}`}
+                    preload="hover"
+                    viewTransition
+                    className="group block"
+                  >
+                    <img
+                      src={e.poster}
+                      alt=""
+                      className="aspect-3/4 w-full rounded-lg object-cover transition group-hover:opacity-90"
+                    />
+                    <p className="mt-2 truncate text-sm font-medium">{e.title}</p>
                     <p className="truncate text-xs text-text-faint">
-                      {c.performing.date} @ {c.performing.venue}
+                      {e.date} @ {e.venue}
                     </p>
-                  )}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {peers.length > 0 && (
+          <section>
+            <h2 className="text-lg font-bold">Performing soon with</h2>
+            {/* Circles match the event-poster width above (w-40 / sm:w-44) */}
+            <ul className="no-scrollbar mt-4 flex gap-4 overflow-x-auto pb-2">
+              {peers.map((c) => (
+                <li key={c.id} className="w-40 shrink-0 text-center sm:w-44">
+                  <Link
+                    to={`/artist/${c.id}`}
+                    preload="hover"
+                    viewTransition
+                    className="group block"
+                  >
+                    <img
+                      src={c.avatar}
+                      alt=""
+                      className="aspect-square w-40 rounded-full object-cover transition group-hover:opacity-90 sm:w-44"
+                    />
+                    <p className="mt-2 truncate text-sm font-medium">{c.name}</p>
+                    {c.performing && (
+                      <p className="truncate text-xs text-text-faint">
+                        {c.performing.date} @ {c.performing.venue}
+                      </p>
+                    )}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+      </div>
     </div>
   );
 }

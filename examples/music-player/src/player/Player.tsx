@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Slider } from "./Slider";
 import { usePlayerStore } from "./playerStore";
 import { getArtist } from "../lib/data";
+import { PlayPause } from "../components/PlayPause";
 
 function SkipBack({ className }: { className?: string }) {
   return (
@@ -27,33 +28,6 @@ function SkipForward({ className }: { className?: string }) {
     >
       <rect x="16.6" y="5" width="2.4" height="14" rx="1.2" />
       <path d="M4 5.7a1 1 0 0 1 1.5-.86L15 11a1 1 0 0 1 0 1.72l-9.5 6.16A1 1 0 0 1 4 18.18V5.7z" />
-    </svg>
-  );
-}
-
-function Play({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className={className}
-      aria-hidden
-    >
-      <path d="M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86A1 1 0 0 0 8 5.14z" />
-    </svg>
-  );
-}
-
-function Pause({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className={className}
-      aria-hidden
-    >
-      <rect x="6" y="5" width="4" height="14" rx="1" />
-      <rect x="14" y="5" width="4" height="14" rx="1" />
     </svg>
   );
 }
@@ -183,11 +157,7 @@ export function Player() {
               aria-label={isPlaying ? "Pause" : "Play"}
               className="text-text transition disabled:opacity-30"
             >
-              {isPlaying ? (
-                <Pause className="h-7 w-7" />
-              ) : (
-                <Play className="h-7 w-7" />
-              )}
+              <PlayPause playing={isPlaying} className="h-7 w-7" />
             </button>
             <button
               onClick={goNext}
@@ -240,11 +210,7 @@ export function Player() {
               aria-label={isPlaying ? "Pause" : "Play"}
               className="text-text transition hover:scale-105 disabled:opacity-30"
             >
-              {isPlaying ? (
-                <Pause className="h-7 w-7" />
-              ) : (
-                <Play className="h-7 w-7" />
-              )}
+              <PlayPause playing={isPlaying} className="h-7 w-7" />
             </button>
             <button
               onClick={goNext}

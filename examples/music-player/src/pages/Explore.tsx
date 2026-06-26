@@ -1,7 +1,8 @@
 import "leaflet/dist/leaflet.css";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { useEffect, useState } from "react";
+import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
 import L from "leaflet";
-import { Link } from "routini";
+import { Link, useSearchParams } from "routini";
 import { events, getArtist, type MusicEvent } from "../lib/data";
 import { useTheme } from "../lib/theme";
 
@@ -18,6 +19,43 @@ const pinIcon = L.divIcon({
 const BOUNDS = L.latLngBounds(
   events.map((e) => [e.lat, e.lng] as [number, number]),
 );
+
+// The map view (center + zoom) lives in the URL via routini's useSearchParams,
+// so a refresh keeps your spot and a shared link opens on the same view.
+type View = { center: [number, number]; zoom: number };
+
+function readView(params: URLSearchParams): View | null {
+  const lat = Number(params.get("lat"));
+  const lng = Number(params.get("lng"));
+  const z = Number(params.get("z"));
+  if (!params.get("lat") || !params.get("lng") || !Number.isFinite(lat) || !Number.isFinite(lng)) {
+    return null;
+  }
+  return { center: [lat, lng], zoom: Number.isFinite(z) && z ? z : 13 };
+}
+
+// Writes the live center+zoom back to the URL on every move. `replace` keeps
+// panning out of the history stack; the pathname-only store means this never
+// remounts the map.
+function ViewSync() {
+  const [, setParams] = useSearchParams();
+  const write = (map: L.Map) => {
+    const c = map.getCenter();
+    setParams(
+      { lat: c.lat.toFixed(4), lng: c.lng.toFixed(4), z: String(map.getZoom()) },
+      { replace: true },
+    );
+  };
+  const map = useMapEvents({ moveend: () => write(map) });
+  // Seed the URL with the initial (fitted) view, so /explore always carries the
+  // coordinates even before you touch the map. The fit-bounds moveend fires
+  // before this listener mounts, so we write it once here.
+  useEffect(() => {
+    write(map);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return null;
+}
 
 // Card rendered inside the pin's popup (anchored to the pin, non-blocking).
 function EventCard({ event }: { event: MusicEvent }) {
@@ -84,15 +122,23 @@ export default function Explore() {
       ? "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       : "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
 
+  // Read the URL view once for the initial render; fall back to fitting the
+  // pins. ViewSync keeps the URL in sync after that.
+  const [params] = useSearchParams();
+  const [initialView] = useState(() => readView(params));
+  const viewProps = initialView
+    ? { center: initialView.center, zoom: initialView.zoom }
+    : { bounds: BOUNDS, boundsOptions: { padding: [60, 60] as [number, number] } };
+
   return (
     <div className="relative isolate h-full w-full">
       <MapContainer
-        bounds={BOUNDS}
-        boundsOptions={{ padding: [60, 60] }}
+        {...viewProps}
         zoomControl={false}
         className="h-full w-full"
         style={{ background: "var(--color-surface)" }}
       >
+        <ViewSync />
         <TileLayer
           key={theme}
           url={tiles}
@@ -103,7 +149,10 @@ export default function Explore() {
             key={e.id}
             position={[e.lat, e.lng]}
             icon={pinIcon}
-            eventHandlers={{ mouseover: (ev) => ev.target.openPopup() }}
+            eventHandlers={{
+              mouseover: (ev) => ev.target.openPopup(),
+              click: (ev) => ev.target.openPopup(),
+            }}
           >
             <Popup autoPan={false} maxWidth={460} className="sona-popup">
               <EventCard event={e} />

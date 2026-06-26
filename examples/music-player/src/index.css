@@ -85,6 +85,15 @@ html[data-theme="light"] {
   }
 }
 
+/* Horizontal rails (event posters, artist circles) scroll without a visible
+   scrollbar — the cards already signal there's more to the side. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Shared-element transitions, the Astro way: the photo, title and date share a
    per-id `view-transition-name` between the Feed row and the Artist page, and we
    let the BROWSER DEFAULT run — the group reshapes + scales each element while a
@@ -135,6 +144,7 @@ html[data-theme="light"] {
 
 /* Explore map pins (Leaflet divIcon). A themed dot that pops on the map. */
 .sona-pin {
+  position: relative;
   display: block;
   height: 16px;
   width: 16px;
@@ -144,6 +154,13 @@ html[data-theme="light"] {
   box-shadow: 0 0 0 1px var(--color-border), 0 2px 6px rgb(0 0 0 / 0.45);
   cursor: pointer;
   transition: transform 0.15s ease;
+}
+/* Invisible ring so the 16px dot is a finger-friendly ~32px tap target. */
+.sona-pin::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 9999px;
 }
 .sona-pin:hover {
   transform: scale(1.35);

@@ -11,10 +11,19 @@ overview; this file is the "how it actually works + what's left" doc.
   - Top bar has `relative z-30` so the UserMenu dropdown sits above the
     scrolling `<main>` (its `view-transition-name` makes it a stacking context).
   - Middle: `flex flex-col` (mobile) → `lg:grid lg:grid-cols-[300px_1fr]`. The
-    events **Sidebar** is desktop-only (`hidden lg:flex`); `<main>` holds the `<Outlet>`.
+    **"For you" Sidebar** (`components/ActivityFeed.tsx`) is desktop-only
+    (`hidden lg:flex`); `<main>` holds the `<Outlet>`. `useLocation()` drops the
+    sidebar (full-width) on `/about` and `/activity`.
   - Footer: the **Player** + the mobile **BottomNav** (tab bar, `lg:hidden`).
   - **UserMenu** (avatar) is a dropdown with the **theme switch**; `variant`
     = `topbar` (opens down) or `bottom` (opens up, in the tab bar).
+- **Follow / activity** — the heart (`Feed` + `Artist`) toggles a persisted
+  follow store (`lib/follow.ts`, zustand + localStorage). `lib/activity.ts`
+  derives a new-show + new-release per followed artist; `ActivityFeed` renders
+  them (artist circle + text, **plain links — no VT**, since a circle avatar
+  can't cleanly morph into the horizontal hero). Shown in the desktop sidebar
+  and the `/activity` page (mobile bell/tab). *Replaced the old notifications
+  master-detail, which was a workaround for routini's lack of nested routes.*
 - **Routes** — `App.tsx`, a `routes` array. Home (`/`) is eager (`Feed`); every
   other page is `lazy`. `*` → NotFound.
 - **Player** — `player/`: a zustand store (`currentSong`, `queue`, `isPlaying`,
@@ -85,6 +94,87 @@ overview; this file is the "how it actually works + what's left" doc.
 - [ ] Deploy (Vercel/Netlify subdir) + link from the routini site "Built with".
 - [ ] Maybe give artists their own albums instead of the shared pool.
 - [ ] More event flyers if we want >14 pins on the map.
+
+## Honest assessment — is Sona a good routini case study?
+
+Short version: **strong portfolio piece, good-but-incomplete routini showcase.**
+
+**What Sona genuinely proves about routini:**
+
+- Lazy routes + `preload="hover"` → navigation feels instant (every `Link`).
+- Shared-element **View Transitions** (feed row → artist hero morph) — the
+  standout; no animation library.
+- `useParams` drives the artist/event/notification pages; `useLocation` drives
+  the full-width layout switch.
+- **`useSearchParams` on the Explore map** is the best routini demo in the repo:
+  the map view lives in the URL, and because the location store is pathname-only,
+  writing `?lat&lng&z` never remounts the (expensive) Leaflet map. A real,
+  hard-to-fake advantage.
+
+**What Sona quietly exposes (be honest about it):**
+
+- The persistent player/nav-outside-`<Outlet>` trick works because Sona has
+  **exactly one layout**. Elegant here; it would not scale to multiple nested
+  layouts.
+- The **notifications master-detail is a workaround** for routini having no
+  nested routes — `/notifications` + `/notifications/:id` share one lazy import
+  so the list doesn't remount. Clever, but it's the router fighting the design,
+  and it's why that page has been the hardest to get right.
+- Unused exports/features: `<Navigate>`, `navigate()`, `preload="render"`,
+  `preload="viewport"`, and the error boundary (`errorFallback`/`onError`). So
+  it's not yet a *complete* showcase.
+
+**Verdict:** Sona honestly shows routini is more than sufficient for a
+single-layout SPA, and that its View-Transition and URL-state stories are
+excellent. It should **not** be sold as a drop-in replacement for a full-featured
+router — and the notifications friction is the clearest in-app evidence that
+nested routes are routini's most-missed feature.
+
+## Improvement roadmap (toward the product's purpose)
+
+Purpose: *discover artists/events near you by **experiencing the music first**
+(not flyers), see where they play next + who shares the stage, make local music
+accessible, and give independent artists a space to promote.* Measured against
+that, the current build is visual-first and several pillars are missing.
+
+**P0 — make "music first" literally true**
+
+- Audio-first feed: previews **autoplay on hover/scroll** so you discover by
+  listening, not by reading a flyer. This is the thesis; today music is secondary
+  to the visuals.
+- A "discovery radio" / continuous-play mode that walks nearby artists.
+
+**P0 — tie the app together with Follow + meaningful activity — DONE**
+
+- ✅ **Follow artists** — the heart (feed + artist page) toggles a persisted
+  follow store (`lib/follow.ts`). A single concept: like = follow.
+- ✅ The old notifications master-detail is **gone**, replaced by a **"For you"
+  activity feed** (`ActivityFeed` + `lib/activity.ts`): new shows/releases from
+  followed artists, artist-circle + text, plain links (no VT). Lives in the
+  desktop sidebar and the `/activity` page (mobile bell/tab). This both removed
+  the nested-routes friction and gave the bell a reason to exist.
+- Next: a "discovery radio" off your follows; richer activity (when a *new*
+  show/release actually appears vs. the static derive); inline preview-play in
+  the activity rows.
+
+**P1 — make "near you" real**
+
+- Geolocation (with permission) or a location picker → real distances; let the
+  **Explore map filter the feed** (and vice-versa).
+- Wire the decorative **Search** and **Filters** (genre / date / distance).
+
+**P1 — serve independent artists (currently 0% of the app)**
+
+- A "For artists" surface: submit a show / claim a profile / upload music +
+  events (even mocked). A whole stated purpose has no UI yet.
+- Event **RSVP / "I'm going" / tickets** to bridge streaming → live.
+
+**P2 — polish + routini completeness**
+
+- Event page layout pass; in-app credits surface; Sona landing page.
+- Round out the routini showcase: `<Navigate>` for an onboarding/guard redirect,
+  `navigate()` for search-submit, `preload="viewport"` for feed/grid rows
+  scrolling into view, and a branded `errorFallback`.
 
 ## Branch / PR
 
