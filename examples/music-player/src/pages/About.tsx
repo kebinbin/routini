@@ -5,7 +5,7 @@ const ROUTINI = [
   ],
   [
     "Lazy routes (code-splitting)",
-    "Each page is a dynamic import(), so it ships as its own chunk. The Leaflet-powered Explore map — the heaviest screen — only downloads when you open it, keeping the initial bundle small.",
+    "Each page is a dynamic import(), so it ships as its own chunk. The Leaflet-powered map — the heaviest screen — only downloads when you open it, keeping the initial bundle small.",
   ],
   [
     "<Link> + preload=\"hover\"",
@@ -29,7 +29,7 @@ const ROUTINI = [
   ],
   [
     "useSearchParams",
-    "The Explore map keeps its center and zoom in the URL (?lat&lng&z). Pan or zoom and the link updates in place (replace, so it never floods history); refresh or share it and the map opens on the exact same view. Because routini's location store is pathname-only, writing the query never remounts the map.",
+    "The map keeps its center and zoom in the URL (?lat&lng&z). Pan or zoom and the link updates in place (replace, so it never floods history); refresh or share it and the map opens on the exact same view. Because routini's location store is pathname-only, writing the query never remounts the map.",
   ],
   [
     "Catch-all \"*\"",
@@ -144,7 +144,7 @@ export default function About() {
               The home feed ranks artists by distance from you ("1.7 km from
               you"), nearest first. Each artist has a page with their tracks, the
               events they'll play, and the other acts they're performing
-              alongside. Events live both on an interactive map (Explore) and in
+              alongside. Events live both on an interactive map and in
               a grid. Follow an artist (the heart) and their new shows and
               releases show up in your "For you" feed. A player docked at the
               bottom keeps playing while you browse, and the whole app supports
@@ -166,7 +166,7 @@ export default function About() {
             <p>
               Pages are self-contained — each reads what it needs from the URL
               (<code className="text-text">useParams</code>) and the static
-              dataset, with no props drilled through the router. The Explore map
+              dataset, with no props drilled through the router. The map
               is real (Leaflet + OpenStreetMap/CARTO tiles), themed to match
               light/dark, and only loads when you open it.
             </p>
@@ -196,16 +196,16 @@ export default function About() {
 
           <Section id="map-url" title="Shareable map state">
             <p>
-              Open the Explore map and pan or zoom. Watch the address bar — it
+              Open the map and pan or zoom. Watch the address bar — it
               rewrites itself live:
             </p>
             <figure className="not-prose">
               <div className="space-y-2.5 rounded-xl border border-border bg-surface p-4">
-                <UrlBar path="sona.app/explore" query="?lat=18.41&lng=-66.06&z=11" />
+                <UrlBar path="sona.app/map" query="?lat=18.41&lng=-66.06&z=11" />
                 <p className="pl-1 text-xs text-text-faint">
                   zoomed out to the whole metro
                 </p>
-                <UrlBar path="sona.app/explore" query="?lat=18.47&lng=-66.11&z=15" />
+                <UrlBar path="sona.app/map" query="?lat=18.47&lng=-66.11&z=15" />
                 <p className="pl-1 text-xs text-text-faint">
                   zoomed into a single venue — same page, different view
                 </p>
@@ -250,7 +250,7 @@ export default function About() {
               uses <code className="text-text">replace</code> (one of routini's
               navigate options): it swaps the current URL in place instead of
               pushing a new one. Back still does the obvious thing — it leaves
-              Explore — while the URL always mirrors the live view. Coordinates are
+              the map — while the URL always mirrors the live view. Coordinates are
               rounded to four decimals (~11 m) to keep the link tidy.
             </p>
           </Section>
@@ -258,7 +258,7 @@ export default function About() {
           <Section id="stack" title="Stack">
             <p>
               React 19 · TypeScript · Vite · Tailwind CSS v4 · routini · zustand
-              (audio store) · Radix Slider · Leaflet / react-leaflet (Explore
+              (audio store) · Radix Slider · Leaflet / react-leaflet (the
               map).
             </p>
           </Section>
@@ -266,7 +266,7 @@ export default function About() {
           <Section id="status" title="Status">
             <p>
               Prototype, actively in progress. Done so far: the feed, artist,
-              event, explore map, events grid, follow + a "For you" activity
+              event, map, events grid, follow + a "For you" activity
               feed, this page, light/dark theming, and a responsive
               desktop↔mobile shell. Next up: music-first previews, an event-page
               pass, an in-app credits surface, a landing page, and a public deploy.

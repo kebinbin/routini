@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link, Outlet, useLocation } from "routini";
 import { Player } from "../player/Player";
 import { setTheme, useTheme } from "../lib/theme";
@@ -189,7 +189,7 @@ function TopBar() {
   const activityCount = activitiesFor(following).length;
   return (
     <header className="flex items-center gap-4 px-2 py-3">
-      <Link to="/" viewTransition aria-label="Sona home" className="shrink-0 px-1 text-text">
+      <Link to="/" viewTransition aria-label="Sona home" className="shrink-0 rounded-md px-1 text-text">
         <Logo className="h-5 w-auto" />
       </Link>
       {/* On mobile (no nav actions) the search fills out to the right edge;
@@ -205,8 +205,14 @@ function TopBar() {
       {/* Secondary actions live in the bottom bar on mobile; the top bar keeps
           just the logo + search there. */}
       <nav className="hidden shrink-0 items-center gap-7 text-sm lg:flex">
+        {/* "Explore near you" — kept for layout; its real behavior isn't built
+            yet. INTENDED: on click, read the device location via
+            navigator.geolocation, store it as the shared search center, and have
+            all three lenses (Artists / Events / Map) do a radius search around
+            it. We can't compute the device location yet, so for now it just
+            links to the Map lens. (Switching lenses lives in DiscoveryTabs.) */}
         <Link
-          to="/explore"
+          to="/map"
           preload="hover"
           className="rounded-full bg-text px-4 py-1.5 font-medium text-bg transition hover:opacity-90"
         >
@@ -215,7 +221,7 @@ function TopBar() {
         <Link
           to="/about"
           preload="hover"
-          className="text-text-dim transition hover:text-text"
+          className="rounded-md text-text-dim transition hover:text-text"
         >
           About this project
         </Link>
@@ -223,7 +229,7 @@ function TopBar() {
           to="/activity"
           preload="hover"
           aria-label={`For you, ${activityCount} updates`}
-          className="relative text-text-dim transition hover:text-text"
+          className="relative rounded-md text-text-dim transition hover:text-text"
         >
           <BellIcon className="h-5 w-5" />
           {activityCount > 0 && (
@@ -260,7 +266,7 @@ function Sidebar() {
           <Link
             to="/activity"
             preload="hover"
-            className="text-xs transition hover:text-text"
+            className="rounded-md text-xs transition hover:text-text"
           >
             See all
           </Link>
@@ -278,7 +284,7 @@ function Sidebar() {
 // sits at the right.
 const BOTTOM_NAV = [
   { Icon: CalendarIcon, label: "Events", to: "/events" },
-  { Icon: CompassIcon, label: "Explore", to: "/explore" },
+  { Icon: CompassIcon, label: "Map", to: "/map" },
   { Icon: BellIcon, label: "For you", to: "/activity" },
   { Icon: InfoIcon, label: "About", to: "/about" },
 ];
@@ -291,7 +297,7 @@ function BottomNav() {
           key={label}
           to={to}
           preload="hover"
-          className="flex flex-1 flex-col items-center gap-1 py-1 text-text-faint transition hover:text-text"
+          className="flex flex-1 flex-col items-center gap-1 rounded-md py-1 text-text-faint transition hover:text-text"
         >
           <Icon className="h-5 w-5" />
           <span className="text-[10px] font-medium">{label}</span>
@@ -306,7 +312,19 @@ export function AppLayout() {
   // Read the path so a page can opt out of the "For you" sidebar and take the
   // full width (About has its own section nav; Activity is the full-page feed).
   const { path } = useLocation();
+  // About/Activity have their own full-width layouts; the discovery lenses
+  // (Artists, Events, Map) all keep the "For you" sidebar.
   const fullWidth = path === "/about" || path === "/activity";
+
+  // routini leaves scroll handling to the app (out of scope), and our scroll
+  // container is <main>, not the window — so a client-side navigation keeps the
+  // previous scroll offset. Reset <main> to the top on each pathname change;
+  // skip it when there's a hash so anchor links (e.g. About's section nav) still
+  // scroll to their target.
+  const mainRef = useRef<HTMLElement>(null);
+  useLayoutEffect(() => {
+    if (!window.location.hash) mainRef.current?.scrollTo({ top: 0 });
+  }, [path]);
 
   return (
     <div className="grid h-screen grid-rows-[auto_1fr_auto] bg-bg">
@@ -319,7 +337,7 @@ export function AppLayout() {
         }`}
       >
         {!fullWidth && <Sidebar />}
-        <main className="min-h-0 overflow-y-auto rounded-xl bg-surface">
+        <main ref={mainRef} className="min-h-0 overflow-y-auto rounded-xl bg-surface">
           <Outlet />
         </main>
       </div>

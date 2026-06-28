@@ -52,6 +52,13 @@ html[data-theme="light"] {
   summary {
     cursor: pointer;
   }
+  /* Use the accent token instead of the browser's default blue. */
+  button:focus-visible,
+  [role="button"]:focus-visible,
+  a:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
 }
 
 /* Scrollbars themed to the palette. Thin with a transparent track + inset pill

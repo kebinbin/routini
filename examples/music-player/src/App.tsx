@@ -1,11 +1,18 @@
-import { Router, type RouteDefinition } from "routini";
+import { Navigate, Router, type RouteDefinition } from "routini";
 import { AppLayout } from "./components/AppLayout";
 import Feed from "./pages/Feed";
 
+// Root redirects to the first discovery lens. <Navigate> replaces by default, so
+// Back doesn't bounce off "/" into a redirect loop.
+function RootRedirect() {
+  return <Navigate to="/artists" />;
+}
+
 const routes: RouteDefinition[] = [
-  { path: "/", component: Feed },
+  { path: "/", component: RootRedirect },
+  { path: "/artists", component: Feed },
   { path: "/events", lazy: () => import("./pages/Events") },
-  { path: "/explore", lazy: () => import("./pages/Explore") },
+  { path: "/map", lazy: () => import("./pages/Map") },
   { path: "/activity", lazy: () => import("./pages/Activity") },
   { path: "/about", lazy: () => import("./pages/About") },
   { path: "/artist/:id", lazy: () => import("./pages/Artist") },

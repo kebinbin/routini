@@ -41,7 +41,7 @@ function PlayButton({ song, queue }: { song: Song; queue: Song[] }) {
     <button
       onClick={() => (isCurrent ? setIsPlaying(!isPlaying) : play(song, queue))}
       aria-label={showPause ? `Pause ${song.title}` : `Play ${song.title}`}
-      className={`grid h-11 w-11 shrink-0 place-items-center transition hover:text-text ${
+      className={`grid h-11 w-11 shrink-0 place-items-center rounded-md transition hover:text-text ${
         isCurrent ? "text-text" : "text-text-dim"
       }`}
     >
@@ -83,7 +83,7 @@ function StreamingLinks({ artist }: { artist: string }) {
           target="_blank"
           rel="noreferrer"
           aria-label={`${artist} on ${label}`}
-          className="flex items-center gap-2 transition hover:text-text"
+          className="flex items-center gap-2 rounded-md transition hover:text-text"
         >
           <Icon className="h-4 w-4" />
           {label}
@@ -156,11 +156,11 @@ export default function Artist() {
           <div className="flex items-center justify-between gap-4">
             <h2 className="text-lg font-bold">Hear more from {artist.name}</h2>
             <div className="hidden items-center gap-5 text-sm text-text-faint sm:flex">
-              <button type="button" className="flex items-center gap-1.5 transition hover:text-text">
+              <button type="button" className="flex items-center gap-1.5 rounded-md transition hover:text-text">
                 Sort by album
                 <ChevronDownIcon className="h-4 w-4" />
               </button>
-              <button type="button" className="flex items-center gap-1.5 transition hover:text-text">
+              <button type="button" className="flex items-center gap-1.5 rounded-md transition hover:text-text">
                 <FiltersIcon className="h-4 w-4" />
                 Filters
               </button>
@@ -212,12 +212,13 @@ export default function Artist() {
                     to={`/event/${e.id}`}
                     preload="hover"
                     viewTransition
-                    className="group block"
+                    className="group block rounded-lg"
                   >
                     <img
                       src={e.poster}
                       alt=""
                       className="aspect-3/4 w-full rounded-lg object-cover transition group-hover:opacity-90"
+                      style={{ viewTransitionName: `poster-${e.id}` }}
                     />
                     <p className="mt-2 truncate text-sm font-medium">{e.title}</p>
                     <p className="truncate text-xs text-text-faint">
@@ -241,7 +242,7 @@ export default function Artist() {
                     to={`/artist/${c.id}`}
                     preload="hover"
                     viewTransition
-                    className="group block"
+                    className="group block rounded-lg"
                   >
                     <img
                       src={c.avatar}

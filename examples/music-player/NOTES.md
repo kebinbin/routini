@@ -52,6 +52,41 @@ overview; this file is the "how it actually works + what's left" doc.
   `lineup` (artist ids).
 - Helpers exported: `getArtist`, `getEvent`, `eventsForArtist`, `coPerformers`.
 
+## Streaming links & audio previews (technical)
+
+How the "taste in-app, hear more outside" mechanic is wired, and the technical
+options for it.
+
+- **Deep-links out (`StreamingLinks` in `Artist.tsx`).** Currently builds
+  **search** URLs (`open.spotify.com/search/<name>`, `soundcloud.com/search`,
+  `youtube.com/results`). To land on the artist's *actual* profile instead of a
+  search page, store real handles on the artist record
+  (`spotifyId` / `soundcloudUrl` / `youtubeUrl`) and link directly
+  (`open.spotify.com/artist/<id>`, etc.). Pure data change — add the fields in
+  `gen-data.mjs`, render them in `StreamingLinks`. Search is the safe fallback
+  when a handle is unknown.
+- **In-app preview audio (what ships today).** Self-hosted clips in the repo
+  (CC-licensed, compressed). This is the simplest legal model — no third-party
+  API, no token, no rate limit — and it's what a real opt-in/artist-uploaded
+  flow would look like.
+- **Third-party preview sources (feasibility, if ever needed):**
+  - **Spotify Web API** — track objects expose a 30s `preview_url` (MP3). Needs
+    an app token to fetch metadata; the clip itself is a plain URL. Caveat:
+    coverage is partial and access to `preview_url` has been **restricted for
+    newer apps** — verify current availability before depending on it.
+  - **Apple Music API** — also serves 30s previews; requires a developer token
+    (JWT).
+  - **SoundCloud API** — effectively **closed to new app registrations**; don't
+    build on it.
+  - **YouTube IFrame API** — legal to embed, but it's video (not a clean audio
+    preview) and registers as a YouTube play.
+  - **Self-hosted / artist-uploaded** — what the demo does; zero licensing
+    friction.
+- **Outbound event link (TODO).** The event page (`Event.tsx`) should carry an
+  external **"Get tickets / RSVP"** link (`ticketUrl` on the event record) — the
+  one outbound action the rest of the flow leads toward. See the RSVP/tickets
+  item under TODO.
+
 ## Explore map (`pages/Explore.tsx`)
 
 - Real **Leaflet** map via `react-leaflet@5`. Tiles = CARTO `dark_all` /
