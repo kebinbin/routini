@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import { useSearchParams } from "routini";
-import { events } from "../lib/data";
+import { venues } from "../lib/data";
 import { useTheme } from "../lib/theme";
 import { DiscoveryHeader } from "../components/DiscoveryNav";
-import { EventCard, MAP_ATTRIBUTION, pinIcon, tileUrl } from "../components/EventMap";
+import { VenueEventsPopup, MAP_ATTRIBUTION, pinIcon, tileUrl } from "../components/EventMap";
 
-// Fit the view to the pins so they fill the screen (zoom-to-events).
+// Fit the view to the venue pins so they fill the screen.
 const BOUNDS = L.latLngBounds(
-  events.map((e) => [e.lat, e.lng] as [number, number]),
+  venues.map((v) => [v.lat, v.lng] as [number, number]),
 );
 
 // The map view (center + zoom) lives in the URL via routini's useSearchParams,
@@ -73,18 +73,18 @@ export default function Map() {
         >
         <ViewSync />
         <TileLayer key={theme} url={tileUrl(theme)} attribution={MAP_ATTRIBUTION} />
-        {events.map((e) => (
+        {venues.map((v) => (
           <Marker
-            key={e.id}
-            position={[e.lat, e.lng]}
+            key={v.id}
+            position={[v.lat, v.lng]}
             icon={pinIcon}
             eventHandlers={{
               mouseover: (ev) => ev.target.openPopup(),
               click: (ev) => ev.target.openPopup(),
             }}
           >
-            <Popup autoPan={false} maxWidth={460} className="sona-popup">
-              <EventCard event={e} />
+            <Popup autoPan={false} maxWidth={480} className="sona-popup">
+              <VenueEventsPopup venue={v} />
             </Popup>
           </Marker>
           ))}

@@ -62,7 +62,7 @@ export default function Event() {
           {/* Left column — text + buttons */}
           <div className="min-w-0">
             <p className="text-base font-medium text-text-dim sm:text-lg">
-              {event.date} · {event.venue}
+              {event.date} · {event.time} · {event.venue}
             </p>
             <h1 className="mt-3.5 text-5xl font-black leading-[0.92] tracking-tight sm:text-6xl lg:text-[5rem]">
               {event.title}
@@ -82,6 +82,12 @@ export default function Event() {
               </a>
               <a
                 href="#event-map"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document
+                    .getElementById("event-map")
+                    ?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
                 className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2.5 text-sm font-medium text-text-dim transition hover:text-text"
               >
                 <MapPinIcon className="h-4 w-4" />
@@ -133,8 +139,7 @@ export default function Event() {
       {/* Where — a focused map of just this event with its popup open. The hero's
           "View on map" anchors here (#event-map). */}
       <section id="event-map" className="scroll-mt-6 px-4 pb-12 sm:px-6 lg:px-10">
-        <h2 className="text-lg font-bold">Where</h2>
-        <p className="mt-1 text-sm text-text-faint">{event.venue}</p>
+        <h2 className="text-lg font-bold">How to get to {event.venue}</h2>
         <div className="mt-4">
           <EventMiniMap event={event} />
         </div>

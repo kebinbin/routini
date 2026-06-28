@@ -191,7 +191,7 @@ export default function Artist() {
                   <span className="hidden min-w-0 flex-1 truncate text-sm tabular-nums text-text-faint lg:block">
                     {s.year}
                   </span>
-                  <span className="hidden min-w-0 flex-1 truncate text-sm tabular-nums text-text-faint sm:block">
+                  <span className="ml-auto hidden w-12 shrink-0 text-sm tabular-nums text-text-faint sm:block">
                     {s.duration}
                   </span>
                 </div>

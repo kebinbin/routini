@@ -46,30 +46,57 @@ const A = [
   ["Bahía Negra", ["Post-Punk", "Indie"], "Cold-wave gloom with a tropical undertow. The band marries icy post-punk guitars to rhythms that could only come from here. Their shows are dim, smoke-machine affairs that somehow still make you move. Heartbreak you can dance to, played in a stubborn minor key."],
 ];
 
-// ── Events — unchanged ─────────────────────────────────────────────────────
+// ── Events (title, date, venue, description) ───────────────────────────────
 const E = [
-  ["Feria del Vinilo", "May 10", "Plaza del Mercado, Santurce", "A day of crate-digging, live sets, and the best record stalls on the island."],
-  ["Noche de Bomba y Plena", "May 17", "Corredor de la Plena, Loíza", "Barrel drums until sunrise — the rhythms that built Puerto Rico."],
-  ["Festival de Trova", "May 24", "Casa Aboy, Miramar", "An intimate evening of songwriters trading verses on the porch."],
-  ["San Juan Jazz Nights", "May 31", "Nuyorican Café, Viejo San Juan", "Latin jazz in a candlelit room, sets running late into the night."],
-  ["Ritmo Caribe", "Jun 6", "Anfiteatro Tito Puente", "An open-air celebration of every rhythm the Caribbean ever invented."],
-  ["Sesión Nocturna", "Jun 8", "La Respuesta, Santurce", "Late-night showcase for the city's loudest new acts."],
-  ["Raíces del Sol", "Jun 13", "Balneario El Escambrón", "Sunset on the beach, roots music with sand between your toes."],
-  ["Concierto Soledad", "Jun 1", "Teatro Tapia", "A seated, hushed night for boleros and slow-burning ballads."],
-  ["Feria de Vida", "May 4", "Surfin, Aguadilla", "West-coast festival pairing surf culture with live music."],
-  ["Fiesta Neón", "Jun 20", "Club Ingeniería", "Neon-soaked dance night for the after-hours crowd."],
-  ["Encuentro Rústico", "May 28", "Hacienda Carabalí, Luquillo", "Mountain-side gathering, acoustic sets under the canopy."],
-  ["Arte y Música", "Jun 18", "Museo de Arte de PR", "Galleries open late, courtyards turned into stages."],
-  ["Concierto de Guitarra", "May 20", "Conservatorio de Música", "A recital celebrating the six-string in all its forms."],
-  ["Mundo Tour", "Jun 22", "Coliseo de Puerto Rico", "The big room — headliners and a full production show."],
+  ["Feria del Vinilo", "May 10", "Plaza del Mercado, Santurce", "A day of crate-digging, live sets, and the best record stalls on the island. Collectors haul out boxes of salsa dura, vintage trova, and rarities you won't find online, while DJs spin from a corner of the plaza. Between digs there are acoustic sets, cold drinks, and the kind of arguments only vinyl people have. Come early — the good pressings are gone by noon, and the stories are worth staying for."],
+  ["Noche de Bomba y Plena", "May 17", "Corredor de la Plena, Loíza", "Barrel drums until sunrise — the rhythms that built Puerto Rico. Loíza's drummers and dancers take over the corredor, trading call-and-response that's been passed down for generations. The circle stays open all night, pulling newcomers in to answer the drum whether they know the steps or not. By the small hours the street, the stage, and the crowd have blurred into one moving thing."],
+  ["Festival de Trova", "May 24", "Casa Aboy, Miramar", "An intimate evening of songwriters trading verses on the porch. A handful of trovadores pass a single guitar around the room, improvising décimas about whatever the night hands them. There's no setlist and no stage to speak of — just chairs, a ceiling fan, and a hundred people leaning in to catch every line. It's the oldest kind of show on the island, and still one of the best."],
+  ["San Juan Jazz Nights", "May 31", "Nuyorican Café, Viejo San Juan", "Latin jazz in a candlelit room, sets running late into the night. The city's finest players rotate through a tight stage in Old San Juan, stretching standards until they're barely recognizable. The room is small enough to hear the brushes on the snare and the murmured count-ins between tunes. Order something, settle in, and let the sets carry you past midnight."],
+  ["Ritmo Caribe", "Jun 6", "Coliseo de Puerto Rico", "A celebration of every rhythm the Caribbean ever invented, blown up to arena scale. Salsa, bomba, plena, and bachata trade off on one enormous stage while the floor and the stands move as one. The lineup runs deep into the night, each act handing off to the next without letting the energy drop. Bring water, wear shoes you can move in, and plan to leave hoarse."],
+  ["Sesión Nocturna", "Jun 8", "La Respuesta, Santurce", "Late-night showcase for the city's loudest new acts. La Respuesta hands its stage to the rock, trap, and post-punk bands rewriting what San Juan sounds like after dark. The bill is stacked and the sets are short, so the energy never has a chance to sag. It's where you go to catch a band a year before everyone else claims they always knew."],
+  ["Raíces del Sol", "Jun 13", "Balneario El Escambrón", "Sunset on the beach, roots music with sand between your toes. As the light drops over El Escambrón, folk and trova acts play from a low stage just above the tide line. Families spread blankets, kids chase the last of the daylight, and it feels more like a gathering than a concert. Stay through dusk — the best sets happen once the stars come out."],
+  ["Concierto Soledad", "Jun 1", "Teatro Tapia", "A seated, hushed night for boleros and slow-burning ballads. Inside the island's oldest theater, a few singers and a guitar fill the room with almost no amplification at all. The audience holds its breath between phrases, and you can hear a pin drop in the gilded balconies. It's romance at its most unhurried — bring someone, or come to miss someone."],
+  ["Feria de Vida", "May 4", "Surfin, Aguadilla", "West-coast festival pairing surf culture with live music. Out in Aguadilla the day starts in the water and ends with reverb-soaked sets as the sun goes down over the point. Between heats there are food stalls, board shapers, and bands playing to a sandy, salt-crusted crowd. It's the most laid-back show on the calendar, and the only one where you might catch a wave first."],
+  ["Fiesta Neón", "Jun 20", "La Respuesta, Santurce", "Neon-soaked dance night for the after-hours crowd. The room goes dark, the lights go electric, and the bass doesn't let up until the place closes. Reggaetón and trap acts trade the booth with DJs who keep the floor moving between live sets. Come late, leave later — nothing here gets going before midnight."],
+  ["Encuentro Rústico", "May 28", "Hacienda Carabalí, Luquillo", "Mountain-side gathering, acoustic sets under the canopy. Up in the Luquillo foothills the music unplugs entirely — just voices and strings beneath the rainforest trees. The air is cooler here, the crowd smaller, and the coquís join in once the sun goes down. It's a half-day escape from the city that happens to come with a soundtrack."],
+  ["Arte y Música", "Jun 18", "Museo de Arte de PR", "Galleries open late, courtyards turned into stages. The museum throws its doors open after hours, scattering acoustic sets through the halls and gardens. You wander from a painting to a song to a sculpture, drink in hand, with no fixed route through the night. Art and music share the same rooms here, and neither asks you to choose."],
+  ["Concierto de Guitarra", "May 20", "Conservatorio de Música", "A recital celebrating the six-string in all its forms. From classical études to island trova, the conservatory's stage hosts a night devoted entirely to the guitar. Students and masters trade off, and the program drifts from formal recital to something looser as the evening goes on. A quiet, attentive show for anyone who's ever loved the instrument."],
+  ["Mundo Tour", "Jun 22", "Coliseo de Puerto Rico", "The big room — headliners and a full production show. This is the arena night, with the lights, the screens, and a crowd that fills the Coliseo to the rafters. The bill is built around the circuit's biggest draws, backed by a production that pulls out every stop. If you only catch one show this season, the spectacle here makes the case for itself."],
 ];
+
+// Each event's start time, parallel to E above.
+const TIMES = ["12:00 PM", "9:00 PM", "7:30 PM", "9:00 PM", "6:00 PM", "10:00 PM", "5:30 PM", "8:00 PM", "2:00 PM", "11:00 PM", "4:00 PM", "7:00 PM", "7:30 PM", "8:00 PM"];
+
+// Venues are entities: an event references one by name (slug), and several
+// events can share a venue (the Coliseo and La Respuesta each host two). id is
+// the slug of the name. photo: a Creative-Commons / licensed image in
+// public/venues/<slug>.webp (omit for none). Re-run this script after editing.
+const VENUES = [
+  { id: "plaza-del-mercado-santurce", name: "Plaza del Mercado, Santurce", lat: 18.4663, lng: -66.1057, photo: "/venues/plaza-del-mercado-santurce.webp", description: "Santurce's old public market by day, a warren of bars and live music by night. The stalls clear out and the plaza fills with sound — the beating heart of the district's scene." },
+  { id: "corredor-de-la-plena-loiza", name: "Corredor de la Plena, Loíza", lat: 18.449, lng: -66.0739, photo: "/venues/corredor-de-la-plena-loiza.webp", description: "An open-air stretch in Loíza where bomba and plena were born and never left. The barrel drums come out after dark and the whole corredor turns into one long call-and-response." },
+  { id: "casa-aboy-miramar", name: "Casa Aboy, Miramar", lat: 18.4475, lng: -66.0858, photo: "/venues/casa-aboy-miramar.webp", description: "A restored Miramar mansion turned cultural house, all wood floors and porch light. Intimate enough that a single guitar carries to the back row." },
+  { id: "nuyorican-cafe-viejo-san-juan", name: "Nuyorican Café, Viejo San Juan", lat: 18.4571, lng: -66.079, photo: "/venues/nuyorican-cafe-viejo-san-juan.webp", description: "A narrow, brick-walled room down an Old San Juan alley, and one of the island's great live-music institutions. Salsa, jazz, and everything in between, late into the night." },
+  { id: "coliseo-de-puerto-rico", name: "Coliseo de Puerto Rico", lat: 18.4238, lng: -66.0735, photo: "/venues/coliseo-de-puerto-rico.webp", description: "Puerto Rico's largest arena — room for some 18,000 fans, full-scale production, and a downtown skyline backdrop. The room reserved for the biggest tours that roll through San Juan." },
+  { id: "la-respuesta-santurce", name: "La Respuesta, Santurce", lat: 18.4536, lng: -66.0648, photo: "/venues/la-respuesta-santurce.webp", description: "Santurce's home for the loud and the new — a dim, sweaty club that's launched half the city's bands. The booking runs from punk to perreo, and the floor never really cools down." },
+  { id: "balneario-el-escambron", name: "Balneario El Escambrón", lat: 18.4663, lng: -66.093, photo: "/venues/balneario-el-escambron.webp", description: "A public beach and reef just east of Old San Juan, with a low stage set almost on the sand. Shows here run on island time and end under the stars." },
+  { id: "teatro-tapia", name: "Teatro Tapia", lat: 18.4659, lng: -66.114, photo: "/venues/teatro-tapia.webp", description: "The oldest theater in Puerto Rico, gilded and hushed since 1832. Red velvet, painted ceilings, and acoustics built for a single voice and a guitar." },
+  { id: "surfin-aguadilla", name: "Surfin, Aguadilla", lat: 18.4283, lng: -66.061, photo: "/venues/surfin-aguadilla.webp", description: "A west-coast surf bar where the day starts in the water and ends with a band on the terrace. Salt, reverb, and the best sunsets on the island." },
+  { id: "hacienda-carabali-luquillo", name: "Hacienda Carabalí, Luquillo", lat: 18.4419, lng: -66.0617, photo: "/venues/hacienda-carabali-luquillo.webp", description: "A working ranch in the Luquillo foothills, on the edge of the rainforest. Acoustic sets under the canopy, with the coquís for a backing choir." },
+  { id: "museo-de-arte-de-pr", name: "Museo de Arte de PR", lat: 18.4602, lng: -66.082, photo: "/venues/museo-de-arte-de-pr.webp", description: "The island's flagship art museum, its galleries and sculpture garden thrown open after hours. Courtyards become stages and the art keeps you company between sets." },
+  { id: "conservatorio-de-musica", name: "Conservatorio de Música", lat: 18.4364, lng: -66.0668, photo: "/venues/conservatorio-de-musica.webp", description: "Puerto Rico's national music conservatory — a proper concert hall with a stage that's trained generations of players. Formal, warm, and tuned to perfection." },
+];
+const venueById = Object.fromEntries(VENUES.map((v) => [v.id, v]));
 
 const slug = (s) =>
   s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
     .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 const artists = A.map(([name, genres, bio]) => ({ id: slug(name), name, genres, bio }));
-const events = E.map(([title, date, venue, description]) => ({ id: slug(title), title, date, venue, description, lineup: [] }));
+const events = E.map(([title, date, venue, description], i) => {
+  const venueId = slug(venue);
+  const v = venueById[venueId];
+  return { id: slug(title), title, date, time: TIMES[i], venueId, venue, lat: v.lat, lng: v.lng, venuePhoto: v.photo, venueDescription: v.description, description, lineup: [] };
+});
 
 // each artist plays 1-4 random events (SAME rng sequence as before → identical)
 for (const a of artists) {
@@ -92,18 +119,6 @@ for (const id of HEADLINERS) {
     if (!events[ei].lineup.includes(id)) events[ei].lineup.push(id);
   }
 }
-
-// Real-ish San Juan coordinates, spread across the metro (Viejo SJ, Santurce,
-// Condado, Miramar, Río Piedras, Hato Rey, the beaches...).
-const COORDS = [
-  [18.4663, -66.1057], [18.449, -66.0739], [18.4475, -66.0858], [18.4571, -66.079],
-  [18.4456, -66.0709], [18.4536, -66.0648], [18.4663, -66.093], [18.4659, -66.114],
-  [18.4283, -66.061], [18.4015, -66.0512], [18.4419, -66.0617], [18.4602, -66.082],
-  [18.4364, -66.0668], [18.4238, -66.0735],
-];
-events.forEach((e, i) => {
-  [e.lat, e.lng] = COORDS[i % COORDS.length];
-});
 
 // ── Song POOL: 15 tracks across all 6 albums (real cover art) ──────────────
 const ALBUMS = ["buena-vista", "control-machete", "ile", "plenero", "residente", "tony-croatto"];
@@ -212,16 +227,29 @@ export interface Artist {
   songs: Song[];
 }
 
+export interface Venue {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+  photo?: string; // /venues/<slug>.webp
+  description?: string;
+}
+
 export interface MusicEvent {
   id: string;
   title: string;
   poster: string;
   date: string;
+  time: string;
+  venueId: string; // → Venue.id
   venue: string;
   description: string;
   lat: number;
   lng: number;
   lineup: string[]; // artist ids
+  venuePhoto?: string; // optional /venues/<slug> thumbnail
+  venueDescription?: string; // optional short venue blurb
 }
 
 // 15 tracks pulled from 6 albums, each keeping its real album art.
@@ -263,17 +291,28 @@ ${ordered.map((a) => {
 }).join("\n")}
 ];
 
+export const venues: Venue[] = [
+${VENUES.map((v) => `  {
+    id: ${lit(v.id)},
+    name: ${lit(v.name)},
+    lat: ${v.lat},
+    lng: ${v.lng},${v.photo ? `\n    photo: ${lit(v.photo)},` : ""}${v.description ? `\n    description: ${lit(v.description)},` : ""}
+  },`).join("\n")}
+];
+
 export const events: MusicEvent[] = [
 ${events.map((e) => `  {
     id: ${lit(e.id)},
     title: ${lit(e.title)},
     poster: ${lit(`/events/${e.id}.webp`)},
     date: ${lit(e.date)},
+    time: ${lit(e.time)},
+    venueId: ${lit(e.venueId)},
     venue: ${lit(e.venue)},
     description: ${lit(e.description)},
     lat: ${e.lat},
     lng: ${e.lng},
-    lineup: ${JSON.stringify(e.lineup)},
+    lineup: ${JSON.stringify(e.lineup)},${e.venuePhoto ? `\n    venuePhoto: ${lit(e.venuePhoto)},` : ""}${e.venueDescription ? `\n    venueDescription: ${lit(e.venueDescription)},` : ""}
   },`).join("\n")}
 ];
 
@@ -282,6 +321,9 @@ export function getArtist(id: string): Artist | undefined {
 }
 export function getEvent(id: string): MusicEvent | undefined {
   return events.find((e) => e.id === id);
+}
+export function getVenue(id: string): Venue | undefined {
+  return venues.find((v) => v.id === id);
 }
 /** Events this artist appears in. */
 export function eventsForArtist(id: string): MusicEvent[] {
