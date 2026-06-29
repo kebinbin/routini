@@ -10,13 +10,24 @@ overview; this file is the "how it actually works + what's left" doc.
   - Grid `grid-rows-[auto_1fr_auto]`: top bar / middle / footer.
   - Top bar has `relative z-30` so the UserMenu dropdown sits above the
     scrolling `<main>` (its `view-transition-name` makes it a stacking context).
-  - Middle: `flex flex-col` (mobile) → `lg:grid lg:grid-cols-[300px_1fr]`. The
+  - Middle: `flex flex-col` (mobile) → `lg:grid lg:grid-cols-[340px_1fr]`. The
     **"For you" Sidebar** (`components/ActivityFeed.tsx`) is desktop-only
     (`hidden lg:flex`); `<main>` holds the `<Outlet>`. `useLocation()` drops the
-    sidebar (full-width) on `/about` and `/activity`.
+    sidebar (full-width) on `/about` and `/activity` only — the discovery lenses
+    (`/artists`, `/events`, `/map`) keep it.
+  - **Scroll-to-top on navigation**: a `useLayoutEffect` on the pathname resets
+    `<main>`'s scroll to top each navigation (skipped when there's a hash, so
+    anchor links still work). routini deliberately doesn't manage scroll, and the
+    scroll container is `<main>`, not the window — so this is the app's job.
   - Footer: the **Player** + the mobile **BottomNav** (tab bar, `lg:hidden`).
   - **UserMenu** (avatar) is a dropdown with the **theme switch**; `variant`
     = `topbar` (opens down) or `bottom` (opens up, in the tab bar).
+- **Discovery lenses** — `components/DiscoveryNav.tsx`: a segmented control
+  (`DiscoveryTabs`) switching **Artists** (`/artists`) · **Events** (`/events`) ·
+  **Map** (`/map`) — three routed views over the same near-you dataset, rendered
+  in the page content (not the top nav). `DiscoveryHeader` is the shared sticky
+  header (lens tabs + a page title; the Artists page also gets the layout
+  switcher in its `right` slot).
 - **Follow / activity** — the heart (`Feed` + `Artist`) toggles a persisted
   follow store (`lib/follow.ts`, zustand + localStorage). `lib/activity.ts`
   derives a new-show + new-release per followed artist; `ActivityFeed` renders
@@ -24,8 +35,11 @@ overview; this file is the "how it actually works + what's left" doc.
   can't cleanly morph into the horizontal hero). Shown in the desktop sidebar
   and the `/activity` page (mobile bell/tab). *Replaced the old notifications
   master-detail, which was a workaround for routini's lack of nested routes.*
-- **Routes** — `App.tsx`, a `routes` array. Home (`/`) is eager (`Feed`); every
-  other page is `lazy`. `*` → NotFound.
+- **Routes** — `App.tsx`, a `routes` array. `/` → `<Navigate to="/artists">`
+  (a tiny `RootRedirect` component — this is where routini's `<Navigate>` is
+  dogfooded). `/artists` is eager (`Feed`); `/events`, `/map`, `/activity`,
+  `/about`, `/artist/:id`, `/event/:id` are all `lazy`. `*` → NotFound.
+  (`/explore` was renamed to `/map`.)
 - **Player** — `player/`: a zustand store (`currentSong`, `queue`, `isPlaying`,
   `volume`, `play`, …) + one `<audio>` + Radix slider. Two layouts in
   `Player.tsx`: mobile (`lg:hidden`, art-left / transport-right / full-width
@@ -40,7 +54,7 @@ overview; this file is the "how it actually works + what's left" doc.
 
 - **Do not hand-edit `data.ts`.** Regenerate with `node scripts/gen-data.mjs`
   (run from `examples/music-player`). Seeded RNG → stable output.
-- 18 artists, 14 events. Each artist plays 1–4 random events (so `eventsForArtist`
+- 18 artists, 14 events, 12 venues. Each artist plays 1–4 random events (so `eventsForArtist`
   + `coPerformers` derive "will be in" / "performing soon with"). Six artists are
   force-ordered first (`FIRST` in the generator). Each artist has `distanceKm`
   ascending in that display order → the feed sorts nearest-first.
@@ -48,9 +62,23 @@ overview; this file is the "how it actually works + what's left" doc.
   durations read via ffprobe; each artist gets 5–13 of them. (The albums are
   named after the OLD artist slugs but are just CC audio folders — see README
   credits. We'll likely give artists their own albums later.)
-- **Events** carry `lat`/`lng` (real San Juan coords) for the Explore map and a
-  `lineup` (artist ids).
-- Helpers exported: `getArtist`, `getEvent`, `eventsForArtist`, `coPerformers`.
+- **Venues are a first-class entity** (`Venue` = `{ id, name, lat, lng, photo?,
+  description? }`; exported `venues` array + `getVenue`). Defined as `VENUES` in
+  `gen-data.mjs`. An event references one by `venueId` (slug of the venue name);
+  the build **denormalizes** the venue's `name`/`lat`/`lng`/`photo`/`description`
+  onto the event (`event.venue`, `event.lat`, `event.lng`, `event.venuePhoto`,
+  `event.venueDescription`) for convenience.
+- **A venue can host several events** — currently the **Coliseo** (Mundo Tour +
+  Ritmo Caribe) and **La Respuesta** (Sesión Nocturna + Fiesta Neón). "Other
+  events at this venue" filters by `venueId`.
+- **Events** also carry `date`, `time`, `poster`, `description`, `lineup`
+  (artist ids). The event order in `gen-data` is unchanged, so the seeded lineup
+  RNG produces identical lineups.
+- **Venue photos** live in `public/venues/<slug>.webp` (Pexels, CC/free). To add
+  one: drop the image, set `photo` in the matching `VENUES` entry, regenerate.
+  See `public/venues/README.md`.
+- Helpers exported: `getArtist`, `getEvent`, `getVenue`, `eventsForArtist`,
+  `coPerformers`.
 
 ## Streaming links & audio previews (technical)
 
@@ -82,30 +110,48 @@ options for it.
     preview) and registers as a YouTube play.
   - **Self-hosted / artist-uploaded** — what the demo does; zero licensing
     friction.
-- **Outbound event link (TODO).** The event page (`Event.tsx`) should carry an
-  external **"Get tickets / RSVP"** link (`ticketUrl` on the event record) — the
-  one outbound action the rest of the flow leads toward. See the RSVP/tickets
-  item under TODO.
+- **Outbound event link (built).** The event page (`Event.tsx`) has a **"Get
+  tickets"** button — currently a render-time Google search for
+  `"<title> <venue> tickets"` (no `ticketUrl` in the data yet; a stored field
+  would replace it).
 
-## Explore map (`pages/Explore.tsx`)
+## Map (`pages/Map.tsx` + `components/EventMap.tsx`)
 
-- Real **Leaflet** map via `react-leaflet@5`. Tiles = CARTO `dark_all` /
-  `light_all` (keyless), swapped by theme. `bounds` fit to the pins (zoom-to-events).
-- Pins are a CSS `divIcon` (`.sona-pin`). Hover a pin → opens its **Leaflet
-  `<Popup>`** (non-blocking; you can move to other pins). The popup renders the
-  horizontal event card (poster `object-cover` left, details + lineup avatars +
-  "View event" right).
-- Popup is themed via `.sona-popup …` overrides in `index.css` (scoped under the
-  popup class so they beat Leaflet's stylesheet, which loads in the lazy chunk).
-  Leaflet's blue link color is reset; the CTA uses `.sona-cta`.
-- `isolate` on the map wrapper contains Leaflet's high z-indexes (else they leak
-  above the top bar).
+The Leaflet bits are shared in `components/EventMap.tsx` (`pinIcon`, `tileUrl`,
+`MAP_ATTRIBUTION`, and the popup/mini-map components). `pages/Map.tsx` is the
+`/map` lens; `EventMiniMap` is the embedded map on the event page.
+
+- Real **Leaflet** via `react-leaflet@5`. CARTO `dark_all` / `light_all` tiles
+  (keyless), swapped by theme. `bounds` fit to the pins.
+- **One pin per venue** — the `/map` lens iterates `venues` (not events), so
+  co-located events don't stack. Pins are a CSS `divIcon` (`.sona-pin`); hover/
+  click opens its **Leaflet `<Popup>`**.
+- The `/map` popup is `VenueEventsPopup`: an `EventCard` (poster left — shares
+  `poster-<id>` with the event hero so it morphs — details + lineup + "View
+  event" right). When a venue hosts **multiple** events, a `‹ 1/2 ›` control
+  cycles them in place (local `useState`).
+- The **event page** embeds `EventMiniMap` (tall, single pin, popup auto-opened
+  via a `useMap`-gated effect) in a "How to get to <venue>" section, reached
+  from the hero's "View on map" — a JS `scrollIntoView`, since native fragment
+  scroll is unreliable inside the nested `<main>` scroller. Its popup is
+  `VenuePopup` (vertical): venue photo on top + blurb + this event's date/time +
+  other events at the venue + "Get directions" (Google Maps dir URL). No lineup
+  (it's already on the page).
+- **Map view in the URL**: `useSearchParams` writes `?lat&lng&z` on `moveend`
+  (`replace`). The pathname-only store means this never remounts the map; `/map`
+  seeds the URL on mount.
+- Popups themed via `.sona-popup …` in `index.css` (beats Leaflet's stylesheet);
+  the filled link uses `.sona-cta`. `isolate` on the wrapper contains Leaflet's
+  high z-indexes.
 
 ## View Transitions
 
 - Browser-default approach (no `animation:none` overrides). The Feed row's photo
   + name + date share per-id `view-transition-name`s with the Artist hero, so
-  they morph. Chrome bits (`sona-topbar/sidebar/player`) are named to stay put.
+  they morph. The **event poster** shares `poster-<id>` between the Events grid,
+  the map popups, and the artist page's "will be in" posters → the Event hero
+  flyer, so those morph too. Chrome bits (`sona-topbar/sidebar/player`) are named
+  to stay put.
 
 ## Gotchas
 
@@ -122,13 +168,17 @@ options for it.
 
 ## TODO / next
 
-- [ ] Event page (`Event.tsx`) layout pass (poster + details + lineup + map?).
+- [x] Event page (`Event.tsx`) layout pass — blurred-flyer hero (two columns),
+      longer descriptions, start times, lineup with the layout switcher, and the
+      "How to get to <venue>" embedded map.
+- [ ] Fill `photo` + `description` for any venues still missing them in `VENUES`
+      (most have a Pexels image now).
+- [ ] Store a real `ticketUrl` per event (Get-tickets is a search link for now).
 - [ ] In-app credits surface (CC-BY attribution) — README has the table; About
       links the repo. A dedicated credits page/section would be cleaner.
 - [ ] Sona landing page (from the Figma landing frame).
 - [ ] Deploy (Vercel/Netlify subdir) + link from the routini site "Built with".
 - [ ] Maybe give artists their own albums instead of the shared pool.
-- [ ] More event flyers if we want >14 pins on the map.
 
 ## Honest assessment — is Sona a good routini case study?
 
@@ -139,31 +189,33 @@ Short version: **strong portfolio piece, good-but-incomplete routini showcase.**
 - Lazy routes + `preload="hover"` → navigation feels instant (every `Link`).
 - Shared-element **View Transitions** (feed row → artist hero morph) — the
   standout; no animation library.
-- `useParams` drives the artist/event/notification pages; `useLocation` drives
-  the full-width layout switch.
-- **`useSearchParams` on the Explore map** is the best routini demo in the repo:
-  the map view lives in the URL, and because the location store is pathname-only,
-  writing `?lat&lng&z` never remounts the (expensive) Leaflet map. A real,
-  hard-to-fake advantage.
+- `useParams` drives the artist/event pages; `useLocation` drives the full-width
+  layout switch + the active discovery lens; `<Navigate>` does the `/` →
+  `/artists` redirect.
+- **`useSearchParams` on the Map** is the best routini demo in the repo: the map
+  view lives in the URL, and because the location store is pathname-only, writing
+  `?lat&lng&z` never remounts the (expensive) Leaflet map. A real, hard-to-fake
+  advantage.
 
 **What Sona quietly exposes (be honest about it):**
 
 - The persistent player/nav-outside-`<Outlet>` trick works because Sona has
   **exactly one layout**. Elegant here; it would not scale to multiple nested
   layouts.
-- The **notifications master-detail is a workaround** for routini having no
-  nested routes — `/notifications` + `/notifications/:id` share one lazy import
-  so the list doesn't remount. Clever, but it's the router fighting the design,
-  and it's why that page has been the hardest to get right.
-- Unused exports/features: `<Navigate>`, `navigate()`, `preload="render"`,
+- The single-layout-outside-`<Outlet>` pattern (above) is where the flat router
+  shows its ceiling — it works because there's exactly one layout. (The old
+  notifications master-detail, a nested-routes workaround, is gone — replaced by
+  the Follow + activity feed.)
+- Still-unused exports/features: `navigate()`, `preload="render"`,
   `preload="viewport"`, and the error boundary (`errorFallback`/`onError`). So
-  it's not yet a *complete* showcase.
+  it's not yet a *complete* showcase. (`<Navigate>` is now used for the root
+  redirect.)
 
 **Verdict:** Sona honestly shows routini is more than sufficient for a
 single-layout SPA, and that its View-Transition and URL-state stories are
 excellent. It should **not** be sold as a drop-in replacement for a full-featured
-router — and the notifications friction is the clearest in-app evidence that
-nested routes are routini's most-missed feature.
+router — the single-layout ceiling is the clearest in-app evidence that nested
+routes are routini's most-missed feature.
 
 ## Improvement roadmap (toward the product's purpose)
 
@@ -195,19 +247,22 @@ that, the current build is visual-first and several pillars are missing.
 **P1 — make "near you" real**
 
 - Geolocation (with permission) or a location picker → real distances; let the
-  **Explore map filter the feed** (and vice-versa).
+  **Map filter the feed** (and vice-versa). "Explore near you" in the top nav is
+  a placeholder for this (links to `/map` for now; see the comment in AppLayout).
 - Wire the decorative **Search** and **Filters** (genre / date / distance).
 
 **P1 — serve independent artists (currently 0% of the app)**
 
 - A "For artists" surface: submit a show / claim a profile / upload music +
   events (even mocked). A whole stated purpose has no UI yet.
-- Event **RSVP / "I'm going" / tickets** to bridge streaming → live.
+- Event **RSVP / "I'm going"** to bridge streaming → live (a basic "Get tickets"
+  outbound search link exists; RSVP state doesn't).
 
 **P2 — polish + routini completeness**
 
-- Event page layout pass; in-app credits surface; Sona landing page.
-- Round out the routini showcase: `<Navigate>` for an onboarding/guard redirect,
+- ✅ Event page layout pass (hero + lineup + venue map). Remaining: in-app
+  credits surface; Sona landing page.
+- Round out the routini showcase: ✅ `<Navigate>` (root redirect); still
   `navigate()` for search-submit, `preload="viewport"` for feed/grid rows
   scrolling into view, and a branded `errorFallback`.
 
