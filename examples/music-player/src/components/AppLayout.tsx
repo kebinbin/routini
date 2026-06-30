@@ -3,8 +3,7 @@ import { Link, Outlet, useLocation } from "routini";
 import { Player } from "../player/Player";
 import { setTheme, useTheme } from "../lib/theme";
 import { ActivityFeed, SortIcon } from "./ActivityFeed";
-import { activitiesFor } from "../lib/activity";
-import { useFollowStore } from "../lib/follow";
+import { useUnseenCount } from "../lib/seen";
 
 // Equalizer-bars logo (from the design), recolorable via currentColor.
 function Logo({ className }: { className?: string }) {
@@ -185,8 +184,7 @@ function UserMenu({ variant }: { variant: "topbar" | "bottom" }) {
 }
 
 function TopBar() {
-  const following = useFollowStore((s) => s.following);
-  const activityCount = activitiesFor(following).length;
+  const activityCount = useUnseenCount();
   return (
     <header className="flex items-center gap-4 px-2 py-3">
       <Link to="/" viewTransition aria-label="Sona home" className="shrink-0 rounded-md px-1 text-text">
@@ -290,6 +288,7 @@ const BOTTOM_NAV = [
 ];
 
 function BottomNav() {
+  const activityCount = useUnseenCount();
   return (
     <nav className="flex items-center justify-around px-1 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] lg:hidden">
       {BOTTOM_NAV.map(({ Icon, label, to }) => (
@@ -299,7 +298,14 @@ function BottomNav() {
           preload="hover"
           className="flex flex-1 flex-col items-center gap-1 rounded-md py-1 text-text-faint transition hover:text-text"
         >
-          <Icon className="h-5 w-5" />
+          <span className="relative">
+            <Icon className="h-5 w-5" />
+            {to === "/activity" && activityCount > 0 && (
+              <span className="absolute -right-2 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-text px-1 text-[10px] font-bold leading-none text-bg ring-2 ring-bg">
+                {activityCount}
+              </span>
+            )}
+          </span>
           <span className="text-[10px] font-medium">{label}</span>
         </Link>
       ))}

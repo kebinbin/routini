@@ -72,7 +72,7 @@ function CoPerformers({ a }: { a: Artist }) {
 function ClassicRow({ a }: { a: Artist }) {
   const { isCurrent, rowPlaying, toggle } = usePlayback(a);
   return (
-    <li className="group relative flex h-12 items-center overflow-hidden rounded-xl bg-surface-2 pr-3 transition hover:bg-surface-3 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-accent sm:h-16 lg:h-24 lg:pr-6">
+    <li className="group relative flex h-12 items-center overflow-hidden rounded-xl pr-3 transition hover:bg-surface-2 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-accent sm:h-16 lg:h-24 lg:pr-6">
       <Link to={`/artist/${a.id}`} preload="hover" viewTransition aria-label={a.name} className="absolute inset-0 focus-visible:outline-none" />
       <button
         onClick={toggle}
@@ -119,7 +119,7 @@ function ClassicRow({ a }: { a: Artist }) {
 function CompactRow({ a }: { a: Artist }) {
   const { isCurrent, rowPlaying, toggle } = usePlayback(a);
   return (
-    <li className="group relative flex items-center gap-4 overflow-hidden rounded-lg bg-surface-2 px-2.5 py-2 transition hover:bg-surface-3 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-accent">
+    <li className="group relative flex items-center gap-4 overflow-hidden rounded-lg px-2.5 py-2 transition hover:bg-surface-2 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-accent">
       <Link to={`/artist/${a.id}`} preload="hover" viewTransition aria-label={a.name} className="absolute inset-0 focus-visible:outline-none" />
       <button
         onClick={toggle}
@@ -166,7 +166,7 @@ function CompactRow({ a }: { a: Artist }) {
 function ImmersiveRow({ a }: { a: Artist }) {
   const { isCurrent, rowPlaying, toggle } = usePlayback(a);
   return (
-    <li className="group relative flex min-h-24 items-center gap-4 overflow-hidden rounded-xl bg-surface-2 pr-4 transition hover:bg-surface-3 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-accent">
+    <li className="group relative flex min-h-24 items-center gap-4 overflow-hidden rounded-xl pr-4 transition hover:bg-surface-2 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-accent">
       <Link to={`/artist/${a.id}`} preload="hover" viewTransition aria-label={a.name} className="absolute inset-0 focus-visible:outline-none" />
 
       {/* LEFT column — photo + artist + place (priority; wraps, never cut) */}
@@ -217,7 +217,7 @@ function ImmersiveRow({ a }: { a: Artist }) {
 function GridCard({ a }: { a: Artist }) {
   const { isCurrent, rowPlaying, toggle } = usePlayback(a);
   return (
-    <li className="group relative overflow-hidden rounded-xl bg-surface-2 transition hover:bg-surface-3 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-accent">
+    <li className="group relative overflow-hidden rounded-xl transition hover:bg-surface-2 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-accent">
       <Link to={`/artist/${a.id}`} preload="hover" viewTransition aria-label={a.name} className="absolute inset-0 focus-visible:outline-none" />
       <div className="pointer-events-none relative aspect-square overflow-hidden" style={{ viewTransitionName: `img-${a.id}` }}>
         <img src={a.photo} alt="" className="h-full w-full object-cover object-center" />
