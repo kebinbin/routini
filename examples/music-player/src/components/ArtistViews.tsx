@@ -261,7 +261,7 @@ function GridCard({ a }: { a: Artist }) {
 }
 
 // ── View-switcher icons — one representative glyph per layout (macOS-style) ──
-function ClassicIcon({ className }: { className?: string }) {
+export function ClassicIcon({ className }: { className?: string }) {
   // rows with a cover thumbnail — a media list
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className={className} aria-hidden>
@@ -301,8 +301,8 @@ function GridIcon({ className }: { className?: string }) {
   );
 }
 
+// "classic" left out of the switcher on purpose; ClassicRow/Icon stay defined.
 const VIEWS = [
-  ["classic", "Classic", ClassicIcon],
   ["immersive", "Immersive", ImmersiveIcon],
   ["compact", "Compact", CompactIcon],
   ["grid", "Grid", GridIcon],

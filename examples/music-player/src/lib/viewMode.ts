@@ -12,7 +12,7 @@ interface ViewState {
 }
 
 export const useFeedView = create<ViewState>()(
-  persist((set) => ({ view: "classic", setView: (view) => set({ view }) }), {
+  persist((set) => ({ view: "immersive", setView: (view) => set({ view }) }), {
     name: "sona-feed-view",
   }),
 );
