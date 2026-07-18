@@ -12,7 +12,7 @@
   <a href="https://github.com/kebinbin/routini/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="license"></a>
 </p>
 
-A tiny, TypeScript-first router for React.
+A tiny router for React with lazy, code-split routes, View Transitions, and error recovery built in.
 
 > Small to ship, solid to type, scoped to one job, free of setup ceremony.
 

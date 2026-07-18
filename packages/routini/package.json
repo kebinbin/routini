@@ -1,7 +1,7 @@
 {
   "name": "routini",
   "version": "0.0.0",
-  "description": "A tiny, TypeScript-first router for React — lazy routes, error boundary, View Transitions, reactive search params, and link preload in ~2.8 KB gzipped, zero dependencies",
+  "description": "A tiny router for React with lazy routes, an error boundary, View Transitions, reactive search params, and link preload — ~2.8 KB gzipped, zero dependencies",
   "keywords": [
     "react",
     "router",

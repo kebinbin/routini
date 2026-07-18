@@ -1,7 +1,7 @@
 {
   "name": "routini-monorepo",
   "version": "1.0.0",
-  "description": "A minimal TypeScript-first router for React.",
+  "description": "A minimal router for React with lazy, code-split routes, View Transitions, and error recovery built in.",
   "private": true,
   "workspaces": [
     "packages/*",
