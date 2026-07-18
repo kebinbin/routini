@@ -35,7 +35,7 @@ const home = {
     bundle: {
       pretitle: "Small on purpose",
       headline: "Tiny by design.",
-      sub: "Small to ship, solid to type, scoped to one job, free of setup ceremony — the whole router in 2.8 KB gzipped, with zero runtime dependencies.",
+      sub: "Small to ship, scoped to one job, free of setup ceremony — the whole router in 2.8 KB gzipped, with zero runtime dependencies.",
       compare: "routini is scoped to routing, so it stays small. The bigger routers add loaders, type-safe routes, and SSR for when you need them.",
     },
     builtIn: {
@@ -139,7 +139,7 @@ const home = {
     bundle: {
       pretitle: "Pequeño a propósito",
       headline: "Diminuto por diseño.",
-      sub: "Ligera al enviar, robusta en tipado, enfocada en una sola tarea, sin ceremonia — todo el router en 2.8 KB comprimido, con cero dependencias en runtime.",
+      sub: "Ligera al enviar, enfocada en una sola tarea, sin ceremonia — todo el router en 2.8 KB comprimido, con cero dependencias en runtime.",
       compare: "routini se enfoca en el routing, por eso es pequeña. Los routers grandes añaden loaders, rutas tipadas y SSR para cuando los necesitas.",
     },
     builtIn: {

@@ -14,7 +14,7 @@
 
 A tiny router for React with lazy, code-split routes, View Transitions, and error recovery built in.
 
-> Small to ship, solid to type, scoped to one job, free of setup ceremony.
+> Small to ship, scoped to one job, free of setup ceremony.
 
 ~2.8 KB gzipped · **zero runtime dependencies** · 8 exports. Lazy routes, an
 error boundary, View Transitions, reactive search params, and link preloading
