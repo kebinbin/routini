@@ -1,0 +1,223 @@
+/* Deliberately minimal — this is a test harness, not a showcase. System fonts,
+   a light/dark-aware neutral palette, and just enough layout to read clearly. */
+
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #6a6a6a;
+  --border: #e2e2e2;
+  --surface: #f6f6f6;
+  --accent: #2563eb;
+  --accent-fg: #ffffff;
+  --danger: #dc2626;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #101012;
+    --fg: #ededed;
+    --muted: #8a8a8a;
+    --border: #2a2a2e;
+    --surface: #1a1a1d;
+    --accent: #4f8cff;
+    --accent-fg: #08080a;
+    --danger: #f87171;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.5;
+}
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  background: var(--surface);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+a {
+  color: var(--accent);
+}
+
+/* ── App shell ─────────────────────────────────────────────────────────── */
+
+.shell {
+  display: grid;
+  grid-template-columns: 15rem 1fr;
+  min-height: 100vh;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+  padding: 1.5rem 1rem;
+  background: var(--surface);
+}
+
+.sidebar h1 {
+  font-size: 1rem;
+  margin: 0 0 0.25rem;
+}
+
+.sidebar p {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin: 0 0 1.25rem;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.sidebar nav a {
+  display: block;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--fg);
+  font-size: 0.9rem;
+}
+
+.sidebar nav a:hover {
+  background: var(--bg);
+}
+
+.sidebar nav a[aria-current="page"] {
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-weight: 600;
+}
+
+.content {
+  padding: 2.5rem 3rem;
+  max-width: 52rem;
+}
+
+/* ── Page primitives ───────────────────────────────────────────────────── */
+
+.page-title {
+  font-size: 1.6rem;
+  margin: 0 0 0.25rem;
+}
+
+.page-intro {
+  color: var(--muted);
+  margin: 0 0 2rem;
+}
+
+section.demo {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+section.demo h2 {
+  font-size: 1rem;
+  margin: 0 0 0.75rem;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+button,
+.btn {
+  font: inherit;
+  cursor: pointer;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  text-decoration: none;
+  display: inline-block;
+}
+
+button:hover,
+.btn:hover {
+  border-color: var(--accent);
+}
+
+button.primary {
+  background: var(--accent);
+  color: var(--accent-fg);
+  border-color: var(--accent);
+}
+
+button.danger {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+input {
+  font: inherit;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.note {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.readout {
+  background: var(--surface);
+  border-radius: 6px;
+  padding: 0.6rem 0.8rem;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.85rem;
+  overflow-x: auto;
+}
+
+.pill {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.loading-box {
+  padding: 2rem;
+  text-align: center;
+  color: var(--muted);
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+}
+
+ul.features {
+  padding-left: 1.1rem;
+}
+
+ul.features li {
+  margin-bottom: 0.3rem;
+}

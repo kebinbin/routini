@@ -5,12 +5,14 @@
   "private": true,
   "workspaces": [
     "packages/*",
-    "examples/*"
+    "examples/*",
+    "playground"
   ],
   "scripts": {
     "build": "npm run build -w packages/routini",
     "dev:package": "npm run dev -w packages/routini",
     "dev:website": "npm run dev -w examples/website",
+    "dev:playground": "npm run dev -w playground",
     "test": "npm run test --workspaces --if-present"
   },
   "repository": {
