@@ -119,7 +119,7 @@ function ClassicRow({ a }: { a: Artist }) {
 function CompactRow({ a }: { a: Artist }) {
   const { isCurrent, rowPlaying, toggle } = usePlayback(a);
   return (
-    <li className="group relative flex items-center gap-4 overflow-hidden rounded-lg px-2.5 py-2 transition hover:bg-surface-2 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-accent">
+    <li className="group relative flex items-center gap-4 overflow-hidden rounded-lg px-2.5 py-1 transition hover:bg-surface-2 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-accent">
       <Link to={`/artist/${a.id}`} preload="hover" viewTransition aria-label={a.name} className="absolute inset-0 focus-visible:outline-none" />
       <button
         onClick={toggle}
@@ -343,7 +343,7 @@ export function ArtistViews({ artists }: { artists: Artist[] }) {
       ))}
     </ul>
   ) : (
-    <ul className={`flex flex-col ${view === "compact" ? "gap-1.5" : "gap-2.5"}`}>
+    <ul className={`flex flex-col ${view === "compact" ? "gap-0.5" : "gap-2.5"}`}>
       {artists.map((a) =>
         view === "compact" ? (
           <CompactRow key={a.id} a={a} />

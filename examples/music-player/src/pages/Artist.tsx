@@ -192,7 +192,7 @@ export default function Artist() {
 
   return (
     <div>
-      <div className="relative aspect-4/3 w-full overflow-hidden sm:aspect-2/1 lg:aspect-8/3">
+      <div className="relative w-full overflow-hidden sm:aspect-2/1 lg:aspect-8/3">
         {/* Photo + scrim share ONE view-transition-name, so they morph together
             as a single snapshot — the scrim is baked into the image's box and
             tracks it the whole way (no seam where a fixed overlay would sit).
@@ -210,7 +210,7 @@ export default function Artist() {
           <div className="absolute inset-0 bg-linear-to-r from-surface via-surface/55 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 h-2/5 bg-linear-to-t from-surface to-transparent" />
         </div>
-        <div className="absolute inset-0 flex flex-col justify-center px-5 sm:px-8 lg:px-10">
+        <div className="relative flex flex-col justify-center px-5 py-12 sm:absolute sm:inset-0 sm:px-8 sm:py-0 lg:px-10">
           <div className="max-w-2xl">
             {artist.performing && (
               <p
@@ -253,11 +253,11 @@ export default function Artist() {
             </div>
           </div>
 
-          <ul className="mt-4 flex flex-col gap-2">
+          <ul className="mt-4 flex flex-col gap-1">
             {artist.songs.map((s) => (
               <li
                 key={s.id}
-                className="group flex items-center gap-3 rounded-lg px-2 py-2.5 transition hover:bg-surface-2 sm:gap-4 sm:px-3"
+                className="group flex items-center gap-3 rounded-lg px-2 py-1.5 transition hover:bg-surface-2 sm:gap-4 sm:px-3"
               >
                 <PlayButton song={s} queue={artist.songs} />
                 <img
