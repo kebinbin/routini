@@ -163,8 +163,15 @@ The Leaflet bits are shared in `components/EventMap.tsx` (`pinIcon`, `tileUrl`,
   45-second previews per album. Don't re-add full-length high-bitrate audio.
 - Buttons need `cursor-pointer` (Tailwind v4 reset doesn't add it) — handled
   globally in `index.css`.
-- Acumin Pro is NOT committed (Adobe license) — paste the Typekit `<link>` into
-  `index.html` to activate; falls back to Inter.
+- Acumin Pro is served via an Adobe Fonts Typekit kit (`index.html`), not
+  committed to the repo (Adobe license) — falls back to Inter if the kit is
+  ever removed or fails to load.
+- Only Regular/Medium/Semibold/Bold/Black are loaded for Acumin Pro, no
+  italic. `index.css`'s `@theme` resets `--font-weight-*` to just those five
+  (400/500/600/700/800), so an unloaded weight (e.g. `font-light`) silently
+  generates no CSS instead of rendering a wrong weight. `font-synthesis: none`
+  stops italic from being faked the same way. Adding a new weight/style means
+  updating both the Adobe kit and this theme block together.
 
 ## TODO / next
 
