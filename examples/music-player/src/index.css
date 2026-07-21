@@ -15,6 +15,14 @@
   --color-accent: #fafafa;
 
   --font-sans: "acumin-pro", "Inter Variable", system-ui, sans-serif;
+
+  /* Only the weights actually loaded for Acumin Pro. */
+  --font-weight-*: initial;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-black: 800;
 }
 
 /* Light theme: override the same tokens, so every `bg-surface`, `text-text`,
