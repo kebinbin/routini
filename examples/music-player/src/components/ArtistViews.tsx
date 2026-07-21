@@ -159,7 +159,7 @@ function ClassicRow({ a }: { a: Artist }) {
 function CompactRow({ a }: { a: Artist }) {
   const { isCurrent, rowPlaying, toggle } = usePlayback(a);
   return (
-    <li className="group relative flex items-center gap-4 overflow-hidden rounded-lg px-2 py-1 transition hover:bg-surface-2 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-accent">
+    <li className="group relative flex items-center gap-4 overflow-hidden rounded-lg px-1 py-1 transition hover:bg-surface-2 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-accent sm:px-2">
       <Link
         to={`/artist/${a.id}`}
         preload="hover"
@@ -167,22 +167,24 @@ function CompactRow({ a }: { a: Artist }) {
         aria-label={a.name}
         className="absolute inset-0 focus-visible:outline-none"
       />
-      <button
-        onClick={toggle}
-        aria-label={rowPlaying ? `Pause ${a.name}` : `Play ${a.name}`}
-        className="relative z-10 grid h-9 w-9 shrink-0 place-items-center rounded-md text-text-dim transition hover:text-text"
-      >
-        <PlayPause playing={rowPlaying} className="h-5 w-5" />
-      </button>
-      <div
-        className="pointer-events-none relative h-11 w-11 shrink-0 overflow-hidden rounded-md"
-        style={{ viewTransitionName: `img-${a.id}` }}
-      >
-        <img
-          src={a.photo}
-          alt=""
-          className="h-full w-full object-cover object-center"
-        />
+      <div className="flex shrink-0 items-center gap-3.5">
+        <button
+          onClick={toggle}
+          aria-label={rowPlaying ? `Pause ${a.name}` : `Play ${a.name}`}
+          className="relative z-10 grid h-6 w-6 shrink-0 place-items-center rounded-md text-text-dim transition hover:text-text"
+        >
+          <PlayPause playing={rowPlaying} className="h-6 w-6" />
+        </button>
+        <div
+          className="pointer-events-none relative h-11 w-11 shrink-0 overflow-hidden rounded-md"
+          style={{ viewTransitionName: `img-${a.id}` }}
+        >
+          <img
+            src={a.photo}
+            alt=""
+            className="h-full w-full object-cover object-center"
+          />
+        </div>
       </div>
       {/* Equal, left-aligned columns on a single row (table-style). */}
       <div className="pointer-events-none flex min-w-0 flex-1 items-center gap-4 text-sm lg:gap-8">
@@ -307,7 +309,7 @@ function ImmersiveRow({ a }: { a: Artist }) {
 function GridCard({ a }: { a: Artist }) {
   const { isCurrent, rowPlaying, toggle } = usePlayback(a);
   return (
-    <li className="group relative overflow-hidden rounded-xl transition hover:bg-surface-2 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-accent">
+    <li className="group relative rounded-xl transition hover:bg-surface-2 has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-accent">
       <Link
         to={`/artist/${a.id}`}
         preload="hover"
@@ -315,60 +317,64 @@ function GridCard({ a }: { a: Artist }) {
         aria-label={a.name}
         className="absolute inset-0 focus-visible:outline-none"
       />
-      <div
-        className="pointer-events-none relative aspect-square overflow-hidden"
-        style={{ viewTransitionName: `img-${a.id}` }}
-      >
-        <img
-          src={a.photo}
-          alt=""
-          className="h-full w-full object-cover object-center"
-        />
-        {/* genres, top-right (max 2) */}
-        <div className="pointer-events-none absolute right-2 top-2 z-10 flex max-w-[85%] flex-wrap justify-end gap-1">
-          {a.genres.slice(0, 2).map((g) => (
-            <span
-              key={g}
-              className="rounded-full bg-black/45 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm"
-            >
-              {g}
-            </span>
-          ))}
-        </div>
-        {/* Hover scrim — decorative only (clicks pass through to the card → artist) */}
-        <div className="pointer-events-none absolute inset-0 bg-black/35 opacity-0 transition group-hover:opacity-100" />
-        {/* Centered play button — ONLY this plays; the rest of the card navigates */}
-        <button
-          onClick={toggle}
-          aria-label={rowPlaying ? `Pause ${a.name}` : `Play ${a.name}`}
-          className={`pointer-events-auto absolute left-1/2 top-1/2 z-10 grid h-16 w-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-text text-bg shadow-lg transition focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-bg ${
-            rowPlaying ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-          }`}
+      <div className="p-3">
+        <div
+          className="pointer-events-none relative aspect-square overflow-hidden rounded-lg"
+          style={{ viewTransitionName: `img-${a.id}` }}
         >
-          <PlayPause playing={rowPlaying} className="h-8 w-8" />
-        </button>
-      </div>
-      <div className="pointer-events-none flex items-center justify-between gap-2 p-3">
-        <div className="min-w-0">
-          <p
-            className={`truncate text-sm font-semibold ${
-              isCurrent ? "text-accent" : "text-text"
+          <img
+            src={a.photo}
+            alt=""
+            className="h-full w-full object-cover object-center"
+          />
+          {/* genres, top-right (max 2) */}
+          <div className="pointer-events-none absolute right-2 top-2 z-10 flex max-w-[85%] flex-wrap justify-end gap-1">
+            {a.genres.slice(0, 2).map((g) => (
+              <span
+                key={g}
+                className="rounded-full bg-black/45 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm"
+              >
+                {g}
+              </span>
+            ))}
+          </div>
+          {/* Hover scrim — decorative only (clicks pass through to the card → artist) */}
+          <div className="pointer-events-none absolute inset-0 bg-black/35 opacity-0 transition group-hover:opacity-100" />
+          {/* Centered play button — ONLY this plays; the rest of the card navigates */}
+          <button
+            onClick={toggle}
+            aria-label={rowPlaying ? `Pause ${a.name}` : `Play ${a.name}`}
+            className={`pointer-events-auto absolute left-1/2 top-1/2 z-10 grid h-16 w-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-text text-bg shadow-lg transition focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-bg ${
+              rowPlaying ? "opacity-100" : "opacity-0 group-hover:opacity-100"
             }`}
-            style={{ viewTransitionName: `name-${a.id}` }}
           >
-            {a.name}
-          </p>
-          <p
-            className="mt-0.5 truncate text-xs text-text-faint"
-            style={{ viewTransitionName: `date-${a.id}` }}
-          >
-            <span className="text-text-dim">{a.distanceKm.toFixed(1)} km</span>
-            {a.performing && ` · ${a.performing.date}`}
-          </p>
+            <PlayPause playing={rowPlaying} className="h-8 w-8" />
+          </button>
         </div>
-        <span className="pointer-events-auto">
-          <Heart artistId={a.id} size={26} />
-        </span>
+        <div className="pointer-events-none flex items-center justify-between gap-2 pt-2">
+          <div className="min-w-0">
+            <p
+              className={`truncate text-sm font-semibold ${
+                isCurrent ? "text-accent" : "text-text"
+              }`}
+              style={{ viewTransitionName: `name-${a.id}` }}
+            >
+              {a.name}
+            </p>
+            <p
+              className="mt-0.5 truncate text-xs text-text-faint"
+              style={{ viewTransitionName: `date-${a.id}` }}
+            >
+              <span className="text-text-dim">
+                {a.distanceKm.toFixed(1)} km
+              </span>
+              {a.performing && ` · ${a.performing.date}`}
+            </p>
+          </div>
+          <span className="pointer-events-auto">
+            <Heart artistId={a.id} size={26} />
+          </span>
+        </div>
       </div>
     </li>
   );
@@ -482,7 +488,7 @@ export function ViewSwitcher() {
 export function ArtistViews({ artists }: { artists: Artist[] }) {
   const view = useFeedView((s) => s.view);
   return view === "grid" ? (
-    <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+    <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {artists.map((a) => (
         <GridCard key={a.id} a={a} />
       ))}
