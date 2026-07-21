@@ -65,7 +65,7 @@ export function DiscoveryHeader({
   right?: ReactNode;
 }) {
   return (
-    <div className="sticky top-0 z-10 bg-surface px-4 pt-5 pb-3 sm:px-6 lg:px-8">
+    <div className="sticky top-0 z-20 bg-surface px-4 pt-5 pb-3 sm:px-6 lg:px-8">
       {title && (
         <h1 className="text-lg font-semibold tracking-tight lg:text-xl">
           {title}

@@ -169,10 +169,27 @@ const songGenresFor = (base) => {
 
 const POOL = poolPairs.map((p, i) => ({ title: TITLES[i], album: p.album, albumName: ALBUM_NAMES[p.album], track: p.track, year: 2017 + Math.floor(rand() * 8), duration: dur(p.album, p.track) }));
 
-// each artist gets 5-13 random songs from the pool + per-song genres
+// each artist gets 5-13 random songs from the pool + per-song genres. The
+// FIRST song (what plays on a row click) is assigned from repeated full
+// shuffled passes over the pool, so every track is used as someone's first
+// song before any track repeats — with 18 artists and a 15-track pool a few
+// repeats are unavoidable, but they land on 3 different tracks instead of
+// piling onto one.
+let firstSongQueue = [];
+const nextFirstSong = () => {
+  if (firstSongQueue.length === 0) {
+    firstSongQueue = shuffle([...Array(POOL.length).keys()]);
+  }
+  return firstSongQueue.pop();
+};
+const pickWithFirst = (n, max, first) => {
+  const s = new Set([first]);
+  while (s.size < n) s.add(Math.floor(rand() * max));
+  return [first, ...shuffle([...s].filter((i) => i !== first))];
+};
 for (const a of artists) {
   const n = 5 + Math.floor(rand() * 9); // 5..13
-  a.songIdx = pick(Math.min(n, POOL.length), POOL.length).sort((x, y) => x - y);
+  a.songIdx = pickWithFirst(Math.min(n, POOL.length), POOL.length, nextFirstSong());
   a.songGenres = a.songIdx.map(() => songGenresFor(a.genres));
 }
 

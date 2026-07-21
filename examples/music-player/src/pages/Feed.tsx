@@ -11,7 +11,7 @@ export default function Feed() {
         title="Discover artists near San Juan"
         right={<ViewSwitcher />}
       />
-      <div className="px-4 pb-8 sm:px-6 lg:px-8">
+      <div className="px-3 pb-8 sm:px-6 lg:px-8">
         <ArtistViews artists={sorted} />
       </div>
     </div>
