@@ -86,16 +86,18 @@ export function Player() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentSong]);
 
-  const artist = currentSong ? getArtist(currentSong.artistId) : undefined;
-  const subtitle =
-    currentSong && artist?.performing
-      ? `${currentSong.artist} @ ${artist.performing.date}, ${artist.performing.venue}`
-      : currentSong?.artist ?? "";
+  // Nothing chosen yet — stay hidden instead of showing an empty bar. Hooks
+  // above are unconditional, so this early return is safe.
+  if (!currentSong) return null;
 
-  const idx =
-    currentSong && queue.length
-      ? queue.findIndex((s) => s.id === currentSong.id)
-      : -1;
+  const artist = getArtist(currentSong.artistId);
+  const subtitle = artist?.performing
+    ? `${currentSong.artist} @ ${artist.performing.date}, ${artist.performing.venue}`
+    : currentSong.artist;
+
+  const idx = queue.length
+    ? queue.findIndex((s) => s.id === currentSong.id)
+    : -1;
   const hasPrev = idx > 0;
   const hasNext = idx >= 0 && idx < queue.length - 1;
   const goPrev = () => hasPrev && play(queue[idx - 1], queue);
@@ -124,22 +126,16 @@ export function Player() {
       <div className="flex flex-col lg:hidden">
         <div className="flex items-center gap-3 px-3 py-2">
           <div className="flex min-w-0 flex-1 items-center gap-3">
-            {currentSong ? (
-              <img
-                src={currentSong.cover}
-                alt=""
-                className="h-11 w-11 shrink-0 rounded-md object-cover"
-              />
-            ) : (
-              <div className="h-11 w-11 shrink-0 rounded-md bg-surface-2" />
-            )}
+            <img
+              src={currentSong.cover}
+              alt=""
+              className="h-11 w-11 shrink-0 rounded-md object-cover"
+            />
             <div className="min-w-0">
               <p className="truncate text-sm font-medium text-text">
-                {currentSong ? currentSong.title : "Select a track to play"}
+                {currentSong.title}
               </p>
-              {currentSong && (
-                <p className="truncate text-xs text-text-faint">{subtitle}</p>
-              )}
+              <p className="truncate text-xs text-text-faint">{subtitle}</p>
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-5">
@@ -152,8 +148,7 @@ export function Player() {
               <SkipBack className="h-5 w-5" />
             </button>
             <button
-              onClick={() => currentSong && setIsPlaying(!isPlaying)}
-              disabled={!currentSong}
+              onClick={() => setIsPlaying(!isPlaying)}
               aria-label={isPlaying ? "Pause" : "Play"}
               className="text-text transition disabled:opacity-30"
             >
@@ -175,22 +170,16 @@ export function Player() {
       {/* Desktop: now-playing · transport + progress · volume */}
       <div className="hidden h-24 items-center gap-4 px-4 lg:flex">
         <div className="flex w-[26%] min-w-0 items-center gap-3">
-          {currentSong ? (
-            <img
-              src={currentSong.cover}
-              alt=""
-              className="h-14 w-14 shrink-0 rounded-md object-cover"
-            />
-          ) : (
-            <div className="h-14 w-14 shrink-0 rounded-md bg-surface-2" />
-          )}
+          <img
+            src={currentSong.cover}
+            alt=""
+            className="h-14 w-14 shrink-0 rounded-md object-cover"
+          />
           <div className="min-w-0">
             <p className="truncate text-sm font-medium text-text">
-              {currentSong ? currentSong.title : "Select a track to play"}
+              {currentSong.title}
             </p>
-            {currentSong && (
-              <p className="truncate text-xs text-text-faint">{subtitle}</p>
-            )}
+            <p className="truncate text-xs text-text-faint">{subtitle}</p>
           </div>
         </div>
 
@@ -205,8 +194,7 @@ export function Player() {
               <SkipBack className="h-5 w-5" />
             </button>
             <button
-              onClick={() => currentSong && setIsPlaying(!isPlaying)}
-              disabled={!currentSong}
+              onClick={() => setIsPlaying(!isPlaying)}
               aria-label={isPlaying ? "Pause" : "Play"}
               className="text-text transition hover:scale-105 disabled:opacity-30"
             >

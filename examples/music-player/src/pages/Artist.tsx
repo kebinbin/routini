@@ -1,9 +1,18 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link, useParams } from "routini";
-import { getArtist, eventsForArtist, coPerformers, type Song } from "../lib/data";
+import {
+  getArtist,
+  eventsForArtist,
+  coPerformers,
+  type Song,
+} from "../lib/data";
 import { usePlayerStore } from "../player/playerStore";
 import { useFollowStore } from "../lib/follow";
-import { SpotifyIcon, SoundCloudIcon, YouTubeIcon } from "../components/BrandIcons";
+import {
+  SpotifyIcon,
+  SoundCloudIcon,
+  YouTubeIcon,
+} from "../components/BrandIcons";
 import { PlayPause } from "../components/PlayPause";
 
 function FollowButton({ artistId }: { artistId: string }) {
@@ -19,7 +28,15 @@ function FollowButton({ artistId }: { artistId: string }) {
           : "bg-text text-bg hover:opacity-90"
       }`}
     >
-      <svg viewBox="0 0 24 24" width="16" height="16" fill={following ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" aria-hidden>
+      <svg
+        viewBox="0 0 24 24"
+        width="16"
+        height="16"
+        fill={following ? "currentColor" : "none"}
+        stroke="currentColor"
+        strokeWidth="1.8"
+        aria-hidden
+      >
         <path d="M12 20.8S3 15.4 3 9.3A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 9 2.3c0 6.1-9 11.5-9 11.5z" />
       </svg>
       {following ? "Following" : "Follow"}
@@ -42,7 +59,7 @@ function PlayButton({ song, queue }: { song: Song; queue: Song[] }) {
     <button
       onClick={() => (isCurrent ? setIsPlaying(!isPlaying) : play(song, queue))}
       aria-label={showPause ? `Pause ${song.title}` : `Play ${song.title}`}
-      className={`grid h-11 w-11 shrink-0 place-items-center rounded-md transition hover:text-text ${
+      className={`grid h-6 w-6 shrink-0 place-items-center rounded-md transition hover:text-text ${
         isCurrent ? "text-text" : "text-text-dim"
       }`}
     >
@@ -53,7 +70,16 @@ function PlayButton({ song, queue }: { song: Song; queue: Song[] }) {
 
 function ChevronDownIcon({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
       <path d="m6 9 6 6 6-6" />
     </svg>
   );
@@ -61,7 +87,16 @@ function ChevronDownIcon({ className }: { className?: string }) {
 
 function FiltersIcon({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
       <path d="M4 6h16M7 12h10M10 18h4" />
     </svg>
   );
@@ -73,7 +108,11 @@ function StreamingLinks({ artist }: { artist: string }) {
   const items: Array<[string, string, React.FC<{ className?: string }>]> = [
     ["Spotify", `https://open.spotify.com/search/${q}`, SpotifyIcon],
     ["SoundCloud", `https://soundcloud.com/search?q=${q}`, SoundCloudIcon],
-    ["Youtube", `https://www.youtube.com/results?search_query=${q}`, YouTubeIcon],
+    [
+      "Youtube",
+      `https://www.youtube.com/results?search_query=${q}`,
+      YouTubeIcon,
+    ],
   ];
   return (
     <div className="mt-6 flex items-center justify-end gap-7 text-sm text-text-faint">
@@ -96,7 +135,16 @@ function StreamingLinks({ artist }: { artist: string }) {
 
 function CaretIcon({ dir }: { dir: "left" | "right" }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-5 w-5"
+      aria-hidden
+    >
       <path d={dir === "left" ? "m15 18-6-6 6-6" : "m9 18 6-6-6-6"} />
     </svg>
   );
@@ -142,14 +190,15 @@ function Carousel({ children }: { children: ReactNode }) {
 
   const page = (dir: 1 | -1) => {
     const el = ref.current;
-    if (el) el.scrollBy({ left: dir * el.clientWidth * 0.85, behavior: "smooth" });
+    if (el)
+      el.scrollBy({ left: dir * el.clientWidth * 0.85, behavior: "smooth" });
   };
 
   return (
     <div className="relative mt-4">
       <ul
         ref={ref}
-        className="no-scrollbar grid auto-cols-[40%] grid-flow-col gap-3 overflow-x-auto scroll-smooth pb-1 sm:auto-cols-[22%] lg:auto-cols-[15.5%] xl:auto-cols-[12.5%]"
+        className="no-scrollbar grid auto-cols-[40%] grid-flow-col overflow-x-auto scroll-smooth pb-1 sm:auto-cols-[22%] lg:auto-cols-[15.5%] xl:auto-cols-[12.5%]"
       >
         {children}
       </ul>
@@ -242,11 +291,17 @@ export default function Artist() {
           <div className="flex items-center justify-between gap-4">
             <h2 className="text-lg font-bold">Hear more from {artist.name}</h2>
             <div className="hidden items-center gap-5 text-sm text-text-faint sm:flex">
-              <button type="button" className="flex items-center gap-1.5 rounded-md transition hover:text-text">
+              <button
+                type="button"
+                className="flex items-center gap-1.5 rounded-md transition hover:text-text"
+              >
                 Sort by album
                 <ChevronDownIcon className="h-4 w-4" />
               </button>
-              <button type="button" className="flex items-center gap-1.5 rounded-md transition hover:text-text">
+              <button
+                type="button"
+                className="flex items-center gap-1.5 rounded-md transition hover:text-text"
+              >
                 <FiltersIcon className="h-4 w-4" />
                 Filters
               </button>
@@ -257,14 +312,16 @@ export default function Artist() {
             {artist.songs.map((s) => (
               <li
                 key={s.id}
-                className="group flex items-center gap-3 rounded-lg px-2 py-1 transition hover:bg-surface-2 sm:gap-4"
+                className="group flex items-center gap-3 rounded-lg px-1 py-1 transition hover:bg-surface-2 sm:gap-4 sm:px-2"
               >
-                <PlayButton song={s} queue={artist.songs} />
-                <img
-                  src={s.cover}
-                  alt=""
-                  className="h-11 w-11 shrink-0 rounded object-cover"
-                />
+                <div className="flex shrink-0 items-center gap-3.5">
+                  <PlayButton song={s} queue={artist.songs} />
+                  <img
+                    src={s.cover}
+                    alt=""
+                    className="h-11 w-11 shrink-0 rounded object-cover"
+                  />
+                </div>
                 {/* Equal, left-aligned columns — same shape as the feed rows */}
                 <div className="flex min-w-0 flex-1 items-center gap-6 lg:gap-10">
                   <div className="min-w-0 flex-[1.4]">
@@ -298,20 +355,22 @@ export default function Artist() {
                     to={`/event/${e.id}`}
                     preload="hover"
                     viewTransition
-                    className="group block overflow-hidden rounded-xl transition hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                    className="group block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                   >
-                    <div
-                      className="relative aspect-3/4 overflow-hidden"
-                      style={{ viewTransitionName: `poster-${e.id}` }}
-                    >
-                      <img
-                        src={e.poster}
-                        alt=""
-                        className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
-                      />
-                    </div>
-                    <div className="p-3">
-                      <p className="truncate text-sm font-semibold text-text">{e.title}</p>
+                    <div className="rounded-xl p-3 transition group-hover:bg-surface-2">
+                      <div
+                        className="relative aspect-3/4 overflow-hidden rounded-lg"
+                        style={{ viewTransitionName: `poster-${e.id}` }}
+                      >
+                        <img
+                          src={e.poster}
+                          alt=""
+                          className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+                        />
+                      </div>
+                      <p className="mt-2 truncate text-sm font-semibold text-text">
+                        {e.title}
+                      </p>
                       <p className="mt-0.5 truncate text-xs text-text-faint">
                         {e.date} @ {e.venue}
                       </p>
@@ -335,24 +394,27 @@ export default function Artist() {
                     viewTransition
                     className="group block rounded-xl focus-visible:outline-none"
                   >
-                    {/* Circle spans the full card width; the wrapper's pt-[50%]
-                        reserves its top half so the hover tint (on the inner box,
-                        which also clears its own bottom half) only ever shows
-                        from the circle's middle down — never behind its top. */}
-                    <div className="relative pt-[50%]">
-                      <div className="rounded-xl px-3 pb-4 pt-[50%] transition group-hover:bg-surface-2 group-focus-visible:ring-2 group-focus-visible:ring-accent">
-                        <p className="mt-2 truncate text-sm font-semibold text-text">{c.name}</p>
-                        {c.performing && (
-                          <p className="mt-0.5 truncate text-xs text-text-faint">
-                            {c.performing.date} @ {c.performing.venue}
-                          </p>
-                        )}
+                    {/* The tint fills the whole card, same as every other card's
+                        hover — the image now shares the text's own px-3/pt-3
+                        inset instead of sitting edge-to-edge, so the circle has
+                        real breathing room and the fill reads as one padded card
+                        rather than a box peeking around a shape. */}
+                    <div className="rounded-xl px-3 pb-4 pt-3 transition group-hover:bg-surface-2 group-focus-visible:ring-2 group-focus-visible:ring-accent">
+                      <div className="relative pt-[100%]">
+                        <img
+                          src={c.avatar}
+                          alt=""
+                          className="absolute inset-0 z-10 h-full w-full rounded-full object-cover"
+                        />
                       </div>
-                      <img
-                        src={c.avatar}
-                        alt=""
-                        className="absolute inset-x-0 top-0 z-10 aspect-square w-full rounded-full object-cover"
-                      />
+                      <p className="mt-2 truncate text-sm font-semibold text-text">
+                        {c.name}
+                      </p>
+                      {c.performing && (
+                        <p className="mt-0.5 truncate text-xs text-text-faint">
+                          {c.performing.date} @ {c.performing.venue}
+                        </p>
+                      )}
                     </div>
                   </Link>
                 </li>
