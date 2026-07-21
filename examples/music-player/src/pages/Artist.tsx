@@ -257,7 +257,7 @@ export default function Artist() {
             {artist.songs.map((s) => (
               <li
                 key={s.id}
-                className="group flex items-center gap-3 rounded-lg px-2 py-1.5 transition hover:bg-surface-2 sm:gap-4 sm:px-3"
+                className="group flex items-center gap-3 rounded-lg px-2 py-1 transition hover:bg-surface-2 sm:gap-4"
               >
                 <PlayButton song={s} queue={artist.songs} />
                 <img
@@ -277,7 +277,7 @@ export default function Artist() {
                   <span className="hidden min-w-0 flex-1 truncate text-sm tabular-nums text-text-faint lg:block">
                     {s.year}
                   </span>
-                  <span className="ml-auto hidden w-12 shrink-0 text-sm tabular-nums text-text-faint sm:block">
+                  <span className="ml-auto w-12 shrink-0 text-right text-sm tabular-nums text-text-faint">
                     {s.duration}
                   </span>
                 </div>
