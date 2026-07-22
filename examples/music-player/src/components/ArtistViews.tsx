@@ -63,8 +63,8 @@ function CoPerformers({ a }: { a: Artist }) {
     p.name.length < s.name.length ? p : s,
   );
   return (
-    <div className="pointer-events-none hidden shrink-0 items-center gap-3 xl:flex">
-      <div className="flex -space-x-2">
+    <div className="pointer-events-none hidden min-w-0 items-center gap-3 xl:flex">
+      <div className="flex shrink-0 -space-x-2">
         {shown.map((p) => (
           <img
             key={p.id}
@@ -244,7 +244,7 @@ function ImmersiveRow({ a }: { a: Artist }) {
       {/* LEFT column — photo + artist + place (priority; wraps, never cut) */}
       <div className="flex min-w-0 flex-[1.4] items-center gap-4 self-stretch">
         <div
-          className="relative w-24 shrink-0 self-stretch overflow-hidden sm:w-44 lg:w-64"
+          className="relative w-32 shrink-0 self-stretch overflow-hidden sm:w-44 lg:w-64"
           style={{ viewTransitionName: `img-${a.id}` }}
         >
           <img
@@ -262,9 +262,9 @@ function ImmersiveRow({ a }: { a: Artist }) {
             </span>
           </button>
         </div>
-        <div className="pointer-events-none flex min-w-0 flex-1 flex-col justify-center gap-1 py-2">
+        <div className="pointer-events-none flex min-h-24 min-w-0 flex-1 flex-col justify-center gap-1 py-1">
           <p
-            className={`text-lg font-semibold leading-tight ${
+            className={`line-clamp-2 text-lg font-semibold leading-tight ${
               isCurrent ? "text-accent" : "text-text"
             }`}
             style={{ viewTransitionName: `name-${a.id}` }}
@@ -272,7 +272,7 @@ function ImmersiveRow({ a }: { a: Artist }) {
             {a.name}
           </p>
           <p
-            className="text-sm leading-snug text-text-faint"
+            className="line-clamp-2 text-sm leading-snug text-text-faint"
             style={{ viewTransitionName: `date-${a.id}` }}
           >
             <span className="text-text-dim">
@@ -317,7 +317,7 @@ function GridCard({ a }: { a: Artist }) {
         aria-label={a.name}
         className="absolute inset-0 focus-visible:outline-none"
       />
-      <div className="p-3">
+      <div className="p-1.5 lg:p-3">
         <div
           className="pointer-events-none relative aspect-square overflow-hidden rounded-lg"
           style={{ viewTransitionName: `img-${a.id}` }}

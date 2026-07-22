@@ -357,7 +357,7 @@ export default function Artist() {
                     viewTransition
                     className="group block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                   >
-                    <div className="rounded-xl p-3 transition group-hover:bg-surface-2">
+                    <div className="rounded-xl p-1.5 transition group-hover:bg-surface-2 lg:p-3">
                       <div
                         className="relative aspect-3/4 overflow-hidden rounded-lg"
                         style={{ viewTransitionName: `poster-${e.id}` }}
@@ -399,7 +399,7 @@ export default function Artist() {
                         inset instead of sitting edge-to-edge, so the circle has
                         real breathing room and the fill reads as one padded card
                         rather than a box peeking around a shape. */}
-                    <div className="rounded-xl px-3 pb-4 pt-3 transition group-hover:bg-surface-2 group-focus-visible:ring-2 group-focus-visible:ring-accent">
+                    <div className="rounded-xl px-1.5 pb-2 pt-1.5 transition group-hover:bg-surface-2 group-focus-visible:ring-2 group-focus-visible:ring-accent lg:px-3 lg:pb-4 lg:pt-3">
                       <div className="relative pt-[100%]">
                         <img
                           src={c.avatar}

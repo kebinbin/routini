@@ -58,7 +58,7 @@ export default function Event() {
           <div className="absolute inset-0 bg-linear-to-t from-surface to-transparent" />
         </div>
 
-        <div className="relative grid grid-cols-1 items-center gap-5 px-5 py-10 sm:gap-8 sm:px-8 sm:py-12 md:grid-cols-2 lg:px-10 lg:py-14">
+        <div className="relative grid grid-cols-1 items-center gap-x-5 gap-y-8 px-5 py-10 sm:gap-x-8 sm:gap-y-10 sm:px-8 sm:py-12 md:grid-cols-2 md:gap-8 lg:px-10 lg:py-14">
           {/* Left column — text + buttons */}
           <div className="min-w-0">
             <p className="text-base font-medium text-text-dim sm:text-lg">
