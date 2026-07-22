@@ -19,7 +19,7 @@ function EventCard({ e }: { e: MusicEvent }) {
         aria-label={e.title}
         className="absolute inset-0 z-10 focus-visible:outline-none"
       />
-      <div className="p-3">
+      <div className="p-1.5 lg:p-3">
         <div
           className="relative aspect-3/4 overflow-hidden rounded-lg"
           style={{ viewTransitionName: `poster-${e.id}` }}
