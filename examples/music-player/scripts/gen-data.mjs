@@ -121,15 +121,15 @@ for (const id of HEADLINERS) {
 }
 
 // ── Song POOL: 15 tracks across all 6 albums (real cover art) ──────────────
-const ALBUMS = ["buena-vista", "control-machete", "ile", "plenero", "residente", "tony-croatto"];
+const ALBUMS = ["le-chant-des-stompbox", "city-slacker", "you-know-where-to-find-me", "nfamoudou-boudougou", "koi-discovery", "seven-elements"];
 // Real CC album titles (see README credits) — shown as the song subtitle.
 const ALBUM_NAMES = {
-  "buena-vista": "Le chant des Stompbox",
-  "control-machete": "City Slacker",
-  "ile": "You Know Where to Find Me",
-  "plenero": "Nfamoudou-Boudougou",
-  "residente": "Koi-discovery",
-  "tony-croatto": "Seven Elements",
+  "le-chant-des-stompbox": "Le chant des Stompbox",
+  "city-slacker": "City Slacker",
+  "you-know-where-to-find-me": "You Know Where to Find Me",
+  "nfamoudou-boudougou": "Nfamoudou-Boudougou",
+  "koi-discovery": "Koi-discovery",
+  "seven-elements": "Seven Elements",
 };
 const TITLES = [
   "Amanecer", "Calle Sin Nombre", "Bajo la Lluvia", "Raíz", "Mar de Fondo",
