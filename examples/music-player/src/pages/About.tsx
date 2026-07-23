@@ -32,8 +32,16 @@ const ROUTINI = [
     "The map keeps its center and zoom in the URL (?lat&lng&z). Pan or zoom and the link updates in place (replace, so it never floods history); refresh or share it and the map opens on the exact same view. Because routini's location store is pathname-only, writing the query never remounts the map.",
   ],
   [
+    "<Navigate>",
+    "\"/\" redirects straight to \"/artists\". <Navigate> replaces the history entry by default specifically to avoid a back-button trap — without it, Back from the feed would bounce you into the redirect and right back out again.",
+  ],
+  [
     "Catch-all \"*\"",
     "Any unmatched URL renders the 404 page.",
+  ],
+  [
+    "Error boundary",
+    "Every route — six of the eight here are lazy — is wrapped in routini's built-in error boundary automatically, no setup required. A failed chunk after a bad deploy gets a fallback instead of a white screen. Not customized in this prototype (errorFallback/onError), so it's the default minimal message.",
   ],
 ];
 
@@ -188,9 +196,10 @@ export default function About() {
               ))}
             </ul>
             <p className="mt-4 text-sm">
-              Available but not yet wired in this prototype:{" "}
-              <code className="text-text">&lt;Navigate&gt;</code> and the
-              imperative <code className="text-text">navigate()</code>.
+              Available but not yet wired in this prototype: the imperative{" "}
+              <code className="text-text">navigate()</code> — every navigation
+              here goes through a <code className="text-text">&lt;Link&gt;</code>{" "}
+              or a declarative <code className="text-text">&lt;Navigate&gt;</code>.
             </p>
           </Section>
 
