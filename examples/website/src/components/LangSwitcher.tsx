@@ -20,7 +20,7 @@ export function LangSwitcher() {
     <div
       role="group"
       aria-label="Language"
-      className="inline-flex items-center font-mono text-xs uppercase tracking-wider"
+      className="inline-flex items-center text-xs uppercase tracking-wider"
     >
       {LANGS.map((lang, i) => (
         <span key={lang} className="flex items-center">

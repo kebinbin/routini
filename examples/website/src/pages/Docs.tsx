@@ -152,13 +152,13 @@ export default function Docs() {
             aria-label={t.docs.onThisPage}
             className="md:sticky md:top-[calc(var(--nav-h)+2rem)]"
           >
-            <p className="mb-5 font-mono text-xs uppercase tracking-[0.2em] text-bone-faint">
+            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-bone-faint">
               {t.docs.onThisPage}
             </p>
             <div className="flex flex-col gap-6">
               {groups.map((group) => (
                 <div key={group.key}>
-                  <p className="mb-2 font-mono text-[0.7rem] uppercase tracking-[0.15em] text-bone-faint">
+                  <p className="mb-2 text-[0.7rem] font-semibold uppercase tracking-[0.15em] text-bone-faint">
                     {group.label}
                   </p>
                   <ul className="flex flex-col border-l border-ink-3">
@@ -190,13 +190,13 @@ export default function Docs() {
         {/* Content */}
         <div className="min-w-0">
           <header className="mb-16">
-            <p className="mb-4 font-mono text-xs uppercase tracking-[0.2em] text-bone-faint">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-bone-faint">
               {t.docs.pretitle}
             </p>
-            <h1 className="text-balance text-4xl font-medium tracking-tight md:text-5xl">
+            <h1 className="text-balance mt-3 text-5xl font-bold leading-[0.92] tracking-tight sm:text-6xl lg:text-7xl">
               {t.docs.title}
             </h1>
-            <p className="text-pretty mt-6 max-w-2xl text-lg text-bone-dim">
+            <p className="text-pretty mt-6 max-w-2xl text-lg leading-relaxed text-bone-dim">
               {t.docs.sub}
             </p>
           </header>
@@ -208,10 +208,10 @@ export default function Docs() {
               return (
                 <section key={entry.anchor} id={entry.anchor}>
                   <div className="mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                    <h2 className="font-mono text-2xl font-medium tracking-tight text-bone">
+                    <h2 className="font-mono text-2xl font-bold tracking-tight text-bone">
                       {entry.name}
                     </h2>
-                    <span className="font-mono text-xs text-bone-faint">
+                    <span className="text-xs text-bone-faint">
                       {t.docs.kind[entry.group]} · {t.docs.since} {entry.since}
                     </span>
                   </div>
@@ -243,7 +243,7 @@ export default function Docs() {
                     ) : null}
 
                     <figure>
-                      <figcaption className="mb-2 font-mono text-xs uppercase tracking-[0.15em] text-bone-faint">
+                      <figcaption className="mb-2 text-xs font-semibold uppercase tracking-[0.15em] text-bone-faint">
                         {t.docs.exampleLabel}
                       </figcaption>
                       <CodeBlock id={entry.snippet} />
@@ -270,20 +270,20 @@ function PropsTable({
 }) {
   return (
     <div>
-      <p className="mb-3 font-mono text-xs uppercase tracking-[0.15em] text-bone-faint">
+      <p className="mb-3 text-xs font-semibold uppercase tracking-[0.15em] text-bone-faint">
         {heading}
       </p>
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-left text-sm">
           <thead>
             <tr className="border-b border-ink-3">
-              <th className="py-2 pr-6 font-mono text-xs font-normal uppercase tracking-wider text-bone-faint">
+              <th className="py-2 pr-6 text-xs font-normal uppercase tracking-wider text-bone-faint">
                 {cols.name}
               </th>
-              <th className="py-2 pr-6 font-mono text-xs font-normal uppercase tracking-wider text-bone-faint">
+              <th className="py-2 pr-6 text-xs font-normal uppercase tracking-wider text-bone-faint">
                 {cols.type}
               </th>
-              <th className="py-2 font-mono text-xs font-normal uppercase tracking-wider text-bone-faint">
+              <th className="py-2 text-xs font-normal uppercase tracking-wider text-bone-faint">
                 {cols.description}
               </th>
             </tr>

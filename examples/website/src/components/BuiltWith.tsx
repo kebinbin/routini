@@ -13,10 +13,10 @@ export function BuiltWith() {
   return (
     <section className="border-t border-ink-3">
       <div className="mx-auto max-w-7xl px-6 py-20 md:py-28">
-        <p className="mb-4 text-center font-mono text-xs uppercase tracking-[0.2em] text-bone-faint">
+        <p className="mb-4 text-center text-base font-medium text-bone-dim sm:text-lg">
           {t.builtWith.pretitle}
         </p>
-        <h2 className="text-pretty mx-auto mb-12 max-w-3xl text-center text-3xl font-medium tracking-tight text-bone md:mb-16 md:text-4xl">
+        <h2 className="text-pretty mx-auto mb-12 max-w-3xl text-center text-3xl font-bold tracking-tight text-bone md:mb-16 md:text-4xl">
           {t.builtWith.intro}
         </h2>
 
@@ -38,23 +38,23 @@ export function BuiltWith() {
                 style={{ viewTransitionName: "sona-shot" }}
               />
               <div className="flex items-center justify-between gap-2 py-3">
-                <span className="font-mono text-sm text-bone">Sona.io</span>
+                <span className="text-sm text-bone">Sona.io</span>
                 <ArrowUpRight className="h-4 w-4 text-bone-dim transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" />
               </div>
             </Link>
           </li>
           {/* One ghost placeholder, then the live "Add yours" CTA cell. */}
-          <li className="aspect-video flex items-center justify-center rounded-lg bg-ink-2">
-            <span className="font-mono text-xs text-bone-faint">
+          <li className="aspect-video flex items-center justify-center rounded-2xl bg-bone/2">
+            <span className="text-xs text-bone-faint">
               {t.builtWith.placeholder}
             </span>
           </li>
-          <li className="aspect-video overflow-hidden rounded-lg bg-ink-2">
+          <li className="aspect-video overflow-hidden rounded-2xl bg-bone/2">
             <a
               href={PR_TEMPLATE_URL}
               target="_blank"
               rel="noreferrer"
-              className="group flex h-full w-full items-center justify-center gap-2 font-mono text-sm text-bone-dim transition-colors hover:bg-ink-hover hover:text-accent"
+              className="group flex h-full w-full items-center justify-center gap-2 text-sm text-bone-dim transition-colors hover:bg-bone/5 hover:text-accent"
             >
               {t.builtWith.cta}
               <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />

@@ -27,8 +27,8 @@ const MAX_KB = Math.max(...ENTRIES.map((e) => e.kb));
 
 export function BundleChart() {
   return (
-    <div className="mx-auto w-full max-w-3xl rounded-md border border-ink-3 p-8 md:p-10">
-      <p className="mb-7 font-mono text-xs uppercase tracking-[0.15em] text-bone-faint">
+    <div className="mx-auto w-full max-w-3xl rounded-2xl bg-bone/2 p-8 md:p-10">
+      <p className="mb-7 text-xs font-semibold uppercase tracking-[0.15em] text-bone-faint">
         Bundle size · minified + gzipped
       </p>
 
@@ -58,14 +58,14 @@ export function BundleChart() {
                 <div
                   className={`relative h-full overflow-hidden rounded-sm border transition-colors ${
                     highlight
-                      ? "border-accent/60 bg-accent/30 group-hover:border-accent/80"
-                      : "border-ink-3 bg-bone-faint/15"
+                      ? "border-accent/60 bg-accent/45 group-hover:border-accent/80"
+                      : "border-ink-3 bg-bone-faint/30"
                   }`}
                   style={{ width: `${width}%` }}
                 >
                   <div
                     className={`absolute inset-0 origin-left scale-x-0 transition-transform duration-500 ease-out group-hover:scale-x-100 pointer-coarse:scale-x-100 ${
-                      highlight ? "bg-accent/35" : "bg-bone-faint/20"
+                      highlight ? "bg-accent/60" : "bg-bone-faint/45"
                     }`}
                   />
                 </div>

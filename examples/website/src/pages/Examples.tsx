@@ -45,13 +45,13 @@ export default function Examples() {
     <div className="py-16 md:py-20">
       <div className="mx-auto max-w-4xl px-6">
       <header className="mb-16">
-        <p className="mb-4 font-mono text-xs uppercase tracking-[0.2em] text-bone-faint">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-bone-faint">
           {t.examples.pretitle}
         </p>
-        <h1 className="text-balance text-4xl font-medium tracking-tight md:text-5xl">
+        <h1 className="text-balance mt-3 text-5xl font-bold leading-[0.92] tracking-tight sm:text-6xl lg:text-7xl">
           {t.examples.title}
         </h1>
-        <p className="text-pretty mt-6 text-lg text-bone-dim">
+        <p className="text-pretty mt-6 text-lg leading-relaxed text-bone-dim">
           {t.examples.sub}
         </p>
       </header>
@@ -62,7 +62,7 @@ export default function Examples() {
           const recipe = recipes[r.anchor];
           return (
             <section key={r.anchor} id={r.anchor}>
-              <h2 className="mb-4 text-2xl font-medium tracking-tight text-bone md:text-3xl">
+              <h2 className="mb-4 text-2xl font-bold tracking-tight text-bone">
                 {recipe?.title}
               </h2>
               <p className="text-pretty mb-7 leading-relaxed text-bone-dim">
@@ -77,7 +77,7 @@ export default function Examples() {
             recipes above, same card look as the home page's Built With
             section. */}
         <section id="full-apps">
-          <h2 className="mb-4 text-2xl font-medium tracking-tight text-bone md:text-3xl">
+          <h2 className="mb-4 text-2xl font-bold tracking-tight text-bone">
             {t.examples.appsTitle}
           </h2>
           <p className="text-pretty mb-7 leading-relaxed text-bone-dim">
@@ -91,9 +91,9 @@ export default function Examples() {
                   return (
                     <li
                       key={app.id}
-                      className="aspect-video flex items-center justify-center rounded-lg bg-ink-2"
+                      className="aspect-video flex items-center justify-center rounded-2xl bg-bone/2"
                     >
-                      <span className="font-mono text-xs text-bone-faint">
+                      <span className="text-xs text-bone-faint">
                         {content?.name} — {t.examples.comingSoon}
                       </span>
                     </li>
@@ -114,7 +114,7 @@ export default function Examples() {
                         style={{ viewTransitionName: "sona-shot" }}
                       />
                       <div className="flex items-center justify-between gap-2 py-3">
-                        <span className="font-mono text-sm text-bone">
+                        <span className="text-sm text-bone">
                           {content?.name}
                         </span>
                         <ArrowUpRight className="h-4 w-4 text-bone-dim transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" />

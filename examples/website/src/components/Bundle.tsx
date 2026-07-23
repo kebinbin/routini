@@ -9,13 +9,13 @@ export function Bundle() {
   return (
     <section className="border-t border-ink-3">
       <div className="mx-auto max-w-7xl px-6 py-20 md:py-28">
-        <p className="mb-4 text-center font-mono text-xs uppercase tracking-[0.2em] text-bone-faint">
+        <p className="mb-4 text-center text-base font-medium text-bone-dim sm:text-lg">
           {t.bundle.pretitle}
         </p>
-        <h2 className="text-pretty mx-auto max-w-2xl text-center text-3xl font-medium tracking-tight text-bone md:text-4xl">
+        <h2 className="text-pretty mx-auto max-w-2xl text-center text-3xl font-bold tracking-tight text-bone md:text-4xl">
           {t.bundle.headline}
         </h2>
-        <p className="text-pretty mx-auto mt-6 max-w-2xl text-center text-lg text-bone-dim">
+        <p className="text-pretty mx-auto mt-6 max-w-2xl text-center text-sm leading-relaxed text-bone-dim sm:text-base">
           {t.bundle.sub}
         </p>
 

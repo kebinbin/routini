@@ -35,13 +35,13 @@ export default function SonaCaseStudy() {
   return (
     <div className="mx-auto max-w-4xl px-6 py-16 md:py-20">
       <header className="mb-16">
-        <p className="mb-4 font-mono text-xs uppercase tracking-[0.2em] text-bone-faint">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-bone-faint">
           {s.pretitle}
         </p>
-        <h1 className="text-balance text-4xl font-medium tracking-tight md:text-5xl">
+        <h1 className="text-balance mt-3 text-5xl font-bold leading-[0.92] tracking-tight sm:text-6xl lg:text-7xl">
           {s.title}
         </h1>
-        <p className="text-pretty mt-6 text-lg text-bone-dim">{s.sub}</p>
+        <p className="text-pretty mt-6 text-lg leading-relaxed text-bone-dim">{s.sub}</p>
         <div className="mt-8 flex flex-wrap gap-3">
           <a
             href={SONA_LIVE_URL}
@@ -81,7 +81,7 @@ export default function SonaCaseStudy() {
           const section = s.sections[id];
           return (
             <section key={id} id={id}>
-              <h2 className="mb-4 text-2xl font-medium tracking-tight text-bone md:text-3xl">
+              <h2 className="mb-4 text-2xl font-bold tracking-tight text-bone">
                 {section.title}
               </h2>
               <p className="text-pretty mb-7 leading-relaxed text-bone-dim">
@@ -99,7 +99,7 @@ export default function SonaCaseStudy() {
         {/* Resilience closes the page — deliberately no snippet: the point is
             that Sona wrote zero code to get this protection. */}
         <section id="resilience">
-          <h2 className="mb-4 text-2xl font-medium tracking-tight text-bone md:text-3xl">
+          <h2 className="mb-4 text-2xl font-bold tracking-tight text-bone">
             {s.sections.resilience.title}
           </h2>
           <p className="text-pretty leading-relaxed text-bone-dim">

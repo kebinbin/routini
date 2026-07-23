@@ -7,7 +7,7 @@ const home = {
     home: {
       pretitle: "A tiny router for React",
       title1: "Routing.",
-      title2: "Nothing else.",
+      title2: "Nothing more.",
       sub: "2.8 KB gzipped. Lazy, code-split routes. View Transitions and error recovery built in.",
       ctaDocs: "Read the docs",
       ctaGithub: "View on GitHub",
@@ -110,8 +110,8 @@ const home = {
   es: {
     home: {
       pretitle: "Un router pequeño para React",
-      title1: "Solo routing.",
-      title2: "Nada más.",
+      title1: "Routing.",
+      title2: "Nada extra.",
       sub: "2.8 KB gzipped. Rutas diferidas y divididas por código. Incluye View Transitions y recuperación de errores.",
       ctaDocs: "Leer la documentación",
       ctaGithub: "Ver en GitHub",
