@@ -102,7 +102,7 @@ const home = {
     builtWith: {
       pretitle: "Built with routini",
       intro:
-        "We're pre-launch. When you ship something with routini, send a PR — we'll feature it here.",
+        "Shipped something with routini? Send a PR — we'll feature it here.",
       placeholder: "Your project here",
       cta: "Add yours →",
     },
@@ -206,7 +206,7 @@ const home = {
     builtWith: {
       pretitle: "Hecho con routini",
       intro:
-        "Estamos en pre-lanzamiento. Cuando publiques algo con routini, abre un PR — lo destacaremos aquí.",
+        "¿Publicaste algo con routini? Abre un PR — lo destacaremos aquí.",
       placeholder: "Tu proyecto aquí",
       cta: "Añade el tuyo →",
     },

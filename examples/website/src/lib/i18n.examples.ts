@@ -13,8 +13,6 @@ const examples = {
       appsIntro:
         "Complete apps built with routini — open the live demo or read the source.",
       comingSoon: "Coming soon",
-      liveDemo: "Live demo",
-      viewSource: "Source",
       recipes: {
         "basic-app": {
           title: "A basic app",
@@ -61,16 +59,10 @@ const examples = {
           body: "Call navigate() from an event handler or anywhere outside a component — after a form submit, a logout, a timeout. No hook required.",
         },
       },
-      apps: [
-        {
-          name: "Music player",
-          blurb: "A player UI with routed views — library, album, playlist.",
-        },
-        {
-          name: "Shop",
-          blurb: "An e-commerce front end — product grid, detail pages, cart.",
-        },
-      ],
+      apps: {
+        sona: { name: "Sona.io" },
+        skeleton: { name: "Skeleton" },
+      },
     },
   },
   es: {
@@ -82,8 +74,6 @@ const examples = {
       appsIntro:
         "Apps completas hechas con routini — abre la demo o lee el código.",
       comingSoon: "Próximamente",
-      liveDemo: "Ver demo",
-      viewSource: "Código",
       recipes: {
         "basic-app": {
           title: "Una app básica",
@@ -130,18 +120,10 @@ const examples = {
           body: "Llama a navigate() desde un event handler o desde cualquier lugar fuera de un componente — tras un submit, un logout, un timeout. Sin hooks.",
         },
       },
-      apps: [
-        {
-          name: "Reproductor de música",
-          blurb:
-            "Una UI de reproductor con vistas enrutadas — biblioteca, álbum, playlist.",
-        },
-        {
-          name: "Tienda",
-          blurb:
-            "Un front-end de e-commerce — grid de productos, páginas de detalle, carrito.",
-        },
-      ],
+      apps: {
+        sona: { name: "Sona.io" },
+        skeleton: { name: "Skeleton" },
+      },
     },
   },
 } as const;

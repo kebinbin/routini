@@ -364,6 +364,106 @@ function Product() {
 }
 `,
 
+  // ── Sona case study (examples/sona) — all six are real excerpts from
+  // examples/music-player, trimmed for length. Not contrived examples.
+  sonaRoutes: `const routes: RouteDefinition[] = [
+  { path: "/", component: RootRedirect },
+  { path: "/artists", component: Feed },
+  { path: "/events", lazy: () => import("./pages/Events") },
+  { path: "/map", lazy: () => import("./pages/Map") },
+  { path: "/activity", lazy: () => import("./pages/Activity") },
+  { path: "/about", lazy: () => import("./pages/About") },
+  { path: "/artist/:id", lazy: () => import("./pages/Artist") },
+  { path: "/event/:id", lazy: () => import("./pages/Event") },
+  { path: "*", lazy: () => import("./pages/NotFound") },
+];
+
+export default function App() {
+  return (
+    <Router routes={routes} loading={<div>Loading…</div>}>
+      <AppLayout />
+    </Router>
+  );
+}
+`,
+
+  sonaLayout: `export function AppLayout() {
+  const { path } = useLocation();
+  const fullWidth = path === "/about" || path === "/activity";
+
+  return (
+    <div className="grid h-screen grid-rows-[auto_1fr_auto]">
+      <TopBar />
+      <div className={fullWidth ? "" : "grid lg:grid-cols-[340px_1fr]"}>
+        {!fullWidth && <Sidebar />}
+        <main className="overflow-y-auto">
+          <Outlet />
+        </main>
+      </div>
+      {/* Outside the Outlet, so this never unmounts on navigation — that's
+          how playback keeps going as you move between pages. */}
+      <footer>
+        <Player />
+        <BottomNav />
+      </footer>
+    </div>
+  );
+}
+`,
+
+  sonaPreloadVt: `<li className="group relative ...">
+  <Link
+    to={\`/artist/\${a.id}\`}
+    preload="hover"
+    viewTransition
+    aria-label={a.name}
+    className="absolute inset-0"
+  />
+  {/* ...row content... */}
+</li>
+`,
+
+  sonaParams: `export default function Artist() {
+  const { id } = useParams<{ id: string }>();
+  const artist = id ? getArtist(id) : undefined;
+
+  if (!artist) {
+    return <div>Artist not found.</div>;
+  }
+  // ...self-contained from here: everything the page needs
+  // came from the URL and the static dataset.
+}
+`,
+
+  sonaSearchParams: `// Writes the live center+zoom back to the URL on every move. \`replace\`
+// keeps panning out of the history stack; the pathname-only store means
+// this never remounts the map.
+function ViewSync() {
+  const [, setParams] = useSearchParams();
+  const write = (map: L.Map) => {
+    const c = map.getCenter();
+    setParams(
+      { lat: c.lat.toFixed(4), lng: c.lng.toFixed(4), z: String(map.getZoom()) },
+      { replace: true },
+    );
+  };
+  const map = useMapEvents({ moveend: () => write(map) });
+  return null;
+}
+`,
+
+  sonaRedirect: `function RootRedirect() {
+  // <Navigate> replaces by default, so Back doesn't bounce off "/"
+  // into a redirect loop.
+  return <Navigate to="/artists" />;
+}
+
+const routes: RouteDefinition[] = [
+  { path: "/", component: RootRedirect },
+  // ...
+];
+`,
+
 } as const;
 
 export type SnippetId = keyof typeof snippets;

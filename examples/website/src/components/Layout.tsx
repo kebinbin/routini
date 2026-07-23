@@ -1,5 +1,5 @@
-import { Outlet, useParams } from "routini";
-import { lazy, Suspense } from "react";
+import { Outlet, useLocation, useParams } from "routini";
+import { lazy, Suspense, useLayoutEffect } from "react";
 import { Nav } from "./Nav";
 import { Footer } from "./Footer";
 import { isLang, useT } from "../lib/i18n";
@@ -15,6 +15,23 @@ export function Layout() {
   const t = useT();
   const { lang } = useParams<{ lang?: string }>();
   const unknownLang = lang !== undefined && !isLang(lang);
+
+  // routini leaves scroll handling to the app (out of scope — the "right"
+  // container varies per app, see examples/music-player's AppLayout for a
+  // nested-<main> version of this same fix). Here the scroll container is
+  // just the window, so a client-side navigation otherwise keeps whatever
+  // scroll offset the previous page was at instead of starting at the top.
+  // Skip when there's a hash so anchor links (e.g. the Docs sidebar) still
+  // scroll to their target.
+  const { path } = useLocation();
+  useLayoutEffect(() => {
+    // behavior: "instant" overrides the global `scroll-behavior: smooth`
+    // (index.css) — that's meant for intentional anchor scrolling, not this
+    // reset, which should be an instant jump like a normal page load.
+    if (!window.location.hash) {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+  }, [path]);
   return (
     <div className="flex min-h-screen flex-col">
       {/* Film-grain atmosphere — a fixed, non-interactive texture overlay. */}

@@ -1,10 +1,13 @@
 import { ArrowUpRight } from "lucide-react";
+import { Link } from "routini";
+import { langPath, useLang } from "../lib/i18n";
 import { useHomeT } from "../lib/i18n.home";
 
 const PR_TEMPLATE_URL =
   "https://github.com/kebinbin/routini/issues/new?title=Built+with+routini%3A+";
 
 export function BuiltWith() {
+  const lang = useLang();
   const t = useHomeT();
 
   return (
@@ -17,24 +20,41 @@ export function BuiltWith() {
           {t.builtWith.intro}
         </h2>
 
-        <ul className="grid grid-cols-1 gap-px bg-ink-3 sm:grid-cols-2 md:grid-cols-3">
-          {/* Two ghost placeholders, then the live "Add yours" CTA cell. */}
-          {[0, 1].map((i) => (
-            <li
-              key={i}
-              className="aspect-4/3 flex items-center justify-center bg-ink"
+        <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+          {/* Sona — the routini showcase demo. Links to its case-study page
+              (examples/sona), not straight out to the live app — that page
+              has its own Live demo + Source links plus the write-up. */}
+          <li className="group">
+            <Link
+              to={langPath(lang, "examples/sona")}
+              preload="viewport"
+              viewTransition
+              className="block"
             >
-              <span className="font-mono text-xs text-bone-faint">
-                {t.builtWith.placeholder}
-              </span>
-            </li>
-          ))}
-          <li className="aspect-4/3 bg-ink">
+              <img
+                src="/built-with/sona.webp"
+                alt="Sona.io — a music-discovery app built with routini"
+                className="aspect-video w-full rounded-lg object-cover transition-opacity group-hover:opacity-80"
+                style={{ viewTransitionName: "sona-shot" }}
+              />
+              <div className="flex items-center justify-between gap-2 py-3">
+                <span className="font-mono text-sm text-bone">Sona.io</span>
+                <ArrowUpRight className="h-4 w-4 text-bone-dim transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" />
+              </div>
+            </Link>
+          </li>
+          {/* One ghost placeholder, then the live "Add yours" CTA cell. */}
+          <li className="aspect-video flex items-center justify-center rounded-lg bg-ink-2">
+            <span className="font-mono text-xs text-bone-faint">
+              {t.builtWith.placeholder}
+            </span>
+          </li>
+          <li className="aspect-video overflow-hidden rounded-lg bg-ink-2">
             <a
               href={PR_TEMPLATE_URL}
               target="_blank"
               rel="noreferrer"
-              className="group flex h-full w-full items-center justify-center gap-2 font-mono text-sm text-bone-dim transition-colors hover:bg-ink-2 hover:text-accent"
+              className="group flex h-full w-full items-center justify-center gap-2 font-mono text-sm text-bone-dim transition-colors hover:bg-ink-hover hover:text-accent"
             >
               {t.builtWith.cta}
               <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />

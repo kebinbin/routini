@@ -21,6 +21,11 @@ const routes: RouteDefinition[] = [
     lazy: () => import("./pages/Examples"),
     loading: <PageSkeleton blocks={3} />,
   },
+  {
+    path: "/:lang/examples/sona",
+    lazy: () => import("./pages/SonaCaseStudy"),
+    loading: <PageSkeleton blocks={3} />,
+  },
   { path: "*", lazy: () => import("./pages/NotFound") },
 ];
 
