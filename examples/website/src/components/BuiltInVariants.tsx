@@ -123,14 +123,13 @@ function DeclImpVisual() {
             imperative ? "opacity-100" : "opacity-0"
           }`}
         >
-          <div>
-            {"onClick={() =>"}
-          </div>
+          <div>{"onClick={() => {"}</div>
           <div>
             {"  "}
             <span className={A_TEXT}>navigate</span>
-            {'("/a")}'}
+            {'("/a");'}
           </div>
+          <div>{"}}"}</div>
         </div>
       </div>
     </div>
@@ -256,7 +255,8 @@ const visuals: Record<string, ReactNode> = {
       </div>
       <div className="flex flex-col items-center gap-1.5 opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-coarse:opacity-100">
         <div className={`rounded-lg px-2.5 py-1 text-[11px] text-bone-dim ${CHIP}`}>
-          <span className="text-bone-faint">useParams().</span>id
+          <span className="text-bone-faint">useParams().</span>
+          <span className={A_TEXT}>id</span>
           {" → "}
           <span className={A_TEXT}>&quot;9&quot;</span>
         </div>
@@ -326,8 +326,9 @@ const ORANGE: CSSProperties = {
   ["--viz-accent" as string]: "var(--color-accent)",
 };
 
-// A shared header — pretitle eyebrow + a balanced headline that no longer
-// strands "in the box." on its own line (text-balance + a tuned max-width).
+// A shared header — same eyebrow → headline hierarchy as Highlights/Bundle
+// (text-xs uppercase tracking-[0.2em] accent eyebrow, then a much bigger bold
+// headline), not this section's own smaller/differently-tracked treatment.
 function BentoHeader({
   pretitle,
   intro,
@@ -340,15 +341,10 @@ function BentoHeader({
   const centered = align === "center";
   return (
     <div className={centered ? "mx-auto max-w-3xl text-center" : "max-w-3xl"}>
-      <div
-        className={`flex items-center gap-2.5 ${centered ? "justify-center" : ""}`}
-      >
-        <span className="h-1.5 w-1.5 rounded-full bg-[var(--viz-accent)]" />
-        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-bone-faint">
-          {pretitle}
-        </p>
-      </div>
-      <h2 className="text-balance mt-5 text-3xl font-bold leading-[1.1] tracking-tight text-bone md:text-[2.5rem]">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+        {pretitle}
+      </p>
+      <h2 className="text-balance mt-4 text-4xl font-bold leading-tight tracking-tight text-bone md:text-5xl">
         {intro}
       </h2>
     </div>
@@ -385,11 +381,20 @@ export function BuiltInV1() {
                   to={`${langPath(lang, "/docs")}#${entry.anchor}`}
                   viewTransition
                   className={[
-                    "group relative flex h-full w-full flex-col overflow-hidden rounded-2xl bg-bone/2 p-7 transition-colors duration-300 hover:bg-bone/5",
+                    // Same card object as Highlights/Bundle: hairline border
+                    // + the shared accent glow (below) instead of a flat,
+                    // borderless tint. These ARE links (unlike Highlights),
+                    // so hover keeps a border-lit affordance on top of the
+                    // existing bg shift.
+                    "group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-ink-3 bg-bone/2 p-8 transition-colors duration-300 hover:border-accent/25 hover:bg-bone/5",
                     wide && "lg:flex-row lg:items-center lg:gap-10",
                   ]
                     .filter(Boolean)
                     .join(" ")}
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(90% 70% at 20% 0%, color-mix(in oklab, var(--color-glow) calc(var(--color-glow-alpha-1) * 0.5), transparent) 0%, transparent 70%)",
+                  }}
                 >
                   <div
                     className={[
@@ -407,7 +412,7 @@ export function BuiltInV1() {
                     {visuals[entry.anchor]}
                   </div>
                   <div className={wide ? "lg:order-1 lg:flex-1" : undefined}>
-                    <h3 className="text-[15px] font-semibold tracking-tight text-bone">
+                    <h3 className="text-lg font-semibold tracking-tight text-bone">
                       {entry.name}
                     </h3>
                     <p className="mt-2 text-sm leading-relaxed text-bone-dim">

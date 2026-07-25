@@ -22,7 +22,7 @@ export function InstallCommand() {
     <button
       onClick={copy}
       aria-label={copied ? t.install.copied : t.install.copy}
-      className="group inline-flex items-center gap-3 rounded-full border border-ink-3 bg-ink-2 px-4 py-3 font-mono text-sm text-bone-dim transition-colors hover:border-bone-dim hover:text-bone"
+      className="group inline-flex items-center gap-3 rounded-lg border border-ink-3 bg-ink-2 px-4 py-3 font-mono text-sm text-bone-dim transition-colors hover:border-bone-dim hover:text-bone"
     >
       <span className="text-accent">$</span>
       <span>{COMMAND}</span>

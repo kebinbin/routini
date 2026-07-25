@@ -26,9 +26,19 @@
   --color-bone-dim: #a39b93; /* secondary text */
   --color-bone-faint: #5f574f; /* tertiary text, captions */
 
-  /* Single warm accent — vivid orange, not muted terracotta. Same hue across themes. */
-  --color-accent: #e8720c;
-  --color-accent-dim: #c75f0a;
+  /* Single warm accent — muted coral/terracotta (dialed back from a prior
+     vivid orange, which read too close to generic "AI brand orange"). Same
+     hue across themes. */
+  --color-accent: #d97757;
+  --color-accent-dim: #c2613f;
+
+  /* Ambient-glow (hero background gradient) — same shape/position/size in
+     both themes; color and alpha are the only tokens that differ, since a
+     low alpha overlay has far less contrast against a light background than
+     a dark one (basic alpha-compositing, not fixable by color alone). */
+  --color-glow: var(--color-accent);
+  --color-glow-alpha-1: 9%;
+  --color-glow-alpha-2: 3%;
 }
 
 /* Light theme overrides — applied when [data-theme="light"] is on <html>. */
@@ -40,13 +50,28 @@
   }
 
   [data-theme="light"] {
-    --color-ink: #faf9f7;
-    --color-ink-2: #f3f0ec;
-    --color-ink-hover: #f7f4f0;
-    --color-ink-3: #e7e2db;
+    /* Neutrals nudged subtly deeper + warmer than a near-white (#f0ece4 →
+       these), on purpose: it gives the glow below room to be WHITE and
+       actually lift. A pure-white glow adds brightness with zero chroma, so
+       it can't muddy the way any coral/peach tint did — but it only reads if
+       the surface it sits on is a touch below white, which is what this
+       deepening provides. */
+    --color-ink: #eae3d4;
+    --color-ink-2: #e1dac9;
+    --color-ink-hover: #e6dfcf;
+    --color-ink-3: #d4cbb6;
     --color-bone: #1c1917;
     --color-bone-dim: #6b645c;
     --color-bone-faint: #a8a097;
+
+    /* Same gradient as dark mode, but a LIGHTER WARM CREAM instead of the
+       accent — lighter than the bg so it still lifts, but keeps the warm hue
+       rather than going stark white (pure white read too harsh against the
+       cream palette). Higher alpha than dark's 9%/3% since a light-on-light
+       lift, with less contrast here, needs more presence to register. */
+    --color-glow: #faf5ec;
+    --color-glow-alpha-1: 74%;
+    --color-glow-alpha-2: 32%;
   }
 
   html {
@@ -117,6 +142,31 @@
 
 @utility loader-reveal {
   animation: routini-loader-reveal 0.6s ease forwards;
+}
+
+/* Hero entrance — a soft rise + fade, staggered per element via an inline
+ * animation-delay. `both` holds each hidden until its delay elapses. */
+@keyframes routini-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility rise {
+  animation: routini-rise 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* "Built in" hash-scroll motif: a scroll-spy highlight steps through the section
