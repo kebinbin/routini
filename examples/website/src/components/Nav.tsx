@@ -19,8 +19,7 @@ export function Nav() {
           aria-label="routini home"
         >
           <Logo className="h-5 w-auto" />
-          <span className="text-base font-semibold">routini</span>
-          <span className="text-xs text-bone-faint">v0.1.0</span>
+          <span className="text-xl font-semibold">routini</span>
         </Link>
 
         <nav className="flex items-center gap-6 text-sm text-bone-dim">

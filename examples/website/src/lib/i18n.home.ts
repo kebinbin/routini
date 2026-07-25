@@ -10,7 +10,7 @@ const home = {
       title2: "much more than that.",
       sub: "A tiny router with the syntax you already know, and the features you need — Lazy, code-split routes. View Transitions and error recovery built in. Made for those who want to ship a React app without adopting a whole framework.",
       ctaDocs: "Read the docs",
-      trust: "2.8 KB · Open source · React 18+",
+      trust: "2.8 KB · v0.1.0 · React 18+",
     },
     highlights: {
       pretitle: "Self-contained",
@@ -110,11 +110,11 @@ const home = {
   es: {
     home: {
       pretitle: "Un router pequeño para React",
-      title1: "Routing,",
-      title2: "nada más.",
-      sub: "Un router pequeño con la sintaxis que ya conoces, y las funciones que necesitas — ni más ni menos. Rutas diferidas y divididas por código. Incluye View Transitions y recuperación de errores.",
+      title1: "Solo routing, no",
+      title2: "mucho más que eso.",
+      sub: "Un router pequeño con la sintaxis que ya conoces, y las funciones que necesitas — rutas lazy y divididas por código. Incluye View Transitions y recuperación de errores. Pensado para quienes quieren lanzar una app de React sin adoptar un framework completo.",
       ctaDocs: "Leer la documentación",
-      trust: "2.8 KB · Código abierto · React 18+",
+      trust: "2.8 KB · v0.1.0 · React 18+",
     },
     highlights: {
       pretitle: "Autocontenida",
@@ -123,7 +123,7 @@ const home = {
       items: [
         {
           name: "Solo routing",
-          desc: "Una librería de routing mínima, no un framework — mapea URLs a componentes y nada más. Maneja tú el fetching de datos, el estado y el build.",
+          desc: "Una librería mínima que cubre lo esencial del routing, no un framework. Maneja tú el fetching de datos, el estado y el build.",
         },
         {
           name: "Sin esfuerzo",

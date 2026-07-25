@@ -169,6 +169,22 @@
   }
 }
 
+/* Device bezel — a glass-like frame around a screenshot/thumbnail (the
+ * appwrite-style "screen inside a device" look): a thin semi-transparent
+ * border + a subtle inset top highlight. Direction flips per theme: dark
+ * mode wants a LIGHT line (catches light against a dark surface); light
+ * mode needs a DARK one instead, or it's invisible/backwards on a bright
+ * page. Pair with a `border` + rounded-* + padding on the element. */
+.bezel {
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme="light"] .bezel {
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.05);
+}
+
 /* "Built in" hash-scroll motif: a scroll-spy highlight steps through the section
  * bars on hover — bars 1–3 pulse in turn (this keyframe), and the 4th (the
  * #section target) fades in and holds via a delayed transition. */

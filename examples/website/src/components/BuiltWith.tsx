@@ -24,24 +24,28 @@ export function BuiltWith() {
         </h2>
 
         <ul className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 md:mt-16 md:grid-cols-3">
-          {/* Sona — the routini showcase demo. Same card object as the rest
-              of the page (hairline border, rounded corners) instead of a
-              bare image + caption with no frame: the image fills the top,
-              a padded caption row sits below — a product-card pattern. */}
-          <li className="group overflow-hidden rounded-2xl border border-ink-3 transition-colors duration-300 hover:border-accent/25">
+          {/* Sona — the routini showcase demo. The image sits inside a
+              device BEZEL (a glass frame, like a screenshot on a real
+              device) — not a bordered card wrapping image + text together.
+              The caption lives outside/below the bezel, as its own row. */}
+          <li className="group">
             <Link
               to={langPath(lang, "examples/sona")}
               preload="viewport"
               viewTransition
               className="block"
             >
-              <img
-                src="/built-with/sona.webp"
-                alt="Sona.io — a music-discovery app built with routini"
-                className="aspect-video w-full object-cover transition-opacity group-hover:opacity-80"
+              <div
+                className="bezel relative overflow-hidden rounded-2xl border bg-bone/6 p-2.5 shadow-[0_20px_50px_-24px_rgba(0,0,0,0.5)] backdrop-blur-sm"
                 style={{ viewTransitionName: "sona-shot" }}
-              />
-              <div className="flex items-center justify-between gap-2 bg-bone/2 px-4 py-3">
+              >
+                <img
+                  src="/built-with/sona.webp"
+                  alt="Sona.io — a music-discovery app built with routini"
+                  className="aspect-video w-full rounded-lg object-cover transition-opacity group-hover:opacity-80"
+                />
+              </div>
+              <div className="flex items-center justify-between gap-2 pt-3 px-3">
                 <span className="text-sm font-medium text-bone">Sona.io</span>
                 <ArrowUpRight className="h-4 w-4 text-bone-dim transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" />
               </div>

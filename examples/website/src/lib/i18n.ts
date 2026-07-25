@@ -20,13 +20,13 @@ export function isLang(value: unknown): value is Lang {
 const global = {
   en: {
     nav: { docs: "docs", examples: "examples", github: "GitHub" },
-    footer: { builtWith: "built with" },
+    footer: { builtWith: "built with", builtBy: "built by" },
     install: { copy: "Copy install command", copied: "Copied" },
     skipToContent: "Skip to content",
   },
   es: {
     nav: { docs: "docs", examples: "ejemplos", github: "GitHub" },
-    footer: { builtWith: "hecho con" },
+    footer: { builtWith: "hecho con", builtBy: "hecho por" },
     install: { copy: "Copiar comando de instalación", copied: "Copiado" },
     skipToContent: "Saltar al contenido",
   },

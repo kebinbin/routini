@@ -16,13 +16,11 @@ export function Layout() {
   const { lang } = useParams<{ lang?: string }>();
   const unknownLang = lang !== undefined && !isLang(lang);
 
-  // routini leaves scroll handling to the app (out of scope — the "right"
-  // container varies per app, see examples/music-player's AppLayout for a
-  // nested-<main> version of this same fix). Here the scroll container is
-  // just the window, so a client-side navigation otherwise keeps whatever
-  // scroll offset the previous page was at instead of starting at the top.
-  // Skip when there's a hash so anchor links (e.g. the Docs sidebar) still
-  // scroll to their target.
+  // routini leaves scroll handling to the app. Client-side nav otherwise
+  // keeps the previous scroll offset instead of starting at top. Skip when
+  // there's a hash so anchor links still scroll to their target.
+  // Known issue: also fires on back/forward, overriding native scroll
+  // restoration. Left as-is for now.
   const { path } = useLocation();
   useLayoutEffect(() => {
     // behavior: "instant" overrides the global `scroll-behavior: smooth`

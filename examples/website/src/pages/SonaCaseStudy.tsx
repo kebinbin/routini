@@ -62,17 +62,19 @@ export default function SonaCaseStudy() {
         </div>
       </header>
 
+      {/* Same device bezel as the home page's "Built with routini" card —
+          a glass frame around the image, not a bare screenshot. */}
       <a
         href={SONA_LIVE_URL}
         target="_blank"
         rel="noreferrer"
-        className="mb-16 block md:mb-24"
+        className="bezel relative mb-16 block overflow-hidden rounded-2xl border bg-bone/6 p-2.5 shadow-[0_20px_50px_-24px_rgba(0,0,0,0.5)] backdrop-blur-sm md:mb-24"
+        style={{ viewTransitionName: "sona-shot" }}
       >
         <img
           src="/built-with/sona.webp"
           alt="Sona.io — a music-discovery app built with routini"
           className="aspect-video w-full rounded-lg object-cover"
-          style={{ viewTransitionName: "sona-shot" }}
         />
       </a>
 
