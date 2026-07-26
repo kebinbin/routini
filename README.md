@@ -8,7 +8,7 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/routini"><img src="https://img.shields.io/npm/v/routini.svg" alt="npm version"></a>
   <a href="https://github.com/kebinbin/routini/actions/workflows/ci.yml"><img src="https://github.com/kebinbin/routini/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <img src="https://img.shields.io/badge/bundle-2.8%20KB%20gzip-success" alt="bundle size">
+  <img src="https://img.shields.io/badge/bundle-3.2%20KB%20gzip-success" alt="bundle size">
   <a href="https://github.com/kebinbin/routini/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="license"></a>
 </p>
 
@@ -16,9 +16,9 @@ A tiny router for React with lazy, code-split routes, View Transitions, and erro
 
 > Small to ship, scoped to one job, free of setup ceremony.
 
-~2.8 KB gzipped · **zero runtime dependencies** · 9 exports. Lazy routes, an
-error boundary, View Transitions, reactive search params, and link preloading
-all ship in the box.
+~3.2 KB gzipped · **zero runtime dependencies** · 9 exports. Lazy routes, an
+error boundary, View Transitions, reactive search params, scroll restoration,
+and link preloading all ship in the box.
 
 ## Contents
 
