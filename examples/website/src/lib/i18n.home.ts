@@ -10,7 +10,6 @@ const home = {
       title2: "much more than that.",
       sub: "A tiny router with the syntax you already know, and the features you need — Lazy, code-split routes. View Transitions and error recovery built in. Made for those who want to ship a React app without adopting a whole framework.",
       ctaDocs: "Read the docs",
-      trust: "3.2 KB · v0.1.0 · React 18+",
     },
     highlights: {
       pretitle: "Self-contained",
@@ -114,7 +113,6 @@ const home = {
       title2: "mucho más que eso.",
       sub: "Un router pequeño con la sintaxis que ya conoces, y las funciones que necesitas — rutas lazy y divididas por código. Incluye View Transitions y recuperación de errores. Pensado para quienes quieren lanzar una app de React sin adoptar un framework completo.",
       ctaDocs: "Leer la documentación",
-      trust: "3.2 KB · v0.1.0 · React 18+",
     },
     highlights: {
       pretitle: "Autocontenida",

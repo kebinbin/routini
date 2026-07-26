@@ -31,7 +31,7 @@ const routes: RouteDefinition[] = [
 
 export default function App() {
   return (
-    <Router routes={routes} loading={<PageLoading />}>
+    <Router routes={routes} loading={<PageLoading />} scrollRestoration>
       <Layout />
     </Router>
   );

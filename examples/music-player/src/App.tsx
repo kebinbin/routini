@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Navigate, Router, type RouteDefinition } from "routini";
 import { AppLayout } from "./components/AppLayout";
 import Feed from "./pages/Feed";
@@ -21,12 +22,18 @@ const routes: RouteDefinition[] = [
 ];
 
 export default function App() {
+  // AppLayout scrolls its own <main>, not the window, so Router needs that
+  // element to apply scroll restoration to it instead.
+  const mainRef = useRef<HTMLElement>(null);
+
   return (
     <Router
       routes={routes}
       loading={<div className="p-6 text-sm text-text-faint">Loading…</div>}
+      scrollRestoration
+      scrollContainer={mainRef}
     >
-      <AppLayout />
+      <AppLayout mainRef={mainRef} />
     </Router>
   );
 }
