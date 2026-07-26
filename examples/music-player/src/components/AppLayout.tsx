@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { Link, Outlet, useLocation } from "routini";
 import { Player } from "../player/Player";
 import { setTheme, useTheme } from "../lib/theme";
@@ -314,23 +314,13 @@ function BottomNav() {
   );
 }
 
-export function AppLayout() {
+export function AppLayout({ mainRef }: { mainRef: RefObject<HTMLElement | null> }) {
   // Read the path so a page can opt out of the "For you" sidebar and take the
   // full width (About has its own section nav; Activity is the full-page feed).
   const { path } = useLocation();
   // About/Activity have their own full-width layouts; the discovery lenses
   // (Artists, Events, Map) all keep the "For you" sidebar.
   const fullWidth = path === "/about" || path === "/activity";
-
-  // routini leaves scroll handling to the app (out of scope), and our scroll
-  // container is <main>, not the window — so a client-side navigation keeps the
-  // previous scroll offset. Reset <main> to the top on each pathname change;
-  // skip it when there's a hash so anchor links (e.g. About's section nav) still
-  // scroll to their target.
-  const mainRef = useRef<HTMLElement>(null);
-  useLayoutEffect(() => {
-    if (!window.location.hash) mainRef.current?.scrollTo({ top: 0 });
-  }, [path]);
 
   return (
     <div className="grid h-screen grid-rows-[auto_1fr_auto] bg-bg">

@@ -1,4 +1,5 @@
 import { Link } from "routini";
+import { version } from "routini/package.json";
 import { ArrowRight } from "lucide-react";
 import HIGHLIGHTED from "virtual:highlighted-snippets";
 import { InstallCommand } from "../components/InstallCommand";
@@ -72,7 +73,7 @@ export default function Home() {
             style={{ animationDelay: "70ms" }}
           >
             <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-accent" />
-            {t.home.trust}
+            3.2 KB · v{version} · React 18+
           </div>
 
           {/* Headline — single line, single color */}

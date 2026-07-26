@@ -1,3 +1,4 @@
+import { version } from "routini/package.json";
 import { Logo } from "./Logo";
 import { useT } from "../lib/i18n";
 
@@ -10,7 +11,7 @@ export function Footer() {
           <Logo className="h-4 w-auto text-bone-faint" />
           <p>
             {t.footer.builtWith} <span className="text-accent">routini</span>{" "}
-            · v0.1.0 · MIT · © 2026
+            · v{version} · MIT · © 2026
           </p>
         </div>
         <div className="flex items-center gap-4">
