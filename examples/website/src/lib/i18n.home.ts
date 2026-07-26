@@ -10,7 +10,7 @@ const home = {
       title2: "much more than that.",
       sub: "A tiny router with the syntax you already know, and the features you need — Lazy, code-split routes. View Transitions and error recovery built in. Made for those who want to ship a React app without adopting a whole framework.",
       ctaDocs: "Read the docs",
-      trust: "2.8 KB · v0.1.0 · React 18+",
+      trust: "3.2 KB · v0.1.0 · React 18+",
     },
     highlights: {
       pretitle: "Self-contained",
@@ -34,7 +34,7 @@ const home = {
     bundle: {
       pretitle: "Small on purpose",
       headline: "Tiny by design.",
-      sub: "Small to ship, scoped to one job, free of setup ceremony — the whole router in 2.8 KB gzipped, with zero runtime dependencies.",
+      sub: "Small to ship, scoped to one job, free of setup ceremony — the whole router in 3.2 KB gzipped, with zero runtime dependencies.",
       compare:
         "routini is scoped to routing, so it stays small. The bigger routers add loaders, type-safe routes, and SSR for when you need them.",
     },
@@ -114,7 +114,7 @@ const home = {
       title2: "mucho más que eso.",
       sub: "Un router pequeño con la sintaxis que ya conoces, y las funciones que necesitas — rutas lazy y divididas por código. Incluye View Transitions y recuperación de errores. Pensado para quienes quieren lanzar una app de React sin adoptar un framework completo.",
       ctaDocs: "Leer la documentación",
-      trust: "2.8 KB · v0.1.0 · React 18+",
+      trust: "3.2 KB · v0.1.0 · React 18+",
     },
     highlights: {
       pretitle: "Autocontenida",
@@ -138,7 +138,7 @@ const home = {
     bundle: {
       pretitle: "Pequeño a propósito",
       headline: "Diminuto por diseño.",
-      sub: "Ligera al enviar, enfocada en una sola tarea, sin ceremonia — todo el router en 2.8 KB comprimido, con cero dependencias en runtime.",
+      sub: "Ligera al enviar, enfocada en una sola tarea, sin ceremonia — todo el router en 3.2 KB comprimido, con cero dependencias en runtime.",
       compare:
         "routini se enfoca en el routing, por eso es pequeña. Los routers grandes añaden loaders, rutas tipadas y SSR para cuando los necesitas.",
     },

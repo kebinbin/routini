@@ -182,7 +182,7 @@ export default function About() {
 
           <Section id="routini" title="How routini is used">
             <p>
-              routini ships eight exports and a handful of features; here's each
+              routini ships nine exports and a handful of features; here's each
               one Sona exercises and how:
             </p>
             <ul className="mt-4 flex flex-col gap-4">

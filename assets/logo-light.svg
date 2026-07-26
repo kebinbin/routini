@@ -1,13 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 48" fill="none" stroke="#0a0a0a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="routini">
-  <g transform="translate(0, 7)">
-    <line x1="8"  y1="17" x2="40"   y2="17" />
-    <line x1="24" y1="17" x2="35.3" y2="28.3" />
-    <line x1="40" y1="17" x2="51.3" y2="5.7" />
-    <circle cx="8"    cy="17"   r="3" fill="#0a0a0a" />
-    <circle cx="24"   cy="17"   r="3" fill="#0a0a0a" />
-    <circle cx="35.3" cy="28.3" r="3" fill="#0a0a0a" />
-    <circle cx="40"   cy="17"   r="3" fill="#ffffff" />
-    <circle cx="51.3" cy="5.7"  r="3" fill="#ffffff" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 205 48" fill="none" stroke="#1c1917" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="routini">
+  <g transform="translate(2, 7)">
+    <line x1="11" y1="17" x2="37" y2="17" />
+    <line x1="26.12" y1="19.12" x2="32.88" y2="25.88" />
+    <line x1="42.12" y1="14.88" x2="48.88" y2="8.12" />
+    <circle cx="8"  cy="17" r="3" fill="#1c1917" />
+    <circle cx="24" cy="17" r="3" fill="#1c1917" />
+    <circle cx="35" cy="28" r="3" fill="#1c1917" />
+    <circle cx="40" cy="17" r="3" />
+    <circle cx="51" cy="6"  r="3" />
   </g>
-  <text x="72" y="34" fill="#0a0a0a" stroke="none" font-family="&quot;Geist Mono&quot;, ui-monospace, &quot;SF Mono&quot;, Menlo, monospace" font-size="28">routini</text>
+  <text x="72" y="33" fill="#1c1917" stroke="none" font-family="&quot;Acumin Pro&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif" font-size="27" font-weight="600" letter-spacing="-0.6">routini</text>
 </svg>

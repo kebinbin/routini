@@ -17,6 +17,10 @@ import { isRouteType } from "./Route";
 import { RouteErrorBoundary, type ErrorFallback } from "./RouteErrorBoundary";
 import { markChunkError } from "../utils/isChunkError";
 import { withViewTransition } from "../utils/viewTransition";
+import {
+  installScrollRestoration,
+  applyPendingScroll,
+} from "../utils/scrollRestoration";
 
 export type DynamicImport = () => Promise<{ default: React.ComponentType }>;
 
@@ -41,6 +45,17 @@ export interface RouterProps {
   errorFallback?: ErrorFallback;
   /** Called when a route errors — for logging/telemetry (e.g. Sentry). */
   onError?: (error: Error, info: React.ErrorInfo) => void;
+  /**
+   * Opt in to scroll restoration: scroll to top on a forward navigation,
+   * restore the previous position on back/forward. Scrolls the window unless
+   * `scrollContainer` is given.
+   */
+  scrollRestoration?: boolean;
+  /**
+   * The scrollable element to restore, when it isn't the window — e.g. a
+   * `<main>` inside a fixed layout. Only used with `scrollRestoration`.
+   */
+  scrollContainer?: React.RefObject<Element | null>;
 }
 
 // Lazy-route resolution keyed by import thunk. routini resolves chunks itself
@@ -192,6 +207,8 @@ export function Router({
   ssrPath,
   errorFallback,
   onError,
+  scrollRestoration = false,
+  scrollContainer,
 }: RouterProps) {
   // React 18+ subscribes to the URL via useSyncExternalStore. Compared to the
   // older useState + useEffect pattern, this eliminates a race where a child
@@ -208,6 +225,19 @@ export function Router({
   // Bumped by the error boundary's reset() to force a fresh render (and a fresh
   // lazy import) after we've dropped the cached component.
   const [, forceRetry] = useReducer((n: number) => n + 1, 0);
+
+  // Opt-in scroll restoration. install/teardown tracks positions + events;
+  // the layout effect applies the queued scroll after the route commits (keyed
+  // on pathname, so query-only navigations don't reset scroll). The container
+  // ref is read lazily, so it resolves to the live element even if it mounts
+  // after the Router.
+  useEffect(() => {
+    if (scrollRestoration)
+      return installScrollRestoration(() => scrollContainer?.current ?? window);
+  }, [scrollRestoration, scrollContainer]);
+  useIsomorphicLayoutEffect(() => {
+    if (scrollRestoration) applyPendingScroll();
+  }, [scrollRestoration, currentPath]);
 
   // Memoized so a stable `routes` prop yields a stable list — keeping both
   // matchRoute's input and the preloadPath callback below stable, and avoiding
