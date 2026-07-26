@@ -17,6 +17,8 @@ const RECIPES: { anchor: string; snippet: SnippetId }[] = [
   { anchor: "active-nav", snippet: "activeNav" },
   { anchor: "redirects-404", snippet: "redirects404" },
   { anchor: "programmatic-nav", snippet: "navigateFromCode" },
+  { anchor: "scroll-restoration", snippet: "scrollRestoration" },
+  { anchor: "package-version", snippet: "packageVersion" },
 ];
 
 export default function Examples() {

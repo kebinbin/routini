@@ -331,6 +331,31 @@ function ProductSearch() {
 }
 `,
 
+  scrollRestoration: `import { Router } from "routini";
+
+// Scrolls to top on a forward nav, restores the previous
+// offset on back/forward. Off by default.
+<Router routes={routes} scrollRestoration />
+
+// Scrolling a nested container instead of the window?
+// Point it at the element.
+const mainRef = useRef<HTMLElement>(null);
+
+<Router routes={routes} scrollRestoration scrollContainer={mainRef} />
+<main ref={mainRef}>
+  <Outlet />
+</main>
+`,
+
+  packageVersion: `import { version } from "routini/package.json";
+
+// Read the installed version straight from the package —
+// no copy to keep in sync by hand.
+function Footer() {
+  return <span>routini v{version}</span>;
+}
+`,
+
   overview: `import { Router, Link, useParams, navigate } from "routini";
 import Home from "./pages/Home";
 
