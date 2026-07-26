@@ -127,14 +127,6 @@ const DOCS_ENTRIES: DocEntry[] = [
     group: "guides",
     since: "0.2.0",
   },
-  {
-    anchor: "reading-version",
-    name: "Reading the version",
-    signature: 'import { version } from "routini/package.json"',
-    snippet: "packageVersion",
-    group: "guides",
-    since: "0.2.0",
-  },
 ];
 
 interface DocsEntryContent {

@@ -1,4 +1,5 @@
 import { useHomeT } from "../lib/i18n.home";
+import { BUNDLE_SIZE_KB } from "../lib/meta";
 import { BundleChart } from "./BundleChart";
 
 // The size story gets its own section (rather than being crammed into a feature
@@ -19,7 +20,7 @@ export function Bundle() {
           {t.bundle.headline}
         </h2>
         <p className="text-pretty mx-auto mt-5 max-w-2xl text-center text-base leading-relaxed text-bone-dim sm:text-lg">
-          {t.bundle.sub}
+          {t.bundle.sub.replace("{size}", `${BUNDLE_SIZE_KB} KB`)}
         </p>
 
         <div className="mx-auto mt-12 max-w-3xl md:mt-16">

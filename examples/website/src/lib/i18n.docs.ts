@@ -317,12 +317,6 @@ const docs = {
           "Each history entry gets its own cached offset, restored when you return to it — not just \"remember the last scroll position.\"",
         ],
       },
-      "reading-version": {
-        body: 'The installed version is available straight from the package, so a footer or an about page never drifts out of sync with a hand-copied string.',
-        notes: [
-          'Reads from routini\'s own package.json via the exports map — no separate version constant to maintain.',
-        ],
-      },
     },
   },
   es: {
@@ -637,12 +631,6 @@ const docs = {
         notes: [
           "Se indexa por el pathname, así que una navegación de solo-query (useSearchParams) nunca resetea el scroll.",
           "Cada entrada del historial guarda su propio offset, restaurado al volver a ella — no solo \"recordar la última posición\".",
-        ],
-      },
-      "reading-version": {
-        body: "La versión instalada está disponible directamente desde el paquete, así que un footer o una página about nunca se desincroniza de una cadena copiada a mano.",
-        notes: [
-          "Se lee desde el propio package.json de routini vía el exports map — sin una constante de versión separada que mantener.",
         ],
       },
     },

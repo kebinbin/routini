@@ -62,10 +62,6 @@ const examples = {
           title: "Scroll restoration",
           body: "Opt in with scrollRestoration on <Router>: forward navigations start at the top, back/forward returns to where you left off. Pass scrollContainer to scroll a nested element instead of the window.",
         },
-        "package-version": {
-          title: "Read the installed version",
-          body: "Import version from routini/package.json — a footer or about page stays in sync with the installed package, no copy to update by hand.",
-        },
       },
       apps: {
         sona: { name: "Sona.io" },
@@ -130,10 +126,6 @@ const examples = {
         "scroll-restoration": {
           title: "Restauración de scroll",
           body: "Actívala con scrollRestoration en <Router>: las navegaciones hacia adelante empiezan arriba, y atrás/adelante te devuelve a donde estabas. Pasa scrollContainer para hacer scroll en un elemento anidado en vez de la ventana.",
-        },
-        "package-version": {
-          title: "Leer la versión instalada",
-          body: "Importa version desde routini/package.json — un footer o página about se mantiene sincronizado con el paquete instalado, sin una copia que actualizar a mano.",
         },
       },
       apps: {

@@ -347,15 +347,6 @@ const mainRef = useRef<HTMLElement>(null);
 </main>
 `,
 
-  packageVersion: `import { version } from "routini/package.json";
-
-// Read the installed version straight from the package —
-// no copy to keep in sync by hand.
-function Footer() {
-  return <span>routini v{version}</span>;
-}
-`,
-
   overview: `import { Router, Link, useParams, navigate } from "routini";
 import Home from "./pages/Home";
 
