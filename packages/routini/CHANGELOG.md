@@ -1,5 +1,13 @@
 # routini
 
+## 0.2.1
+
+### Patch Changes
+
+- ec6c775: Fix `scrollRestoration` animating instead of jumping when the page sets
+  `scroll-behavior: smooth` in CSS (e.g. for anchor links). Restoration now
+  always scrolls instantly, matching native browser navigation.
+
 ## 0.2.0
 
 ### Minor Changes
