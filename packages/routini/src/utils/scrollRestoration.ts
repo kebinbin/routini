@@ -30,7 +30,11 @@ let getTarget: GetTarget = () => window;
 let prevNativeRestoration: History["scrollRestoration"] | undefined;
 
 const offsetOf = (t: Target) => (t === window ? window.scrollY : (t as Element).scrollTop);
-const scrollTargetTo = (t: Target, top: number) => t.scrollTo({ top });
+// "instant" forces a jump regardless of the page's own `scroll-behavior: smooth`
+// (e.g. for anchor links) — restoration emulates native navigation, which never
+// animates: a fresh page load doesn't glide to the top, and back/forward doesn't
+// glide to the old position, it just lands there.
+const scrollTargetTo = (t: Target, top: number) => t.scrollTo({ top, behavior: "instant" });
 
 function entryId(): number | undefined {
   const id = (window.history.state as Record<string, unknown> | null)?.[KEY];

@@ -59,7 +59,7 @@ describe("scroll restoration", () => {
   it("scrolls to top on a forward navigation", () => {
     render(<Router routes={routes} scrollRestoration />);
     act(() => navigate("/about"));
-    expect(scrollToSpy).toHaveBeenCalledWith({ top: 0 });
+    expect(scrollToSpy).toHaveBeenCalledWith({ top: 0, behavior: "instant" });
   });
 
   it("restores the saved position on back/forward", () => {
@@ -72,7 +72,7 @@ describe("scroll restoration", () => {
     scrollToSpy.mockClear();
     popTo(homeState, "/"); // back to home
 
-    expect(scrollToSpy).toHaveBeenCalledWith({ top: 500 });
+    expect(scrollToSpy).toHaveBeenCalledWith({ top: 500, behavior: "instant" });
   });
 
   it("does not reset scroll on a query-only navigation", () => {
@@ -99,7 +99,7 @@ describe("scroll restoration", () => {
     el.scrollTo = scrollElTo as unknown as typeof el.scrollTo;
 
     act(() => navigate("/about"));
-    expect(scrollElTo).toHaveBeenCalledWith({ top: 0 });
+    expect(scrollElTo).toHaveBeenCalledWith({ top: 0, behavior: "instant" });
     expect(scrollToSpy).not.toHaveBeenCalled(); // window untouched
   });
 });
