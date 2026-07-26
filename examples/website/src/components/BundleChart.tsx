@@ -1,16 +1,18 @@
 import { useEffect, useRef, useState } from "react";
+import { BUNDLE_SIZE_KB } from "../lib/meta";
 
 /**
  * Bundle-size comparison, Astro-style horizontal bars.
  *
  * Sizes are minified + gzipped. Competitor figures are from bundlephobia
- * (verified 2026-05-30, versions noted below); routini is measured locally the
- * same way (terser --compress --mangle, react external, gzip) via `npm run
- * size` since it is not yet published — keep this in sync with the i18n copy.
+ * (verified 2026-05-30, versions noted below); routini's figure comes from
+ * BUNDLE_SIZE_KB (lib/meta.ts) — the one source both this chart and the
+ * "Small on purpose" copy read from, measured locally the same way (terser
+ * --compress --mangle, react external, gzip) via `npm run size`.
  *
  *   React Router    react-router-dom@7.16.0   59.97 KB
  *   TanStack Router @tanstack/react-router@1.170.10  39.3 KB
- *   routini  (error boundary, View Transitions, preload, search params, scroll restoration, lazy resolver)  3.20 KB
+ *   routini  (error boundary, View Transitions, preload, search params, scroll restoration, lazy resolver)  see BUNDLE_SIZE_KB
  *
  * Measured against the full-featured routers people weigh routini against. They
  * carry much more — loaders, a data layer, type-safe routing, SSR — so they're
@@ -20,7 +22,12 @@ import { useEffect, useRef, useState } from "react";
  * framework. Ordered smallest → largest; routini is highlighted as the reference.
  */
 const ENTRIES = [
-  { name: "routini", kb: 3.2, label: "3.2 KB", highlight: true },
+  {
+    name: "routini",
+    kb: BUNDLE_SIZE_KB,
+    label: `${BUNDLE_SIZE_KB} KB`,
+    highlight: true,
+  },
   { name: "TanStack Router", kb: 39.3, label: "39 KB" },
   { name: "React Router", kb: 59.97, label: "60 KB" },
 ] as const;
