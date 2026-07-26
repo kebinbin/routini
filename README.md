@@ -16,7 +16,7 @@ A tiny router for React with lazy, code-split routes, View Transitions, and erro
 
 > Small to ship, scoped to one job, free of setup ceremony.
 
-~2.8 KB gzipped · **zero runtime dependencies** · 8 exports. Lazy routes, an
+~2.8 KB gzipped · **zero runtime dependencies** · 9 exports. Lazy routes, an
 error boundary, View Transitions, reactive search params, and link preloading
 all ship in the box.
 
@@ -31,6 +31,8 @@ all ship in the box.
 - [Catch-all Route](#catch-all-route)
 - [View Transitions](#view-transitions)
 - [Preloading](#preloading)
+- [Scroll restoration](#scroll-restoration)
+- [Reading the version](#reading-the-version)
 - [Philosophy](#philosophy)
 - [What's not in scope](#whats-not-in-scope)
 - [Performance](#performance)
@@ -79,6 +81,7 @@ The root component. Provides routing context to all children.
   routes={routes} // route definitions array
   loading={<Spinner />} // global loading fallback for lazy routes
   errorFallback={<Oops />} // shown when a route fails to load or throws
+  scrollRestoration // top on forward nav, restore on back/forward (opt-in)
 >
   {children}
 </Router>
@@ -463,6 +466,43 @@ however many links point at it. A failed preload is swallowed silently; the real
 navigation still surfaces the error through the
 [error boundary](#error-handling).
 
+## Scroll restoration
+
+Opt in with `<Router scrollRestoration>`: forward navigations scroll to the top,
+and back/forward restores the position you'd scrolled to — the behavior most
+SPAs want. It's off by default (nothing scrolls on navigation unless you ask).
+
+```tsx
+<Router routes={routes} scrollRestoration />
+```
+
+The router is the right place for this because only it knows the navigation
+*type* (a link click vs. the back button), which is exactly what's needed to
+decide "scroll to top" vs. "restore." It keys positions on the pathname, so
+query-only navigations (search params) don't reset scroll.
+
+By default it restores the **window** scroll. If your layout scrolls a nested
+element instead (e.g. a `<main>` inside a fixed shell), point it there:
+
+```tsx
+const scrollRef = useRef<HTMLElement>(null);
+
+<Router routes={routes} scrollRestoration scrollContainer={scrollRef} />;
+<main ref={scrollRef}>{/* the actual scroll container */}</main>;
+```
+
+Restores best when the target route's content is present on navigation. For an
+uncached lazy route that suspends on back, the restore lands once the chunk is
+warm — pair with [`preload`](#preloading) to keep it instant.
+
+## Reading the version
+
+`package.json` is exported, so you can read the installed version:
+
+```ts
+import { version } from "routini/package.json";
+```
+
 ## Philosophy
 
 **Pages are self-contained.** Routes get their data from:
@@ -479,7 +519,7 @@ clean React architecture.
 **Lazy by default.** Every page-level route should use `lazy`.
 Only use `component` for routes that must be eagerly loaded.
 
-**Minimal API.** Routini has 8 exports and nothing more.
+**Minimal API.** Routini has 9 exports and nothing more.
 No loaders, no actions, no data fetching — just routing.
 
 ## What's not in scope

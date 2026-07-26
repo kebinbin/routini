@@ -23,18 +23,24 @@ export function navigate(to: string, options: NavigateOptions = {}) {
 
   const { replace, viewTransition } = options;
 
-  // When animating, record it in history.state so a later back/forward to this
-  // entry replays the transition (popstate has no call site to carry the intent).
-  const state = viewTransition ? { [VIEW_TRANSITION_STATE_KEY]: true } : {};
+  const vt = viewTransition ? { [VIEW_TRANSITION_STATE_KEY]: true } : undefined;
 
   const update = () => {
     // Tag the entry we're leaving too (same URL), so going *back* to it also
     // animates — both ends of an animated edge carry the flag. Skipped on
-    // replace, where there's no separate entry to return to.
+    // replace, where there's no separate entry to return to. Merged into the
+    // existing state so it doesn't drop other keys (e.g. the scroll id).
     if (viewTransition && !replace) {
-      window.history.replaceState(state, "", window.location.href);
+      window.history.replaceState(
+        { ...window.history.state, ...vt },
+        "",
+        window.location.href,
+      );
     }
-    window.history[replace ? "replaceState" : "pushState"](state, "", to);
+    // push mints a fresh entry; replace keeps the current entry's state (incl.
+    // its scroll id) and just layers the View Transition tag on top.
+    const state = replace ? { ...window.history.state, ...vt } : vt;
+    window.history[replace ? "replaceState" : "pushState"](state ?? {}, "", to);
     window.dispatchEvent(new Event(EVENTS.NAVIGATE)); // Emit event to listening router.
   };
 

@@ -81,10 +81,11 @@ function Breadcrumb() {
 }
 `,
 
-  apiSurface: `// Seven exports. That's the entire API.
+  apiSurface: `// Nine exports. That's the entire API.
 import {
-  Router, Route, Link, Outlet,
-  Navigate, useLocation, useParams,
+  Router, Route, Link, Outlet, Navigate,
+  useLocation, useParams, useSearchParams,
+  navigate,
 } from "routini";
 `,
 

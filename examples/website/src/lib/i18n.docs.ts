@@ -7,7 +7,7 @@ const docs = {
     docs: {
       pretitle: "/docs",
       title: "API reference",
-      sub: "Eight exports and one utility — the whole router. Each entry has a signature, a working example, and where it fits.",
+      sub: "Nine exports — the whole router. Each entry has a signature, a working example, and where it fits.",
       onThisPage: "On this page",
       groups: {
         components: "Components",
@@ -304,7 +304,7 @@ const docs = {
     docs: {
       pretitle: "/docs",
       title: "Referencia del API",
-      sub: "Ocho exports y una utilidad — todo el router. Cada entrada tiene una firma, un ejemplo funcional y dónde encaja.",
+      sub: "Nueve exports — todo el router. Cada entrada tiene una firma, un ejemplo funcional y dónde encaja.",
       onThisPage: "En esta página",
       groups: {
         components: "Componentes",
