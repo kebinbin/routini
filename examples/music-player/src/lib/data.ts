@@ -59,7 +59,7 @@ export interface MusicEvent {
 const POOL = [
   {
     "title": "Amanecer",
-    "album": "buena-vista",
+    "album": "le-chant-des-stompbox",
     "albumName": "Le chant des Stompbox",
     "track": 4,
     "year": 2021,
@@ -67,7 +67,7 @@ const POOL = [
   },
   {
     "title": "Calle Sin Nombre",
-    "album": "buena-vista",
+    "album": "le-chant-des-stompbox",
     "albumName": "Le chant des Stompbox",
     "track": 1,
     "year": 2019,
@@ -75,7 +75,7 @@ const POOL = [
   },
   {
     "title": "Bajo la Lluvia",
-    "album": "plenero",
+    "album": "nfamoudou-boudougou",
     "albumName": "Nfamoudou-Boudougou",
     "track": 6,
     "year": 2019,
@@ -83,7 +83,7 @@ const POOL = [
   },
   {
     "title": "Raíz",
-    "album": "ile",
+    "album": "you-know-where-to-find-me",
     "albumName": "You Know Where to Find Me",
     "track": 2,
     "year": 2023,
@@ -91,7 +91,7 @@ const POOL = [
   },
   {
     "title": "Mar de Fondo",
-    "album": "buena-vista",
+    "album": "le-chant-des-stompbox",
     "albumName": "Le chant des Stompbox",
     "track": 5,
     "year": 2023,
@@ -99,7 +99,7 @@ const POOL = [
   },
   {
     "title": "Último Tren",
-    "album": "residente",
+    "album": "koi-discovery",
     "albumName": "Koi-discovery",
     "track": 6,
     "year": 2017,
@@ -107,7 +107,7 @@ const POOL = [
   },
   {
     "title": "Luz de Patio",
-    "album": "buena-vista",
+    "album": "le-chant-des-stompbox",
     "albumName": "Le chant des Stompbox",
     "track": 2,
     "year": 2023,
@@ -115,7 +115,7 @@ const POOL = [
   },
   {
     "title": "Tormenta",
-    "album": "residente",
+    "album": "koi-discovery",
     "albumName": "Koi-discovery",
     "track": 3,
     "year": 2022,
@@ -123,7 +123,7 @@ const POOL = [
   },
   {
     "title": "Son del Cangrejo",
-    "album": "residente",
+    "album": "koi-discovery",
     "albumName": "Koi-discovery",
     "track": 5,
     "year": 2019,
@@ -131,7 +131,7 @@ const POOL = [
   },
   {
     "title": "Noche en Vela",
-    "album": "ile",
+    "album": "you-know-where-to-find-me",
     "albumName": "You Know Where to Find Me",
     "track": 4,
     "year": 2019,
@@ -139,7 +139,7 @@ const POOL = [
   },
   {
     "title": "Ron y Café",
-    "album": "tony-croatto",
+    "album": "seven-elements",
     "albumName": "Seven Elements",
     "track": 5,
     "year": 2017,
@@ -147,7 +147,7 @@ const POOL = [
   },
   {
     "title": "Sereno",
-    "album": "ile",
+    "album": "you-know-where-to-find-me",
     "albumName": "You Know Where to Find Me",
     "track": 5,
     "year": 2020,
@@ -155,7 +155,7 @@ const POOL = [
   },
   {
     "title": "Vuelo Nocturno",
-    "album": "control-machete",
+    "album": "city-slacker",
     "albumName": "City Slacker",
     "track": 1,
     "year": 2020,
@@ -163,7 +163,7 @@ const POOL = [
   },
   {
     "title": "Tierra Adentro",
-    "album": "plenero",
+    "album": "nfamoudou-boudougou",
     "albumName": "Nfamoudou-Boudougou",
     "track": 2,
     "year": 2017,
@@ -171,7 +171,7 @@ const POOL = [
   },
   {
     "title": "Marejada",
-    "album": "tony-croatto",
+    "album": "seven-elements",
     "albumName": "Seven Elements",
     "track": 6,
     "year": 2024,

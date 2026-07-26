@@ -20,21 +20,23 @@ const NODES: Record<NodeId, { cx: number; cy: number }> = {
   1: { cx: 8, cy: 17 },
   2: { cx: 24, cy: 17 },
   3: { cx: 40, cy: 17 },
-  4: { cx: 35.3, cy: 28.3 },
-  5: { cx: 51.3, cy: 5.7 },
+  4: { cx: 35, cy: 28 },
+  5: { cx: 51, cy: 6 },
 };
 
-// All edges are ~16 units long (diagonals: 11.3√2 ≈ 16)
+// Edge endpoints are trimmed exactly to the node radius (3) — flush against
+// the circle's boundary, not floating short of it (an earlier 6.5 trim left
+// a visible gap past the ring). Touching, not disconnected.
 const EDGES: Record<
   EdgeId,
   { x1: number; y1: number; x2: number; y2: number }
 > = {
-  "1-2": { x1: 8, y1: 17, x2: 24, y2: 17 },
-  "2-3": { x1: 24, y1: 17, x2: 40, y2: 17 },
-  "2-4": { x1: 24, y1: 17, x2: 35.3, y2: 28.3 },
-  "3-5": { x1: 40, y1: 17, x2: 51.3, y2: 5.7 },
+  "1-2": { x1: 11, y1: 17, x2: 21, y2: 17 },
+  "2-3": { x1: 27, y1: 17, x2: 37, y2: 17 },
+  "2-4": { x1: 26.12, y1: 19.12, x2: 32.88, y2: 25.88 },
+  "3-5": { x1: 42.12, y1: 14.88, x2: 48.88, y2: 8.12 },
 };
-const EDGE_LENGTH = 16;
+const EDGE_LENGTH = 10;
 
 const NODE_MS = 300; // time to fill one node
 const EDGE_MS = 300; // time to grow one edge
@@ -44,9 +46,14 @@ const REST_MS = 2000; // empty hold between patterns
 // Stroke weights. The ANIMATED_* pair is the animated mark's faint background
 // edges and their "lit" weight; STATIC is the plain weight for the
 // non-animated mark (nav, footer), which must read clearly at small sizes.
-const STROKE_ANIMATED_INACTIVE = ".05";
-const STROKE_ANIMATED_ACTIVE = ".25";
-const STROKE_STATIC = "1";
+// INACTIVE was originally .05 — at the hero's render sizes (h-12 to h-24,
+// ~48-96px) that scales to a sub-pixel stroke (~0.1-0.2px), which
+// anti-aliases inconsistently across browsers/GPUs and can read as
+// invisible; 0.6 is a real, consistent hairline without going as bold as an
+// earlier 1/2.2/1.4 pass.
+const STROKE_ANIMATED_INACTIVE = "0.6";
+const STROKE_ANIMATED_ACTIVE = "1.4";
+const STROKE_STATIC = "0.9";
 
 export function Logo({ className, animated = false }: LogoProps) {
   const reduceMotion =
@@ -179,11 +186,12 @@ export function Logo({ className, animated = false }: LogoProps) {
     >
       {animated ? (
         <>
-          {/* Background edges — always visible, thin */}
-          <line x1="8" y1="17" x2="24" y2="17" />
-          <line x1="24" y1="17" x2="40" y2="17" />
-          <line x1="24" y1="17" x2="35.3" y2="28.3" />
-          <line x1="40" y1="17" x2="51.3" y2="5.7" />
+          {/* Background edges — always visible, thin. Endpoints match EDGES
+              above exactly, flush against every (hollow) node's boundary. */}
+          <line x1="11" y1="17" x2="21" y2="17" />
+          <line x1="27" y1="17" x2="37" y2="17" />
+          <line x1="26.12" y1="19.12" x2="32.88" y2="25.88" />
+          <line x1="42.12" y1="14.88" x2="48.88" y2="8.12" />
 
           {/* Animated thick edges — grow on top of the background lines */}
           {(Object.entries(EDGES) as [EdgeId, (typeof EDGES)[EdgeId]][]).map(
@@ -210,7 +218,10 @@ export function Logo({ className, animated = false }: LogoProps) {
           )}
 
           {/* Node rings — hollow circles whose stroke thickens on activation,
-              matching the edge behaviour exactly. */}
+              matching the edge behaviour exactly. fill="none" (not a
+              hardcoded --color-ink patch) so the hole is genuinely
+              transparent and reads correctly over any backdrop, including
+              the hero's gradient. */}
           {(
             Object.entries(NODES) as [string, { cx: number; cy: number }][]
           ).map(([id, { cx, cy }]) => {
@@ -221,7 +232,7 @@ export function Logo({ className, animated = false }: LogoProps) {
                 cx={cx}
                 cy={cy}
                 r="3"
-                fill="var(--color-ink)"
+                fill="none"
                 strokeWidth={
                   isActive ? STROKE_ANIMATED_ACTIVE : STROKE_ANIMATED_INACTIVE
                 }
@@ -236,14 +247,16 @@ export function Logo({ className, animated = false }: LogoProps) {
         </>
       ) : (
         <>
-          <line x1="8" y1="17" x2="40" y2="17" />
-          <line x1="24" y1="17" x2="35.3" y2="28.3" />
-          <line x1="40" y1="17" x2="51.3" y2="5.7" />
+          {/* Same trim as the animated variant, applied uniformly (even where
+              a node is solid) so every line is flush against its node. */}
+          <line x1="11" y1="17" x2="37" y2="17" />
+          <line x1="26.12" y1="19.12" x2="32.88" y2="25.88" />
+          <line x1="42.12" y1="14.88" x2="48.88" y2="8.12" />
           <circle cx="8" cy="17" r="3" fill="currentColor" />
           <circle cx="24" cy="17" r="3" fill="currentColor" />
-          <circle cx="35.3" cy="28.3" r="3" fill="currentColor" />
-          <circle cx="40" cy="17" r="3" fill="var(--color-ink)" />
-          <circle cx="51.3" cy="5.7" r="3" fill="var(--color-ink)" />
+          <circle cx="35" cy="28" r="3" fill="currentColor" />
+          <circle cx="40" cy="17" r="3" fill="none" />
+          <circle cx="51" cy="6" r="3" fill="none" />
         </>
       )}
     </svg>

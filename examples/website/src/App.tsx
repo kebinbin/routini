@@ -21,6 +21,11 @@ const routes: RouteDefinition[] = [
     lazy: () => import("./pages/Examples"),
     loading: <PageSkeleton blocks={3} />,
   },
+  {
+    path: "/:lang/examples/sona",
+    lazy: () => import("./pages/SonaCaseStudy"),
+    loading: <PageSkeleton blocks={3} />,
+  },
   { path: "*", lazy: () => import("./pages/NotFound") },
 ];
 
@@ -36,7 +41,7 @@ function PageLoading() {
   return (
     <div className="loader-reveal flex min-h-[60vh] flex-col items-center justify-center gap-5">
       <Logo className="h-7 w-auto animate-pulse text-bone-dim motion-reduce:animate-none" />
-      <span className="font-mono text-xs uppercase tracking-[0.2em] text-bone-faint">
+      <span className="text-xs font-semibold uppercase tracking-[0.2em] text-bone-faint">
         loading
       </span>
     </div>

@@ -161,7 +161,7 @@ const visuals: Record<string, ReactNode> = {
     <div className="grid h-16 w-28 place-items-center rounded-md border border-ink-3">
       <div className="relative h-10 w-20 rounded-md border border-dashed border-ink-3 transition-colors duration-300 group-hover:border-accent pointer-coarse:border-accent">
         <div className="absolute inset-[30%] rounded-sm bg-accent/30 transition-all duration-300 ease-out group-hover:inset-0 pointer-coarse:inset-0">
-          <span className="absolute -right-1.5 -top-1.5 grid h-4 w-4 place-items-center rounded-full bg-accent font-mono text-[9px] text-white">
+          <span className="absolute -right-1.5 -top-1.5 grid h-4 w-4 place-items-center rounded-full bg-accent text-[9px] text-white">
             !
           </span>
         </div>
@@ -304,14 +304,14 @@ export function BuiltIn() {
   return (
     <section className="border-t border-ink-3">
       <div className="mx-auto max-w-7xl px-6 py-20 md:py-28">
-        <p className="mb-4 text-center font-mono text-xs uppercase tracking-[0.2em] text-bone-faint">
+        <p className="mb-4 text-center text-base font-medium text-bone-dim sm:text-lg">
           {t.builtIn.pretitle}
         </p>
-        <h2 className="text-pretty mx-auto mb-16 max-w-3xl text-center text-3xl font-medium tracking-tight text-bone md:mb-24 md:text-4xl">
+        <h2 className="text-pretty mx-auto mb-16 max-w-3xl text-center text-3xl font-bold tracking-tight text-bone md:mb-24 md:text-4xl">
           {t.builtIn.intro}
         </h2>
 
-        <ul className="grid grid-cols-1 gap-px bg-ink-3 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {t.builtIn.entries.map((entry) => {
             const wide = entry.anchor === WIDE;
             const tall = entry.anchor === TALL;
@@ -328,7 +328,7 @@ export function BuiltIn() {
                   to={`${langPath(lang, "/docs")}#${entry.anchor}`}
                   viewTransition
                   className={[
-                    "group flex h-full w-full flex-col bg-ink p-8 transition-colors hover:bg-ink-hover",
+                    "group flex h-full w-full flex-col rounded-2xl border border-ink-3 bg-ink p-8 transition-colors hover:bg-ink-hover",
                     wide && "lg:flex-row lg:items-center lg:gap-10",
                   ]
                     .filter(Boolean)
@@ -347,7 +347,7 @@ export function BuiltIn() {
                     {visuals[entry.anchor]}
                   </div>
                   <div className={wide ? "lg:order-1 lg:flex-1" : undefined}>
-                    <h3 className="font-medium text-bone transition-colors group-hover:text-accent">
+                    <h3 className="font-semibold text-bone transition-colors group-hover:text-accent">
                       {entry.name}
                     </h3>
                     <p className="mt-2 text-sm text-bone-dim">{entry.desc}</p>

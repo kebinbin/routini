@@ -13,8 +13,6 @@ const examples = {
       appsIntro:
         "Complete apps built with routini — open the live demo or read the source.",
       comingSoon: "Coming soon",
-      liveDemo: "Live demo",
-      viewSource: "Source",
       recipes: {
         "basic-app": {
           title: "A basic app",
@@ -69,16 +67,10 @@ const examples = {
           body: "Import version from routini/package.json — a footer or about page stays in sync with the installed package, no copy to update by hand.",
         },
       },
-      apps: [
-        {
-          name: "Music player",
-          blurb: "A player UI with routed views — library, album, playlist.",
-        },
-        {
-          name: "Shop",
-          blurb: "An e-commerce front end — product grid, detail pages, cart.",
-        },
-      ],
+      apps: {
+        sona: { name: "Sona.io" },
+        skeleton: { name: "Skeleton" },
+      },
     },
   },
   es: {
@@ -90,8 +82,6 @@ const examples = {
       appsIntro:
         "Apps completas hechas con routini — abre la demo o lee el código.",
       comingSoon: "Próximamente",
-      liveDemo: "Ver demo",
-      viewSource: "Código",
       recipes: {
         "basic-app": {
           title: "Una app básica",
@@ -146,18 +136,10 @@ const examples = {
           body: "Importa version desde routini/package.json — un footer o página about se mantiene sincronizado con el paquete instalado, sin una copia que actualizar a mano.",
         },
       },
-      apps: [
-        {
-          name: "Reproductor de música",
-          blurb:
-            "Una UI de reproductor con vistas enrutadas — biblioteca, álbum, playlist.",
-        },
-        {
-          name: "Tienda",
-          blurb:
-            "Un front-end de e-commerce — grid de productos, páginas de detalle, carrito.",
-        },
-      ],
+      apps: {
+        sona: { name: "Sona.io" },
+        skeleton: { name: "Skeleton" },
+      },
     },
   },
 } as const;

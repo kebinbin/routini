@@ -6,12 +6,11 @@ const home = {
   en: {
     home: {
       pretitle: "A tiny router for React",
-      title1: "Routing.",
-      title2: "Nothing else.",
-      sub: "3.2 KB gzipped. Lazy, code-split routes. View Transitions and error recovery built in.",
+      title1: "Just routing, not",
+      title2: "much more than that.",
+      sub: "A tiny router with the syntax you already know, and the features you need — Lazy, code-split routes. View Transitions and error recovery built in. Made for those who want to ship a React app without adopting a whole framework.",
       ctaDocs: "Read the docs",
-      ctaGithub: "View on GitHub",
-      trust: "MIT licensed · Zero dependencies · React 18+",
+      trust: "3.2 KB · v0.1.0 · React 18+",
     },
     highlights: {
       pretitle: "Self-contained",
@@ -20,7 +19,7 @@ const home = {
       items: [
         {
           name: "Just routing",
-          desc: "A minimal routing library, not a framework — it maps URLs to components and nothing more. Bring your own data fetching, state, and build.",
+          desc: "A minimal library that covers the routing essentials, not a framework. Bring your own data fetching, state, and build.",
         },
         {
           name: "Effortless",
@@ -36,7 +35,8 @@ const home = {
       pretitle: "Small on purpose",
       headline: "Tiny by design.",
       sub: "Small to ship, scoped to one job, free of setup ceremony — the whole router in 3.2 KB gzipped, with zero runtime dependencies.",
-      compare: "routini is scoped to routing, so it stays small. The bigger routers add loaders, type-safe routes, and SSR for when you need them.",
+      compare:
+        "routini is scoped to routing, so it stays small. The bigger routers add loaders, type-safe routes, and SSR for when you need them.",
     },
     builtIn: {
       pretitle: "Built in",
@@ -102,7 +102,7 @@ const home = {
     builtWith: {
       pretitle: "Built with routini",
       intro:
-        "We're pre-launch. When you ship something with routini, send a PR — we'll feature it here.",
+        "Shipped something with routini? Send a PR — we'll feature it here.",
       placeholder: "Your project here",
       cta: "Add yours →",
     },
@@ -110,12 +110,11 @@ const home = {
   es: {
     home: {
       pretitle: "Un router pequeño para React",
-      title1: "Solo routing.",
-      title2: "Nada más.",
-      sub: "3.2 KB gzipped. Rutas diferidas y divididas por código. Incluye View Transitions y recuperación de errores.",
+      title1: "Solo routing, no",
+      title2: "mucho más que eso.",
+      sub: "Un router pequeño con la sintaxis que ya conoces, y las funciones que necesitas — rutas lazy y divididas por código. Incluye View Transitions y recuperación de errores. Pensado para quienes quieren lanzar una app de React sin adoptar un framework completo.",
       ctaDocs: "Leer la documentación",
-      ctaGithub: "Ver en GitHub",
-      trust: "Licencia MIT · Cero dependencias · React 18+",
+      trust: "3.2 KB · v0.1.0 · React 18+",
     },
     highlights: {
       pretitle: "Autocontenida",
@@ -124,7 +123,7 @@ const home = {
       items: [
         {
           name: "Solo routing",
-          desc: "Una librería de routing mínima, no un framework — mapea URLs a componentes y nada más. Maneja tú el fetching de datos, el estado y el build.",
+          desc: "Una librería mínima que cubre lo esencial del routing, no un framework. Maneja tú el fetching de datos, el estado y el build.",
         },
         {
           name: "Sin esfuerzo",
@@ -140,7 +139,8 @@ const home = {
       pretitle: "Pequeño a propósito",
       headline: "Diminuto por diseño.",
       sub: "Ligera al enviar, enfocada en una sola tarea, sin ceremonia — todo el router en 3.2 KB comprimido, con cero dependencias en runtime.",
-      compare: "routini se enfoca en el routing, por eso es pequeña. Los routers grandes añaden loaders, rutas tipadas y SSR para cuando los necesitas.",
+      compare:
+        "routini se enfoca en el routing, por eso es pequeña. Los routers grandes añaden loaders, rutas tipadas y SSR para cuando los necesitas.",
     },
     builtIn: {
       pretitle: "Incluido",
@@ -201,12 +201,10 @@ const home = {
           desc: "Los enlaces a #secciones hacen scroll suave y siguen funcionando en rutas lazy.",
         },
       ],
-
     },
     builtWith: {
       pretitle: "Hecho con routini",
-      intro:
-        "Estamos en pre-lanzamiento. Cuando publiques algo con routini, abre un PR — lo destacaremos aquí.",
+      intro: "¿Publicaste algo con routini? Abre un PR — lo destacaremos aquí.",
       placeholder: "Tu proyecto aquí",
       cta: "Añade el tuyo →",
     },

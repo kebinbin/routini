@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from "react";
+
 /**
  * Bundle-size comparison, Astro-style horizontal bars.
  *
@@ -26,14 +28,53 @@ const ENTRIES = [
 const MAX_KB = Math.max(...ENTRIES.map((e) => e.kb));
 
 export function BundleChart() {
+  // Bars fill in once, when the card scrolls into view — not on hover.
+  // IntersectionObserver flips `visible` the first time the card is
+  // ~30% in view, then disconnects (fires once, not on every scroll pass).
+  // Reduced-motion starts `visible` (full width, no animation) via the
+  // useState initializer — not a synchronous setState in the effect, which
+  // the react-hooks/set-state-in-effect rule (rightly) flags.
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+
+  useEffect(() => {
+    if (visible) return; // already shown (reduced motion) — no observer needed
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [visible]);
+
   return (
-    <div className="mx-auto w-full max-w-3xl rounded-md border border-ink-3 p-8 md:p-10">
-      <p className="mb-7 font-mono text-xs uppercase tracking-[0.15em] text-bone-faint">
+    <div
+      ref={containerRef}
+      className="relative mx-auto w-full max-w-3xl overflow-hidden rounded-2xl border border-ink-3 bg-bone/2 p-8 md:p-10"
+      style={{
+        // Same theme-aware --color-glow tokens as the hero + the Highlights
+        // cards, anchored top-left to match the Highlights cards' position.
+        backgroundImage:
+          "radial-gradient(90% 70% at 20% 0%, color-mix(in oklab, var(--color-glow) calc(var(--color-glow-alpha-1) * 0.5), transparent) 0%, transparent 70%)",
+      }}
+    >
+      <p className="mb-8 text-xs font-semibold uppercase tracking-[0.2em] text-bone-faint">
         Bundle size · minified + gzipped
       </p>
 
-      <div className="flex flex-col gap-5">
-        {ENTRIES.map((entry) => {
+      <div className="flex flex-col gap-3">
+        {ENTRIES.map((entry, i) => {
           // Range spans ~20×, so a purely linear width makes routini's bar
           // vanish. Floor at 8% to keep it legible — the labels carry the
           // exact figures.
@@ -42,39 +83,46 @@ export function BundleChart() {
 
           return (
             <div key={entry.name} className="flex items-center gap-4">
+              {/* routini's row is the actual point of this section — it gets
+                  a visibly bigger, bolder name and number (a "hero stat"),
+                  not the same weight as the competitor rows it's compared
+                  against. */}
               <span
                 className={[
-                  "w-32 shrink-0 text-right text-sm",
-                  highlight ? "font-medium text-bone" : "text-bone-dim",
+                  "w-32 shrink-0 text-right",
+                  highlight
+                    ? "text-base font-bold text-bone"
+                    : "text-sm text-bone-dim",
                 ].join(" ")}
               >
                 {entry.name}
               </span>
 
-              {/* Each bar shows at rest (subtle). On hover a deeper fill sweeps
-                  in from left to right — accent for routini, grey for the rest —
-                  matching the bento's bordered, semi-transparent motifs. */}
-              <div className="h-7 flex-1 overflow-hidden rounded-sm">
+              {/* Flat, solid bars — no border/translucent-fill combo (which
+                  read as washed out) and no grey for the competitors (warm
+                  --color-ink-3 instead, matching the palette). The bar
+                  fills left-to-right ONCE when the card scrolls into view
+                  (the `visible` flag from the IntersectionObserver above),
+                  not on hover — staggered per row for a cascading reveal.
+                  No hover interaction; these are static data, not links. */}
+              <div className="h-8 flex-1 overflow-hidden rounded-sm">
                 <div
-                  className={`relative h-full overflow-hidden rounded-sm border transition-colors ${
-                    highlight
-                      ? "border-accent/60 bg-accent/30 group-hover:border-accent/80"
-                      : "border-ink-3 bg-bone-faint/15"
+                  className={`h-full rounded-sm transition-[width] duration-700 ease-out ${
+                    highlight ? "bg-accent" : "bg-ink-3"
                   }`}
-                  style={{ width: `${width}%` }}
-                >
-                  <div
-                    className={`absolute inset-0 origin-left scale-x-0 transition-transform duration-500 ease-out group-hover:scale-x-100 pointer-coarse:scale-x-100 ${
-                      highlight ? "bg-accent/35" : "bg-bone-faint/20"
-                    }`}
-                  />
-                </div>
+                  style={{
+                    width: visible ? `${width}%` : "0%",
+                    transitionDelay: `${i * 120}ms`,
+                  }}
+                />
               </div>
 
               <span
                 className={[
-                  "w-16 shrink-0 text-right font-mono text-sm tabular-nums",
-                  highlight ? "text-accent" : "text-bone-dim",
+                  "w-20 shrink-0 text-right font-mono tabular-nums",
+                  highlight
+                    ? "text-base font-bold text-accent"
+                    : "text-xs text-bone-dim",
                 ].join(" ")}
               >
                 {entry.label}

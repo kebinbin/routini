@@ -9,20 +9,21 @@ export function Bundle() {
   return (
     <section className="border-t border-ink-3">
       <div className="mx-auto max-w-7xl px-6 py-20 md:py-28">
-        <p className="mb-4 text-center font-mono text-xs uppercase tracking-[0.2em] text-bone-faint">
+        {/* Same eyebrow → headline → subhead hierarchy as Highlights: a
+            small uppercase accent label, then a much bigger bold headline,
+            then a body-sized subhead — not three similarly-weighted lines. */}
+        <p className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-accent">
           {t.bundle.pretitle}
         </p>
-        <h2 className="text-pretty mx-auto max-w-2xl text-center text-3xl font-medium tracking-tight text-bone md:text-4xl">
+        <h2 className="text-pretty mx-auto mt-4 max-w-2xl text-center text-4xl font-bold leading-tight tracking-tight text-bone md:text-5xl">
           {t.bundle.headline}
         </h2>
-        <p className="text-pretty mx-auto mt-6 max-w-2xl text-center text-lg text-bone-dim">
+        <p className="text-pretty mx-auto mt-5 max-w-2xl text-center text-base leading-relaxed text-bone-dim sm:text-lg">
           {t.bundle.sub}
         </p>
 
         <div className="mx-auto mt-12 max-w-3xl md:mt-16">
-          <div className="group">
-            <BundleChart />
-          </div>
+          <BundleChart />
           <p className="text-pretty ml-auto mt-7 max-w-md text-left text-xs leading-relaxed text-bone-faint">
             {t.bundle.compare}
           </p>

@@ -83,12 +83,12 @@ credits:
 
 | Album folder | Artist | Album | License |
 | --- | --- | --- | --- |
-| `albums/tony-croatto` | The Wanderer / 7 Elements | Seven Elements | CC-BY |
-| `albums/ile` | Soft and Furious | You Know Where to Find Me | CC-BY |
-| `albums/residente` | Ane-Chrysalide | Koi-discovery | CC-BY |
-| `albums/plenero` | Breuss Arrizabalaga Quintet | Nfamoudou-Boudougou | CC-BY |
-| `albums/buena-vista` | Monplaisir | Le chant des Stompbox | CC-BY |
-| `albums/control-machete` | HoliznaCC0 | City Slacker | CC0 |
+| `albums/seven-elements` | The Wanderer | Seven Elements | CC-BY |
+| `albums/you-know-where-to-find-me` | Soft and Furious | You Know Where to Find Me | CC-BY |
+| `albums/koi-discovery` | Ante-Chrysalide | Koi-discovery | CC-BY |
+| `albums/nfamoudou-boudougou` | Breuss Arrizabalaga Quintet | Nfamoudou-Boudougou | CC-BY |
+| `albums/le-chant-des-stompbox` | Monplaisir | Le chant des Stompbox | CC-BY |
+| `albums/city-slacker` | HoliznaCC0 | City Slacker | CC0 |
 
 Fonts: Acumin Pro (Adobe Fonts, via a Typekit `<link>` — not committed), with
 Inter Variable as the open fallback. Map tiles © OpenStreetMap, © CARTO.

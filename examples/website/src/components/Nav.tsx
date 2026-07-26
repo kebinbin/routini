@@ -10,20 +10,19 @@ export function Nav() {
   const t = useT();
 
   return (
-    <header className="sticky top-0 z-10 border-b border-ink-3 bg-ink">
+    <header className="sticky top-0 z-30 border-b border-ink-3 bg-ink">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <Link
           to={langPath(lang)}
           viewTransition
-          className="group inline-flex items-center gap-2.5 font-mono text-sm tracking-tight text-bone hover:text-accent"
+          className="group inline-flex items-center gap-2.5 text-sm tracking-tight text-bone hover:text-accent"
           aria-label="routini home"
         >
           <Logo className="h-5 w-auto" />
-          <span>routini</span>
-          <span className="text-bone-faint">v0.1.0</span>
+          <span className="text-xl font-semibold">routini</span>
         </Link>
 
-        <nav className="flex items-center gap-6 font-mono text-sm text-bone-dim">
+        <nav className="flex items-center gap-6 text-sm text-bone-dim">
           {/* render, not hover: warm both primary routes during idle on load —
               instant first click, and it works on touch (hover never fires). */}
           <Link

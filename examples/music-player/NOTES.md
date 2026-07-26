@@ -59,9 +59,13 @@ overview; this file is the "how it actually works + what's left" doc.
   force-ordered first (`FIRST` in the generator). Each artist has `distanceKm`
   ascending in that display order → the feed sorts nearest-first.
 - **Songs**: a shared 15-track POOL across the 6 albums (real `cover.jpg`),
-  durations read via ffprobe; each artist gets 5–13 of them. (The albums are
-  named after the OLD artist slugs but are just CC audio folders — see README
-  credits. We'll likely give artists their own albums later.)
+  durations read via ffprobe; each artist gets 5–13 of them. Album folders are
+  slugged from the real CC album titles (e.g. `koi-discovery`) — see README
+  credits. They used to be named after real famous artists (iLe, Residente,
+  Tony Croatto, Control Machete...) as leftover slugs from an earlier, scrapped
+  plan to model the fictional artists after real acts; renamed since the audio
+  has no connection to those real artists. We'll likely give artists their own
+  albums later.
 - **Venues are a first-class entity** (`Venue` = `{ id, name, lat, lng, photo?,
   description? }`; exported `venues` array + `getVenue`). Defined as `VENUES` in
   `gen-data.mjs`. An event references one by `venueId` (slug of the venue name);

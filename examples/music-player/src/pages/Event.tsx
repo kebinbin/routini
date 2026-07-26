@@ -51,11 +51,11 @@ export default function Event() {
           <img
             src={event.poster}
             alt=""
-            className="h-full w-full scale-125 object-cover blur-3xl"
+            className="h-full w-full scale-110 object-cover blur-lg"
           />
           {/* Darken behind the text (left) for legibility; let color show right. */}
-          <div className="absolute inset-0 bg-linear-to-r from-surface via-surface/70 to-surface/30" />
-          <div className="absolute inset-0 bg-linear-to-t from-surface to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-r from-surface via-surface/55 to-surface/15" />
+          <div className="absolute inset-0 bg-linear-to-t from-surface via-surface/40 to-transparent" />
         </div>
 
         <div className="relative grid grid-cols-1 items-center gap-x-5 gap-y-8 px-5 py-10 sm:gap-x-8 sm:gap-y-10 sm:px-8 sm:py-12 md:grid-cols-2 md:gap-8 lg:px-10 lg:py-14">

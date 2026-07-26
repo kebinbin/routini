@@ -1,5 +1,5 @@
-import { Outlet, useParams } from "routini";
-import { lazy, Suspense } from "react";
+import { Outlet, useLocation, useParams } from "routini";
+import { lazy, Suspense, useLayoutEffect } from "react";
 import { Nav } from "./Nav";
 import { Footer } from "./Footer";
 import { isLang, useT } from "../lib/i18n";
@@ -15,6 +15,21 @@ export function Layout() {
   const t = useT();
   const { lang } = useParams<{ lang?: string }>();
   const unknownLang = lang !== undefined && !isLang(lang);
+
+  // routini leaves scroll handling to the app. Client-side nav otherwise
+  // keeps the previous scroll offset instead of starting at top. Skip when
+  // there's a hash so anchor links still scroll to their target.
+  // Known issue: also fires on back/forward, overriding native scroll
+  // restoration. Left as-is for now.
+  const { path } = useLocation();
+  useLayoutEffect(() => {
+    // behavior: "instant" overrides the global `scroll-behavior: smooth`
+    // (index.css) — that's meant for intentional anchor scrolling, not this
+    // reset, which should be an instant jump like a normal page load.
+    if (!window.location.hash) {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+  }, [path]);
   return (
     <div className="flex min-h-screen flex-col">
       {/* Film-grain atmosphere — a fixed, non-interactive texture overlay. */}
@@ -27,7 +42,7 @@ export function Layout() {
           tabIndex={-1}> works on modern browsers. */}
       <a
         href="#main"
-        className="sr-only z-50 bg-accent px-4 py-2 font-mono text-sm text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+        className="sr-only z-50 bg-accent px-4 py-2 text-sm text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
       >
         {t.skipToContent}
       </a>

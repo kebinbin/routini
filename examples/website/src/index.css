@@ -1,12 +1,21 @@
 @import "tailwindcss";
 @import "@fontsource-variable/geist";
 @import "@fontsource-variable/geist-mono";
-@import "@fontsource-variable/fraunces";
 
+/* Acumin Pro (Adobe Fonts, loaded via the Typekit <link> in index.html — same
+   kit as the Sona demo) for headings + body. Geist Variable is the fallback if
+   the kit fails to load; Geist Mono stays reserved for actual code/labels. */
 @theme {
-  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "acumin-pro", "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono Variable", ui-monospace, "SF Mono", Menlo, monospace;
-  --font-display: "Fraunces Variable", ui-serif, Georgia, serif;
+
+  /* Only the weights actually loaded for Acumin Pro (matches the Sona kit). */
+  --font-weight-*: initial;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-black: 800;
 
   /* Dark theme — warm minimalism: stone-tinted neutrals tuned to the coral accent */
   --color-ink: #0c0a09; /* page background — warm near-black */
@@ -17,9 +26,19 @@
   --color-bone-dim: #a39b93; /* secondary text */
   --color-bone-faint: #5f574f; /* tertiary text, captions */
 
-  /* Single warm accent — coral/orange. Same hue across themes. */
+  /* Single warm accent — muted coral/terracotta (dialed back from a prior
+     vivid orange, which read too close to generic "AI brand orange"). Same
+     hue across themes. */
   --color-accent: #d97757;
   --color-accent-dim: #c2613f;
+
+  /* Ambient-glow (hero background gradient) — same shape/position/size in
+     both themes; color and alpha are the only tokens that differ, since a
+     low alpha overlay has far less contrast against a light background than
+     a dark one (basic alpha-compositing, not fixable by color alone). */
+  --color-glow: var(--color-accent);
+  --color-glow-alpha-1: 9%;
+  --color-glow-alpha-2: 3%;
 }
 
 /* Light theme overrides — applied when [data-theme="light"] is on <html>. */
@@ -30,21 +49,29 @@
     --nav-h: 3.25rem;
   }
 
-  /* Display serif for headings; body stays Geist, code stays Geist Mono. */
-  h1,
-  h2 {
-    font-family: var(--font-display);
-    font-optical-sizing: auto;
-  }
-
   [data-theme="light"] {
-    --color-ink: #faf9f7;
-    --color-ink-2: #f3f0ec;
-    --color-ink-hover: #f7f4f0;
-    --color-ink-3: #e7e2db;
+    /* Neutrals nudged subtly deeper + warmer than a near-white (#f0ece4 →
+       these), on purpose: it gives the glow below room to be WHITE and
+       actually lift. A pure-white glow adds brightness with zero chroma, so
+       it can't muddy the way any coral/peach tint did — but it only reads if
+       the surface it sits on is a touch below white, which is what this
+       deepening provides. */
+    --color-ink: #eae3d4;
+    --color-ink-2: #e1dac9;
+    --color-ink-hover: #e6dfcf;
+    --color-ink-3: #d4cbb6;
     --color-bone: #1c1917;
     --color-bone-dim: #6b645c;
     --color-bone-faint: #a8a097;
+
+    /* Same gradient as dark mode, but a LIGHTER WARM CREAM instead of the
+       accent — lighter than the bg so it still lifts, but keeps the warm hue
+       rather than going stark white (pure white read too harsh against the
+       cream palette). Higher alpha than dark's 9%/3% since a light-on-light
+       lift, with less contrast here, needs more presence to register. */
+    --color-glow: #faf5ec;
+    --color-glow-alpha-1: 74%;
+    --color-glow-alpha-2: 32%;
   }
 
   html {
@@ -115,6 +142,47 @@
 
 @utility loader-reveal {
   animation: routini-loader-reveal 0.6s ease forwards;
+}
+
+/* Hero entrance — a soft rise + fade, staggered per element via an inline
+ * animation-delay. `both` holds each hidden until its delay elapses. */
+@keyframes routini-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility rise {
+  animation: routini-rise 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Device bezel — a glass-like frame around a screenshot/thumbnail (the
+ * appwrite-style "screen inside a device" look): a thin semi-transparent
+ * border + a subtle inset top highlight. Direction flips per theme: dark
+ * mode wants a LIGHT line (catches light against a dark surface); light
+ * mode needs a DARK one instead, or it's invisible/backwards on a bright
+ * page. Pair with a `border` + rounded-* + padding on the element. */
+.bezel {
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme="light"] .bezel {
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.05);
 }
 
 /* "Built in" hash-scroll motif: a scroll-spy highlight steps through the section
