@@ -7,7 +7,7 @@ const docs = {
     docs: {
       pretitle: "/docs",
       title: "API reference",
-      sub: "Eight exports and one utility — the whole router. Each entry has a signature, a working example, and where it fits.",
+      sub: "Nine exports — the whole router. Each entry has a signature, a working example, and where it fits.",
       onThisPage: "On this page",
       groups: {
         components: "Components",
@@ -298,13 +298,38 @@ const docs = {
           "Pairs with View Transitions: warm the chunk so the animation lands on the real page rather than the loading fallback.",
         ],
       },
+      "scroll-restoration": {
+        body: "Opt in to the scroll behavior most SPAs want: a forward navigation starts at the top, and returning via back/forward puts you back where you left off. Only the router knows which kind of navigation just happened, which is why this lives here rather than in a scroll hook you'd have to call on every page.",
+        table: [
+          {
+            name: "scrollRestoration",
+            type: "boolean",
+            desc: "On <Router>. Off by default; turn it on to enable the behavior above.",
+          },
+          {
+            name: "scrollContainer",
+            type: "RefObject<Element | null>",
+            desc: "Optional. Scroll a specific element instead of the window — for layouts where the page scrolls inside a nested container.",
+          },
+        ],
+        notes: [
+          "Keyed on the pathname, so a query-only navigation (useSearchParams) never resets scroll.",
+          "Each history entry gets its own cached offset, restored when you return to it — not just \"remember the last scroll position.\"",
+        ],
+      },
+      "reading-version": {
+        body: 'The installed version is available straight from the package, so a footer or an about page never drifts out of sync with a hand-copied string.',
+        notes: [
+          'Reads from routini\'s own package.json via the exports map — no separate version constant to maintain.',
+        ],
+      },
     },
   },
   es: {
     docs: {
       pretitle: "/docs",
       title: "Referencia del API",
-      sub: "Ocho exports y una utilidad — todo el router. Cada entrada tiene una firma, un ejemplo funcional y dónde encaja.",
+      sub: "Nueve exports — todo el router. Cada entrada tiene una firma, un ejemplo funcional y dónde encaja.",
       onThisPage: "En esta página",
       groups: {
         components: "Componentes",
@@ -593,6 +618,31 @@ const docs = {
           "Todos los enlaces viewport comparten un único IntersectionObserver, así que una lista larga de enlaces sigue siendo barata; cada uno precarga una vez. No hace nada donde IntersectionObserver no está disponible.",
           "Una precarga fallida se ignora en silencio; la navegación real sigue mostrando el error a través del error boundary de ruta.",
           "Combina con View Transitions: precarga el chunk para que la animación aterrice en la página real en lugar del fallback de carga.",
+        ],
+      },
+      "scroll-restoration": {
+        body: "Activa el comportamiento de scroll que la mayoría de SPAs quieren: una navegación hacia adelante empieza arriba del todo, y volver con atrás/adelante te devuelve a donde estabas. Solo el router sabe qué tipo de navegación acaba de ocurrir, por eso vive aquí y no en un hook de scroll que tendrías que llamar en cada página.",
+        table: [
+          {
+            name: "scrollRestoration",
+            type: "boolean",
+            desc: "En <Router>. Desactivado por defecto; actívalo para habilitar el comportamiento anterior.",
+          },
+          {
+            name: "scrollContainer",
+            type: "RefObject<Element | null>",
+            desc: "Opcional. Hace scroll en un elemento concreto en vez de la ventana — para layouts donde la página se desplaza dentro de un contenedor anidado.",
+          },
+        ],
+        notes: [
+          "Se indexa por el pathname, así que una navegación de solo-query (useSearchParams) nunca resetea el scroll.",
+          "Cada entrada del historial guarda su propio offset, restaurado al volver a ella — no solo \"recordar la última posición\".",
+        ],
+      },
+      "reading-version": {
+        body: "La versión instalada está disponible directamente desde el paquete, así que un footer o una página about nunca se desincroniza de una cadena copiada a mano.",
+        notes: [
+          "Se lee desde el propio package.json de routini vía el exports map — sin una constante de versión separada que mantener.",
         ],
       },
     },

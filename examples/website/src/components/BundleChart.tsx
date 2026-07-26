@@ -8,7 +8,7 @@
  *
  *   React Router    react-router-dom@7.16.0   59.97 KB
  *   TanStack Router @tanstack/react-router@1.170.10  39.3 KB
- *   routini  (error boundary, View Transitions, preload, search params, lazy resolver)  2.79 KB
+ *   routini  (error boundary, View Transitions, preload, search params, scroll restoration, lazy resolver)  3.20 KB
  *
  * Measured against the full-featured routers people weigh routini against. They
  * carry much more — loaders, a data layer, type-safe routing, SSR — so they're
@@ -18,7 +18,7 @@
  * framework. Ordered smallest → largest; routini is highlighted as the reference.
  */
 const ENTRIES = [
-  { name: "routini", kb: 2.79, label: "2.8 KB", highlight: true },
+  { name: "routini", kb: 3.2, label: "3.2 KB", highlight: true },
   { name: "TanStack Router", kb: 39.3, label: "39 KB" },
   { name: "React Router", kb: 59.97, label: "60 KB" },
 ] as const;

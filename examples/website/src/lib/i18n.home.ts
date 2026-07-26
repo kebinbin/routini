@@ -8,7 +8,7 @@ const home = {
       pretitle: "A tiny router for React",
       title1: "Routing.",
       title2: "Nothing else.",
-      sub: "2.8 KB gzipped. Lazy, code-split routes. View Transitions and error recovery built in.",
+      sub: "3.2 KB gzipped. Lazy, code-split routes. View Transitions and error recovery built in.",
       ctaDocs: "Read the docs",
       ctaGithub: "View on GitHub",
       trust: "MIT licensed · Zero dependencies · React 18+",
@@ -35,7 +35,7 @@ const home = {
     bundle: {
       pretitle: "Small on purpose",
       headline: "Tiny by design.",
-      sub: "Small to ship, scoped to one job, free of setup ceremony — the whole router in 2.8 KB gzipped, with zero runtime dependencies.",
+      sub: "Small to ship, scoped to one job, free of setup ceremony — the whole router in 3.2 KB gzipped, with zero runtime dependencies.",
       compare: "routini is scoped to routing, so it stays small. The bigger routers add loaders, type-safe routes, and SSR for when you need them.",
     },
     builtIn: {
@@ -112,7 +112,7 @@ const home = {
       pretitle: "Un router pequeño para React",
       title1: "Solo routing.",
       title2: "Nada más.",
-      sub: "2.8 KB gzipped. Rutas diferidas y divididas por código. Incluye View Transitions y recuperación de errores.",
+      sub: "3.2 KB gzipped. Rutas diferidas y divididas por código. Incluye View Transitions y recuperación de errores.",
       ctaDocs: "Leer la documentación",
       ctaGithub: "Ver en GitHub",
       trust: "Licencia MIT · Cero dependencias · React 18+",
@@ -139,7 +139,7 @@ const home = {
     bundle: {
       pretitle: "Pequeño a propósito",
       headline: "Diminuto por diseño.",
-      sub: "Ligera al enviar, enfocada en una sola tarea, sin ceremonia — todo el router en 2.8 KB comprimido, con cero dependencias en runtime.",
+      sub: "Ligera al enviar, enfocada en una sola tarea, sin ceremonia — todo el router en 3.2 KB comprimido, con cero dependencias en runtime.",
       compare: "routini se enfoca en el routing, por eso es pequeña. Los routers grandes añaden loaders, rutas tipadas y SSR para cuando los necesitas.",
     },
     builtIn: {

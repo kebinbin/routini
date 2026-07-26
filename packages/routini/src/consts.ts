@@ -10,3 +10,10 @@ export const EVENTS = {
  * reached by an animated navigation.
  */
 export const VIEW_TRANSITION_STATE_KEY = "routiniViewTransition";
+
+/**
+ * Key written into `history.state` to give each entry a stable id, so opt-in
+ * scroll restoration can cache and restore a scroll offset per entry. See
+ * `utils/scrollRestoration.ts`.
+ */
+export const SCROLL_RESTORATION_STATE_KEY = "routiniScrollId";

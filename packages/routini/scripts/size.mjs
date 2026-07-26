@@ -12,14 +12,13 @@ import { gzipSync, brotliCompressSync } from "node:zlib";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 
-// gzip budget, in KB. Current is ~2.79 KB. This session added a reactive
-// `useSearchParams` hook (its own location subscription, so query-only
-// navigations re-render) and `<Link preload="viewport">` (one shared
-// IntersectionObserver across all viewport links). Both are real features, not
-// creep — bumped from 2.6 deliberately. This ceiling leaves a little headroom
-// while still catching a real regression; growing past it should be a conscious
+// gzip budget, in KB. Current is ~3.20 KB. This session added opt-in scroll
+// restoration (`<Router scrollRestoration scrollContainer>`) and exposed
+// `package.json` in the exports map. Both are real features, not creep —
+// bumped from 2.8 deliberately. This ceiling leaves a little headroom while
+// still catching a real regression; growing past it should be a conscious
 // decision.
-const LIMIT_KB = 2.8;
+const LIMIT_KB = 3.3;
 
 const here = dirname(fileURLToPath(import.meta.url));
 const entry = resolve(here, "../src/index.ts");

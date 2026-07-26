@@ -81,10 +81,11 @@ function Breadcrumb() {
 }
 `,
 
-  apiSurface: `// Seven exports. That's the entire API.
+  apiSurface: `// Nine exports. That's the entire API.
 import {
-  Router, Route, Link, Outlet,
-  Navigate, useLocation, useParams,
+  Router, Route, Link, Outlet, Navigate,
+  useLocation, useParams, useSearchParams,
+  navigate,
 } from "routini";
 `,
 
@@ -327,6 +328,31 @@ function ProductSearch() {
       <Results query={q} sort={sort} />
     </>
   );
+}
+`,
+
+  scrollRestoration: `import { Router } from "routini";
+
+// Scrolls to top on a forward nav, restores the previous
+// offset on back/forward. Off by default.
+<Router routes={routes} scrollRestoration />
+
+// Scrolling a nested container instead of the window?
+// Point it at the element.
+const mainRef = useRef<HTMLElement>(null);
+
+<Router routes={routes} scrollRestoration scrollContainer={mainRef} />
+<main ref={mainRef}>
+  <Outlet />
+</main>
+`,
+
+  packageVersion: `import { version } from "routini/package.json";
+
+// Read the installed version straight from the package —
+// no copy to keep in sync by hand.
+function Footer() {
+  return <span>routini v{version}</span>;
 }
 `,
 
