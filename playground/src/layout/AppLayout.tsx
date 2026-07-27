@@ -12,6 +12,7 @@ const LINKS: { to: string; label: string }[] = [
   { to: "/preload", label: "Link preload" },
   { to: "/error", label: "Error boundary" },
   { to: "/hash", label: "Hash anchors" },
+  { to: "/scroll", label: "Scroll restoration" },
   { to: "/jsx-route", label: "JSX <Route>" },
   { to: "/nope", label: "Catch-all (404)" },
 ];

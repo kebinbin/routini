@@ -20,6 +20,10 @@ const ROUTINI = [
     "AppLayout renders the matched page inside a single <Outlet>. Crucially, the audio player and navigation live OUTSIDE that Outlet, so the <audio> element is never unmounted on navigation — that's how playback keeps going as you move between pages.",
   ],
   [
+    "scrollRestoration + scrollContainer",
+    "AppLayout scrolls its own <main>, not the window, so <Router scrollContainer> points at it. Switching discovery lenses (Artists/Events/Map) starts each at the top; opening an artist or event and hitting Back restores exactly where you left off in the list.",
+  ],
+  [
     "useParams",
     "The artist (/artist/:id) and event (/event/:id) pages read the route param to look up their record from the static dataset — so each page is self-contained and deep-linkable, and back/forward just work.",
   ],
