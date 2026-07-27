@@ -29,6 +29,7 @@ One sidebar entry per demo:
 | Link preload | `hover` / `render` / `viewport`, each with a live "loaded" indicator |
 | Error boundary | render throw **and** failed-chunk import → function `errorFallback` with `reset` / `reload` / `isChunkError`, plus `onError` logging |
 | Hash anchors | pure `#hash` and `path#hash` |
+| Scroll restoration | `scrollRestoration` (window-scoped) — forward nav to top, back/forward restores offset |
 | JSX `<Route>` | the JSX-children input form alongside the `routes` array |
 | Catch-all 404 | `*` renders in place (no redirect) |
 | Sidebar | `useLocation()`-driven active links |
