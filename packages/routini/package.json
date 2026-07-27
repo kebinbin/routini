@@ -1,6 +1,6 @@
 {
   "name": "routini",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A tiny router for React with lazy routes, an error boundary, View Transitions, reactive search params, scroll restoration, and link preload — ~3.2 KB gzipped, zero dependencies",
   "keywords": [
     "react",
