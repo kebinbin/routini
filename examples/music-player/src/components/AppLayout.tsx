@@ -6,14 +6,29 @@ import { ActivityFeed, SortIcon } from "./ActivityFeed";
 import { useUnseenCount } from "../lib/seen";
 
 // Equalizer-bars logo (from the design), recolorable via currentColor.
+//
+// viewBox is 20 units tall to match the rendered height (h-5 = 20px)
+// exactly, and every coordinate below is an integer. That 1:1 mapping is
+// deliberate: the previous 26x25 viewBox scaled down to a fractional
+// ~20.8x20px box, so each bar's edges rounded to the nearest device pixel
+// independently — the two middle bars landed a pixel narrower than the
+// other three. With no scaling left to round, every bar renders the same
+// width in every browser.
 function Logo({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 26 25" fill="currentColor" className={className} role="img" aria-label="Sona">
-      <rect y="18" width="2" height="7" />
-      <rect x="6" width="2" height="25" />
-      <rect x="12" y="8" width="2" height="17" />
-      <rect x="18" y="16" width="2" height="9" />
-      <rect x="24" y="12" width="2" height="13" />
+    <svg
+      viewBox="0 0 22 20"
+      fill="currentColor"
+      className={className}
+      role="img"
+      aria-label="Sona"
+      shapeRendering="crispEdges"
+    >
+      <rect x="0" y="14" width="2" height="6" />
+      <rect x="5" y="0" width="2" height="20" />
+      <rect x="10" y="6" width="2" height="14" />
+      <rect x="15" y="13" width="2" height="7" />
+      <rect x="20" y="10" width="2" height="10" />
     </svg>
   );
 }
