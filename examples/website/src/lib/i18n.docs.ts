@@ -55,6 +55,19 @@ const docs = {
             type: "string",
             desc: 'Initial path used when window is undefined (server rendering). Defaults to "/".',
           },
+          {
+            name: "scrollRestoration",
+            type: "boolean",
+            desc: "Scroll to top on a forward navigation, restore the previous offset on back/forward. Off by default.",
+            linkAnchor: "scroll-restoration",
+            linkPrefix: "See more about ",
+            linkText: "Scroll restoration",
+          },
+          {
+            name: "scrollContainer",
+            type: "RefObject<Element | null>",
+            desc: "Scroll a specific element instead of the window. Only used with scrollRestoration.",
+          },
         ],
         notes: [
           "Define the routes array outside your component. A fresh array — and fresh lazy thunks — on every render misses the lazy cache and remounts the page.",
@@ -370,6 +383,19 @@ const docs = {
             name: "ssrPath",
             type: "string",
             desc: 'Ruta inicial usada cuando window no existe (renderizado en servidor). Por defecto "/".',
+          },
+          {
+            name: "scrollRestoration",
+            type: "boolean",
+            desc: "Hace scroll arriba en una navegación hacia adelante, restaura el offset anterior en atrás/adelante. Desactivado por defecto.",
+            linkAnchor: "scroll-restoration",
+            linkPrefix: "Ver más sobre ",
+            linkText: "Restauración de scroll",
+          },
+          {
+            name: "scrollContainer",
+            type: "RefObject<Element | null>",
+            desc: "Hace scroll en un elemento concreto en vez de la ventana. Solo se usa junto con scrollRestoration.",
           },
         ],
         notes: [
