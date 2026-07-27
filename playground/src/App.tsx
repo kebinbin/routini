@@ -67,6 +67,7 @@ const routes: RouteDefinition[] = [
       Promise.reject(new Error("Simulated failed chunk load (stale deploy)")),
   },
   { path: "/hash", lazy: () => import("./pages/Hash") },
+  { path: "/scroll", lazy: () => import("./pages/ScrollDemo") },
   { path: "*", lazy: () => import("./pages/NotFound") },
 ];
 
@@ -107,6 +108,7 @@ export default function App() {
       routes={routes}
       loading={<div className="loading-box">Loading…</div>}
       errorFallback={errorFallback}
+      scrollRestoration
       onError={(error, info) =>
         // Logging/telemetry hook — check the console when /error throws.
         console.error("[routini onError]", error.message, info.componentStack)
