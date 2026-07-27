@@ -26,7 +26,8 @@ const DOCS_ENTRIES: DocEntry[] = [
   {
     anchor: "router",
     name: "Router",
-    signature: "<Router routes loading ssrPath>{children?}</Router>",
+    signature:
+      "<Router routes loading ssrPath scrollRestoration scrollContainer>{children?}</Router>",
     snippet: "setup",
     group: "components",
     since: "0.1.0",
@@ -131,7 +132,14 @@ const DOCS_ENTRIES: DocEntry[] = [
 
 interface DocsEntryContent {
   body: string;
-  table?: readonly { name: string; type: string; desc: string }[];
+  table?: readonly {
+    name: string;
+    type: string;
+    desc: string;
+    linkAnchor?: string;
+    linkPrefix?: string;
+    linkText?: string;
+  }[];
   notes?: readonly string[];
 }
 
@@ -247,6 +255,7 @@ export default function Docs() {
                         heading={t.docs.tableHeading[entry.group]}
                         cols={t.docs.tableCols}
                         rows={c.table}
+                        docsPath={docsPath}
                       />
                     ) : null}
 
@@ -271,10 +280,19 @@ function PropsTable({
   heading,
   cols,
   rows,
+  docsPath,
 }: {
   heading: string;
   cols: { name: string; type: string; description: string };
-  rows: readonly { name: string; type: string; desc: string }[];
+  rows: readonly {
+    name: string;
+    type: string;
+    desc: string;
+    linkAnchor?: string;
+    linkPrefix?: string;
+    linkText?: string;
+  }[];
+  docsPath: string;
 }) {
   return (
     <div>
@@ -305,7 +323,20 @@ function PropsTable({
                 <td className="whitespace-nowrap py-3 pr-6 font-mono text-bone-dim">
                   {row.type}
                 </td>
-                <td className="py-3 text-bone-dim">{row.desc}</td>
+                <td className="py-3 text-bone-dim">
+                  {row.desc}{" "}
+                  {row.linkAnchor ? (
+                    <>
+                      {row.linkPrefix}
+                      <Link
+                        to={`${docsPath}#${row.linkAnchor}`}
+                        className="whitespace-nowrap text-accent underline underline-offset-2"
+                      >
+                        {row.linkText}
+                      </Link>
+                    </>
+                  ) : null}
+                </td>
               </tr>
             ))}
           </tbody>
