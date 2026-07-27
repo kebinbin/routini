@@ -1,4 +1,4 @@
-import { EVENTS, SCROLL_RESTORATION_STATE_KEY as KEY } from "../consts";
+import { SCROLL_RESTORATION_STATE_KEY as KEY } from "../consts";
 
 /**
  * Scroll restoration — opt-in via `<Router scrollRestoration>`. Standard SPA
@@ -8,33 +8,37 @@ import { EVENTS, SCROLL_RESTORATION_STATE_KEY as KEY } from "../consts";
  *
  * Scrolls the window by default; pass `<Router scrollContainer={ref}>` for an
  * app that scrolls a nested element instead (e.g. a `<main>` inside a fixed
- * layout). A pathname-keyed apply (see Router) means query-only navigations
- * (search params) don't reset scroll; only pathname changes do.
+ * layout).
+ *
+ * The scroll decision reads `history.state` directly (see `applyScroll`) rather
+ * than through a separate popstate listener — so it can't race Router's own
+ * location subscription. Router's layout effect, keyed on the pathname, is the
+ * single driver, which also means query-only navigations (search params) never
+ * reset scroll.
  */
 
 // The scroll container: the window, or a nested scrollable element.
 type Target = Element | Window;
 type GetTarget = () => Target;
 
-// What the next committed pathname change should do: scroll to top (forward
-// nav), restore a saved offset (back/forward), or nothing.
-type Pending = number | "top" | null;
-
 const positions = new Map<number, number>();
 let nextId = 1;
 let currentId = 0;
-let prevPathname = "";
-let pending: Pending = null;
+// Pathname applyScroll last acted on. Guards the initial mount (and StrictMode's
+// double-invoke) from scrolling — we only scroll on an actual pathname change.
+let appliedPathname = "";
 let refs = 0;
 let getTarget: GetTarget = () => window;
 let prevNativeRestoration: History["scrollRestoration"] | undefined;
 
-const offsetOf = (t: Target) => (t === window ? window.scrollY : (t as Element).scrollTop);
+const offsetOf = (t: Target) =>
+  t === window ? window.scrollY : (t as Element).scrollTop;
 // "instant" forces a jump regardless of the page's own `scroll-behavior: smooth`
 // (e.g. for anchor links) — restoration emulates native navigation, which never
 // animates: a fresh page load doesn't glide to the top, and back/forward doesn't
 // glide to the old position, it just lands there.
-const scrollTargetTo = (t: Target, top: number) => t.scrollTo({ top, behavior: "instant" });
+const scrollTargetTo = (t: Target, top: number) =>
+  t.scrollTo({ top, behavior: "instant" });
 
 function entryId(): number | undefined {
   const id = (window.history.state as Record<string, unknown> | null)?.[KEY];
@@ -48,31 +52,16 @@ function assignId(): number {
   return id;
 }
 
-// Keep the current entry's cached offset current, so it's already saved by the
-// time we navigate away from it.
+// Keep the current entry's cached offset up to date, so it's already saved by
+// the time we navigate away from it.
 function trackScroll() {
   if (currentId) positions.set(currentId, offsetOf(getTarget()));
 }
 
-function onLocationChange() {
-  const { pathname } = window.location;
-  if (pathname === prevPathname) return; // query/hash-only change: leave scroll alone
-  prevPathname = pathname;
-
-  const existing = entryId();
-  if (existing === undefined) {
-    currentId = assignId(); // brand-new entry → forward nav
-    pending = "top";
-  } else {
-    currentId = existing; // revisited entry → back/forward
-    pending = positions.get(existing) ?? 0;
-  }
-}
-
 /**
- * Start restoring scroll; returns a teardown. No-op under SSR. `resolveTarget`
- * returns the scroll container (window by default) and is read lazily, so it
- * always sees the live element even if it mounts after the Router.
+ * Start caching scroll offsets; returns a teardown. No-op under SSR.
+ * `resolveTarget` returns the scroll container (window by default) and is read
+ * lazily, so it always sees the live element even if it mounts after the Router.
  */
 export function installScrollRestoration(resolveTarget: GetTarget): () => void {
   if (typeof window === "undefined") return () => {};
@@ -83,17 +72,13 @@ export function installScrollRestoration(resolveTarget: GetTarget): () => void {
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
     }
-    prevPathname = window.location.pathname;
     currentId = entryId() ?? assignId();
     getTarget().addEventListener("scroll", trackScroll, { passive: true });
-    window.addEventListener(EVENTS.NAVIGATE, onLocationChange);
-    window.addEventListener(EVENTS.POPSTATE, onLocationChange);
   }
   return () => {
     if (--refs > 0) return;
     getTarget().removeEventListener("scroll", trackScroll);
-    window.removeEventListener(EVENTS.NAVIGATE, onLocationChange);
-    window.removeEventListener(EVENTS.POPSTATE, onLocationChange);
+    appliedPathname = "";
     if (prevNativeRestoration && "scrollRestoration" in window.history) {
       window.history.scrollRestoration = prevNativeRestoration;
     }
@@ -101,15 +86,26 @@ export function installScrollRestoration(resolveTarget: GetTarget): () => void {
 }
 
 /**
- * Apply the scroll queued by the last pathname change, after the route commits.
- * Hash targets are left to routini's ScrollToHash. Called from Router's layout
- * effect so the content is laid out before we scroll.
+ * Apply scroll for the just-committed route. Called from Router's layout effect
+ * on each pathname change, so the content is laid out first. Reads the target
+ * from `history.state`: a brand-new entry (no id) is a forward nav → top; a
+ * revisited entry (has an id) is back/forward → its saved offset. Reading state
+ * here — not in a popstate listener — is what makes restoration independent of
+ * listener ordering. The initial mount only establishes the id (no scroll); hash
+ * targets are left to routini's ScrollToHash.
  */
-export function applyPendingScroll() {
-  if (pending === null || window.location.hash) {
-    pending = null;
-    return;
-  }
-  scrollTargetTo(getTarget(), pending === "top" ? 0 : pending);
-  pending = null;
+export function applyScroll(resolveTarget: GetTarget) {
+  if (typeof window === "undefined" || window.location.hash) return;
+
+  const { pathname } = window.location;
+  // Skip the first apply (mount) and StrictMode's re-run of it — only an actual
+  // pathname change should move the scroll position.
+  const skip = appliedPathname === "" || pathname === appliedPathname;
+  appliedPathname = pathname;
+
+  const existing = entryId();
+  currentId = existing ?? assignId();
+  if (skip) return;
+
+  scrollTargetTo(resolveTarget(), existing === undefined ? 0 : positions.get(existing) ?? 0);
 }

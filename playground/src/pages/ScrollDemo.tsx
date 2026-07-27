@@ -20,8 +20,9 @@ export default function ScrollDemo() {
             you'll land back at the same scroll offset.
           </li>
           <li>
-            Click a link below, then a fresh <Link to="/">Home</Link> visit
-            starts at the top, same as a normal page load.
+            From anywhere on this page, click <Link to="/">Home</Link> — a
+            forward navigation always starts at the top, same as a normal
+            page load.
           </li>
         </ol>
       </section>

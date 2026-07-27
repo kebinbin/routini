@@ -19,7 +19,7 @@ import { markChunkError } from "../utils/isChunkError";
 import { withViewTransition } from "../utils/viewTransition";
 import {
   installScrollRestoration,
-  applyPendingScroll,
+  applyScroll,
 } from "../utils/scrollRestoration";
 
 export type DynamicImport = () => Promise<{ default: React.ComponentType }>;
@@ -226,18 +226,19 @@ export function Router({
   // lazy import) after we've dropped the cached component.
   const [, forceRetry] = useReducer((n: number) => n + 1, 0);
 
-  // Opt-in scroll restoration. install/teardown tracks positions + events;
-  // the layout effect applies the queued scroll after the route commits (keyed
-  // on pathname, so query-only navigations don't reset scroll). The container
-  // ref is read lazily, so it resolves to the live element even if it mounts
-  // after the Router.
+  // Opt-in scroll restoration. install/teardown caches offsets per history
+  // entry; the layout effect applies the scroll after the route commits, keyed
+  // on pathname so query-only navigations don't reset scroll. The container ref
+  // is read lazily, so it resolves to the live element even if it mounts after
+  // the Router.
   useEffect(() => {
     if (scrollRestoration)
       return installScrollRestoration(() => scrollContainer?.current ?? window);
   }, [scrollRestoration, scrollContainer]);
   useIsomorphicLayoutEffect(() => {
-    if (scrollRestoration) applyPendingScroll();
-  }, [scrollRestoration, currentPath]);
+    if (scrollRestoration)
+      applyScroll(() => scrollContainer?.current ?? window);
+  }, [scrollRestoration, currentPath, scrollContainer]);
 
   // Memoized so a stable `routes` prop yields a stable list — keeping both
   // matchRoute's input and the preloadPath callback below stable, and avoiding
