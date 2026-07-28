@@ -45,7 +45,7 @@ const ROUTINI = [
   ],
   [
     "Error boundary",
-    "Every route — six of the eight here are lazy — is wrapped in routini's built-in error boundary automatically, no setup required. A failed chunk after a bad deploy gets a fallback instead of a white screen. Not customized in this prototype (errorFallback/onError), so it's the default minimal message.",
+    "Every route — seven of the nine here are lazy — is wrapped in routini's built-in error boundary automatically, no setup required. Sona also passes its own errorFallback (RouteErrorFallback.tsx): a failed chunk offers a reload, since that's the only thing that fixes a stale deploy, while a render error offers an in-place retry that keeps playback and app state alive.",
   ],
 ];
 

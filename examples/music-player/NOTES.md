@@ -217,10 +217,10 @@ Short version: **strong portfolio piece, good-but-incomplete routini showcase.**
   shows its ceiling — it works because there's exactly one layout. (The old
   notifications master-detail, a nested-routes workaround, is gone — replaced by
   the Follow + activity feed.)
-- Still-unused exports/features: `navigate()`, `preload="render"`,
-  `preload="viewport"`, and the error boundary (`errorFallback`/`onError`). So
-  it's not yet a *complete* showcase. (`<Navigate>` is now used for the root
-  redirect.)
+- Still-unused exports/features: `navigate()`, `preload="render"`, and
+  `preload="viewport"`. So it's not yet a *complete* showcase. (`<Navigate>` is
+  now used for the root redirect; a branded `errorFallback` is wired in
+  `src/components/RouteErrorFallback.tsx`.)
 
 **Verdict:** Sona honestly shows routini is more than sufficient for a
 single-layout SPA, and that its View-Transition and URL-state stories are
@@ -273,9 +273,10 @@ that, the current build is visual-first and several pillars are missing.
 
 - ✅ Event page layout pass (hero + lineup + venue map). Remaining: in-app
   credits surface; Sona landing page.
-- Round out the routini showcase: ✅ `<Navigate>` (root redirect); still
-  `navigate()` for search-submit, `preload="viewport"` for feed/grid rows
-  scrolling into view, and a branded `errorFallback`.
+- Round out the routini showcase: ✅ `<Navigate>` (root redirect); ✅ a branded
+  `errorFallback` (chunk failures offer reload, render errors retry in place);
+  still `navigate()` for search-submit and `preload="viewport"` for feed/grid
+  rows scrolling into view.
 
 ## Branch / PR
 

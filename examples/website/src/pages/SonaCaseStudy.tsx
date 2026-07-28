@@ -1,4 +1,5 @@
 import { CodeBlock } from "../components/CodeBlock";
+import { Video } from "../components/Video";
 import { useSonaCaseStudyT } from "../lib/i18n.sonaCaseStudy";
 import { usePageTitle } from "../lib/usePageTitle";
 import { snippets } from "../lib/snippets";
@@ -19,6 +20,11 @@ const SECTIONS = [
     caption: "src/components/ArtistViews.tsx",
   },
   { id: "params", snippet: "sonaParams", caption: "src/pages/Artist.tsx" },
+  {
+    id: "scrollRestoration",
+    snippet: "sonaScrollRestoration",
+    caption: "src/App.tsx",
+  },
   {
     id: "searchParams",
     snippet: "sonaSearchParams",
@@ -72,8 +78,8 @@ export default function SonaCaseStudy() {
         style={{ viewTransitionName: "sona-shot" }}
       >
         <img
-          src="/built-with/sona.webp"
-          alt="Sona.io — a music-discovery app built with routini"
+          src="/examples/sona/hero.webp"
+          alt={s.heroAlt}
           className="aspect-video w-full rounded-lg object-cover"
         />
       </a>
@@ -86,7 +92,7 @@ export default function SonaCaseStudy() {
               <h2 className="mb-4 text-2xl font-bold tracking-tight text-bone">
                 {section.title}
               </h2>
-              <p className="text-pretty mb-7 leading-relaxed text-bone-dim">
+              <p className="text-pretty mb-12 leading-relaxed text-bone-dim">
                 {section.body}
               </p>
               <CodeBlock
@@ -94,19 +100,55 @@ export default function SonaCaseStudy() {
                 caption={caption}
                 copyText={snippets[snippet]}
               />
+              {id === "routes" && "videoIntro" in section && (
+                <>
+                  <p className="text-pretty mb-12 mt-12 leading-relaxed text-bone-dim">
+                    {section.videoIntro}
+                  </p>
+                  <Video
+                    src="/examples/sona/discover-lenses.mp4"
+                    caption={s.videos.discoverLenses}
+                  />
+                </>
+              )}
+              {id === "preloadVt" && "videoIntro" in section && (
+                <>
+                  <p className="text-pretty mb-12 mt-12 leading-relaxed text-bone-dim">
+                    {section.videoIntro}
+                  </p>
+                  <Video
+                    src="/examples/sona/persistent-player.mp4"
+                    caption={s.videos.persistentPlayer}
+                  />
+                </>
+              )}
+              {id === "searchParams" && "videoIntro" in section && (
+                <>
+                  <p className="text-pretty mb-12 mt-12 leading-relaxed text-bone-dim">
+                    {section.videoIntro}
+                  </p>
+                  <Video
+                    src="/examples/sona/map-url-sync.mp4"
+                    caption={s.videos.mapUrlSync}
+                  />
+                </>
+              )}
             </section>
           );
         })}
 
-        {/* Resilience closes the page — deliberately no snippet: the point is
-            that Sona wrote zero code to get this protection. */}
         <section id="resilience">
           <h2 className="mb-4 text-2xl font-bold tracking-tight text-bone">
             {s.sections.resilience.title}
           </h2>
-          <p className="text-pretty leading-relaxed text-bone-dim">
+          <p className="text-pretty mb-12 leading-relaxed text-bone-dim">
             {s.sections.resilience.body}
           </p>
+          <CodeBlock
+            id="sonaErrorFallback"
+            caption="src/components/RouteErrorFallback.tsx"
+            copyText={snippets.sonaErrorFallback}
+          />
         </section>
       </div>
     </div>
