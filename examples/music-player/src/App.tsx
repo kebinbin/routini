@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { Navigate, Router, type RouteDefinition } from "routini";
 import { AppLayout } from "./components/AppLayout";
+import { RouteErrorFallback } from "./components/RouteErrorFallback";
 import Feed from "./pages/Feed";
 
 // Root redirects to the first discovery lens. <Navigate> replaces by default, so
@@ -30,6 +31,7 @@ export default function App() {
     <Router
       routes={routes}
       loading={<div className="p-6 text-sm text-text-faint">Loading…</div>}
+      errorFallback={RouteErrorFallback}
       scrollRestoration
       scrollContainer={mainRef}
     >

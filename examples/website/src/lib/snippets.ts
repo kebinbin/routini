@@ -481,6 +481,47 @@ const routes: RouteDefinition[] = [
 ];
 `,
 
+  sonaScrollRestoration: `// App.tsx — AppLayout scrolls its own <main>, not the window,
+// so Router needs a ref to that element instead of the default.
+const mainRef = useRef<HTMLElement>(null);
+
+<Router routes={routes} scrollRestoration scrollContainer={mainRef}>
+  <AppLayout mainRef={mainRef} />
+</Router>
+
+// AppLayout.tsx — the ref lands on the element Router should restore.
+<main ref={mainRef} className="overflow-y-auto">
+  <Outlet />
+</main>
+`,
+
+  sonaErrorFallback: `function RouteErrorFallback({
+  error,
+  reset,
+  reload,
+  isChunkError,
+}: ErrorFallbackContext) {
+  return (
+    <div role="alert">
+      <p>
+        {isChunkError
+          ? "This page failed to load, likely from a new deploy."
+          : "Something went wrong loading this page."}
+      </p>
+      <p>{error.message}</p>
+      {/* A stale chunk only clears on a fresh document; a render error
+          can retry in place, keeping playback and app state alive. */}
+      <button onClick={isChunkError ? reload : reset}>
+        {isChunkError ? "Reload" : "Try again"}
+      </button>
+      <Link to="/" viewTransition>Back to discover</Link>
+    </div>
+  );
+}
+
+<Router routes={routes} errorFallback={RouteErrorFallback}>
+`,
+
 } as const;
 
 export type SnippetId = keyof typeof snippets;
