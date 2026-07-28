@@ -28,7 +28,7 @@ export default function TransitionA() {
       <section className="demo">
         <h2>Animate forward</h2>
         <div className="row">
-          <Link className="btn" to="/transitions/b" viewTransition>
+          <Link className="btn" to="/transitions/b" viewTransition preload="hover">
             → Page B (viewTransition)
           </Link>
           <Link className="btn" to="/transitions/b">
@@ -36,9 +36,14 @@ export default function TransitionA() {
           </Link>
         </div>
         <p className="note" style={{ marginTop: "0.75rem" }}>
-          After animating forward with the first link, press the browser Back
-          button — routini replays the transition automatically, because it
-          tagged the history entry. The second link’s edge stays instant.
+          The first link pairs <code>viewTransition</code> with{" "}
+          <code>preload="hover"</code> — both pages are lazy, and without a
+          warm chunk the transition would animate into the Suspense fallback
+          instead of the real page (hover this link, or click it a second
+          time, to see the difference). After animating forward, press the
+          browser Back button — routini replays the transition automatically,
+          because it tagged the history entry. The second link’s edge stays
+          instant.
         </p>
       </section>
     </>
