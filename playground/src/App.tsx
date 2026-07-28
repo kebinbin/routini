@@ -22,6 +22,11 @@ const trackedImport = <T,>(key: string, factory: () => Promise<T>, ms = 700) =>
     return mod;
   });
 
+// One reference shared by all three /params routes below — routini's lazy
+// cache is keyed by function identity, so separate closures would each
+// suspend on first visit despite importing the same file.
+const paramsLazy = () => import("./pages/Params");
+
 // Most routes live in this array (the recommended form). One route below is
 // declared as a <Route> JSX child instead, to exercise the other input form —
 // Router concatenates array routes + <Route> children.
@@ -34,9 +39,9 @@ const routes: RouteDefinition[] = [
     // Per-route loading — overrides the Router's global `loading` below.
     loading: <div className="loading-box">Loading the lazy route’s chunk…</div>,
   },
-  { path: "/params", lazy: () => import("./pages/Params") },
-  { path: "/params/:userId", lazy: () => import("./pages/Params") },
-  { path: "/params/:userId/:postId", lazy: () => import("./pages/Params") },
+  { path: "/params", lazy: paramsLazy },
+  { path: "/params/:userId", lazy: paramsLazy },
+  { path: "/params/:userId/:postId", lazy: paramsLazy },
   { path: "/search", lazy: () => import("./pages/SearchParams") },
   { path: "/navigate", lazy: () => import("./pages/NavigateDemo") },
   // Redirect target — <Navigate> sends visitors from here to /navigate.

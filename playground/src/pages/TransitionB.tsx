@@ -27,7 +27,7 @@ export default function TransitionB() {
       <section className="demo">
         <h2>Animate back</h2>
         <div className="row">
-          <Link className="btn" to="/transitions/a" viewTransition>
+          <Link className="btn" to="/transitions/a" viewTransition preload="hover">
             ← Page A (viewTransition)
           </Link>
         </div>

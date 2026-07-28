@@ -21,23 +21,28 @@ export default function Params() {
       <section className="demo">
         <h2>Try different URLs</h2>
         <div className="row">
-          <Link className="btn" to="/params">
+          <Link className="btn" to="/params" preload="hover">
             /params
           </Link>
-          <Link className="btn" to="/params/42">
+          <Link className="btn" to="/params/42" preload="hover">
             /params/42
           </Link>
-          <Link className="btn" to="/params/42/hello-world">
+          <Link className="btn" to="/params/42/hello-world" preload="hover">
             /params/42/hello-world
           </Link>
-          <Link className="btn" to="/params/caf%C3%A9">
+          <Link className="btn" to="/params/caf%C3%A9" preload="hover">
             /params/café (encoded)
           </Link>
         </div>
         <p className="note" style={{ marginTop: "0.75rem" }}>
           The same component renders for all three route patterns — routini
           matches the most specific one and the others fall through by segment
-          count.
+          count. In App.tsx all three share one <code>lazy</code> function
+          reference (routini's lazy cache is keyed by that identity), so
+          visiting any of these links resolves the chunk for all of them —
+          only the very first click here suspends at all.{" "}
+          <code>preload="hover"</code> is still on all four links so even that
+          first click is instant.
         </p>
       </section>
     </>
